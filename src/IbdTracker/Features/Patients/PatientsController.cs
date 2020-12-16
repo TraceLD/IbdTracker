@@ -21,7 +21,7 @@ namespace IbdTracker.Features.Patients
         }
         
         // gets patient object corresponding to currently logged in user;
-        [Authorize]
+        [Authorize("read:patient")]
         [HttpGet]
         public async Task<ActionResult<Patient>> Get()
         {
