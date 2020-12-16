@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
-using IbdTracker.Core.Entities;
+using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +11,7 @@ namespace IbdTracker.Features.Patients
 {
     public class Get
     {
-        public class Query : IRequest<Patient?>
+        public class Query : IRequest<PatientDto?>
         {
             public string? AuthId { get; set; }
         }
@@ -26,7 +26,7 @@ namespace IbdTracker.Features.Patients
             }
         }
 
-        public class Handler : IRequestHandler<Query, Patient?>
+        public class Handler : IRequestHandler<Query, PatientDto?>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -35,11 +35,18 @@ namespace IbdTracker.Features.Patients
                 _context = context;
             }
 
-            public async Task<Patient?> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<PatientDto?> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.Patients
                     .AsNoTracking()
                     .Where(p => p.AuthId.Equals(request.AuthId))
+                    .Select(p => new PatientDto
+                    {
+                        PatientId = p.PatientId,
+                        Name = p.Name,
+                        DateOfBirth = p.DateOfBirth,
+                        DateDiagnosed = p.DateDiagnosed
+                    })
                     .FirstOrDefaultAsync(cancellationToken);
             }
         }

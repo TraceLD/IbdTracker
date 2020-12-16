@@ -39,8 +39,7 @@ namespace IbdTracker
             services.AddDbContext<IbdSymptomTrackerContext>((provider, builder) =>
             {
                 var cfg = provider.GetRequiredService<DbConfig>();
-                builder.UseNpgsql(
-                    $@"Server={cfg.Server};Port={cfg.Port};Database={cfg.DatabaseName};User Id={cfg.UserId};Password={cfg.Password};");
+                builder.UseNpgsql(cfg.ConnectionString);
             });
 
             services.AddMediatR(typeof(Startup));

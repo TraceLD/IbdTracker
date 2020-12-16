@@ -3,15 +3,17 @@ using System;
 using IbdTracker.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    partial class IbdSymptomTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20201216114200_FixDoctor")]
+    partial class FixDoctor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,7 +138,11 @@ namespace IbdTracker.Core.Migrations
                     b.Property<int?>("DoctorId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -195,9 +201,11 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Patient", b =>
                 {
-                    b.HasOne("IbdTracker.Core.Entities.Doctor", null)
+                    b.HasOne("IbdTracker.Core.Entities.Doctor", "Doctor")
                         .WithMany("Patients")
                         .HasForeignKey("DoctorId");
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Prescription", b =>

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
+using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +14,7 @@ namespace IbdTracker.Features.Patients
 {
     public class GetAssigned
     {
-        public class Query : IRequest<IList<Patient>>
+        public class Query : IRequest<IList<PatientDto>>
         {
             public string? AuthId { get; set; }
         }
@@ -27,7 +29,7 @@ namespace IbdTracker.Features.Patients
             }
         }
 
-        public class Handler : IRequestHandler<Query, IList<Patient>>
+        public class Handler : IRequestHandler<Query, IList<PatientDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -36,11 +38,9 @@ namespace IbdTracker.Features.Patients
                 _context = context;
             }
 
-            public async Task<IList<Patient>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IList<PatientDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Patients
-                    .Where(p => p.Doctor.AuthId == request.AuthId)
-                    .ToListAsync(cancellationToken);
+                throw new NotImplementedException();
             }
         }
     }

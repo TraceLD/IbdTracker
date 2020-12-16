@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,7 @@ namespace IbdTracker.Features.Patients
         // gets patient object corresponding to currently logged in user;
         [Authorize("read:patient")]
         [HttpGet]
-        public async Task<ActionResult<Patient>> Get()
+        public async Task<ActionResult<PatientDto>> Get()
         {
             var res = await _mediator.Send(new Get.Query {AuthId = User.Identity?.Name});
             if (res is null) return NotFound();
