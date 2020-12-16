@@ -11,13 +11,7 @@ namespace IbdTracker.Core
         public DbSet<Prescription> Prescriptions { get; set; } = null!;
         public DbSet<PainEvent> PainEvents { get; set; } = null!;
         public DbSet<BowelMovementEvent> BowelMovementEvents { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(
-                @"");
-        }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // to search patients via ID from Auth0 JWT;
