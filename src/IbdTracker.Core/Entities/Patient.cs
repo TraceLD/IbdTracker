@@ -11,14 +11,15 @@ namespace IbdTracker.Core.Entities
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateDiagnosed { get; set; }
+        
         public int? DoctorId { get; set; }
+        public Doctor Doctor { get; set; } = null!;
 
         public List<Prescription> Prescriptions { get; } = new List<Prescription>();
         public List<PainEvent> PainEvents { get; } = new List<PainEvent>();
         public List<BowelMovementEvent> BowelMovementEvents { get; } = new List<BowelMovementEvent>();
 
-        public Patient(string authId, string firstName, string lastName, DateTime dateOfBirth, DateTime dateDiagnosed,
-            int? doctorId = null)
+        public Patient(string authId, string firstName, string lastName, DateTime dateOfBirth, DateTime dateDiagnosed, int? doctorId = null)
         {
             AuthId = authId;
             FirstName = firstName;

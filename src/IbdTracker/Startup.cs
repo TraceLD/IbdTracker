@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Security.Claims;
 using FluentValidation.AspNetCore;
 using IbdTracker.Core;
@@ -58,10 +59,23 @@ namespace IbdTracker
                 });
             services.AddAuthorization(options =>
             {
-                // TODO: add proper policies;
-                options.AddPolicy("read:messages",
-                    policy => policy.Requirements.Add(new HasScopeRequirement("read:messages",
-                        Configuration["Auth0:Domain"])));
+                var policies = new List<string>
+                {
+                    "read:assignedpatients",
+                    "read:patient",
+                    "write:patient",
+                    "read:allpatients",
+                    "read:doctor",
+                    "write:doctor",
+                    "read:assigneddoctor"
+                };
+                
+                foreach (var policy in policies)
+                {
+                    options.AddPolicy(policy,
+                        builder => builder.Requirements.Add(new HasScopeRequirement(policy,
+                            Configuration["Auth0:Domain"])));
+                }
             });
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 

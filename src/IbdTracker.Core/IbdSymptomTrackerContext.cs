@@ -11,6 +11,11 @@ namespace IbdTracker.Core
         public DbSet<Prescription> Prescriptions { get; set; } = null!;
         public DbSet<PainEvent> PainEvents { get; set; } = null!;
         public DbSet<BowelMovementEvent> BowelMovementEvents { get; set; } = null!;
+
+        public IbdSymptomTrackerContext(DbContextOptions<IbdSymptomTrackerContext> options)
+            : base(options)
+        {
+        }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

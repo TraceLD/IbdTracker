@@ -20,8 +20,4 @@
     <ProjectReference Include="..\IbdTracker.Infrastructure\IbdTracker.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Accounts" />
-  </ItemGroup>
-
 </Project>

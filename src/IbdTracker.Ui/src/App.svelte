@@ -16,11 +16,7 @@
 
 		const params = window.location.search;
 		if (params.includes("code=") && params.includes("state=")) {
-			await auth0.handleRedirectCallback();
-
-			const user = await auth0.getUser();
-			console.log(user);
-
+			await auth0.handleRedirectCallback();			
 			window.history.replaceState({}, document.title, "/");
 			loggedIn = await auth0.isAuthenticated();
 		}
@@ -34,7 +30,7 @@
 
 	async function handleApiClick() {
 		const accessToken = await auth0.getTokenSilently();
-		const result = await fetch('http://localhost:8080/api/private', {
+		const result = await fetch('http://localhost:8080/api/patients', {
 			method: 'GET',
 			headers: {
 				Authorization: "Bearer " + accessToken
@@ -43,8 +39,8 @@
 
 		if (result.ok) {
 			const data = await result.json();
-			console.log(data);
-		}	
+			response = JSON.stringify(data, null, "\t");
+		}
 	}
 </script>
 
@@ -52,7 +48,7 @@
 
 {#if loggedIn}
 	<h2>You are logged in</h2>
-	<button on:click={handleApiClick}>Send GET</button>
+	<button on:click={handleApiClick}>GET patient info for yourself</button>
 	{#if response !== undefined}
 		<p>{response}</p>
 	{/if}

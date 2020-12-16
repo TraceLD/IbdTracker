@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    [Migration("20201216062732_InitialCreate")]
+    [Migration("20201216094242_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -201,9 +201,11 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Patient", b =>
                 {
-                    b.HasOne("IbdTracker.Core.Entities.Doctor", null)
+                    b.HasOne("IbdTracker.Core.Entities.Doctor", "Doctor")
                         .WithMany("Patients")
                         .HasForeignKey("DoctorId");
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Prescription", b =>

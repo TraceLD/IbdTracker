@@ -199,9 +199,11 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Patient", b =>
                 {
-                    b.HasOne("IbdTracker.Core.Entities.Doctor", null)
+                    b.HasOne("IbdTracker.Core.Entities.Doctor", "Doctor")
                         .WithMany("Patients")
                         .HasForeignKey("DoctorId");
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Prescription", b =>
