@@ -1,12 +1,18 @@
 using System.Security.Claims;
+using FluentValidation.AspNetCore;
+using IbdTracker.Core;
+using IbdTracker.Core.Config;
 using IbdTracker.Infrastructure.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -25,8 +31,19 @@ namespace IbdTracker
         public void ConfigureServices(IServiceCollection services)
         {
             // register db config;
-            
-            
+            services.Configure<DbConfig>(Configuration.GetSection("Database"));
+            services.AddSingleton(provider => provider.GetRequiredService<IOptions<DbConfig>>().Value);
+
+            // add db context;
+            services.AddDbContext<IbdSymptomTrackerContext>((provider, builder) =>
+            {
+                var cfg = provider.GetRequiredService<DbConfig>();
+                builder.UseNpgsql(
+                    $@"Server={cfg.Server};Port={cfg.Port};Database={cfg.DatabaseName};User Id={cfg.UserId};Password={cfg.Password};");
+            });
+
+            services.AddMediatR(typeof(Startup));
+
             // configure auth;
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -47,16 +64,19 @@ namespace IbdTracker
                         Configuration["Auth0:Domain"])));
             });
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
-            
-            services.AddControllers();
-            
-            // 
-            
+
+            services.AddControllers()
+                .AddFluentValidation(configuration =>
+                {
+                    configuration.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    configuration.ImplicitlyValidateChildProperties = true;
+                });
+
             // configure swagger/openapi;
             // TODO: add swagger/openapi decorators to controllers;
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "IbdTracker", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "IbdTracker", Version = "v1"});
             });
         }
 
@@ -77,10 +97,7 @@ namespace IbdTracker
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
