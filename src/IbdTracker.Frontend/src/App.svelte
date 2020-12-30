@@ -7,8 +7,7 @@
 	
 
 	const authConfig: AuthConfig = {
-		domain: "traceld.eu.auth0.com"
-		,
+		domain: "traceld.eu.auth0.com",
 		client_id: "K6e54LHQGgwswqgWE6QEWWsMKCEsC57I",
 		audience: "https://ibdsymptomtracker.com/api"
 	};
