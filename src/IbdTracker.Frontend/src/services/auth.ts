@@ -15,16 +15,16 @@ export const authToken: Writable<string> = writable('');
 const refreshRate: number = 10 * 60 * 60 * 1000;
 let auth0: Auth0Client = null;
 
-function createAuth(config: AuthConfig): void  {    
+function createAuth(config: AuthConfig): void {
     let intervalId = undefined;
 
-    onMount(async (): Promise<() => void> => {       
+    onMount(async (): Promise<() => void> => {
         auth0 = await createAuth0Client(config);
         const params: string = window.location.search;
 
         if (params.includes("code=") && params.includes("state=")) {
             await auth0.handleRedirectCallback();
-            window.history.replaceState({}, document.title, "/");    
+            window.history.replaceState({}, document.title, "/");
         }
 
         const _isAuthenticated: boolean = await auth0.isAuthenticated();
@@ -48,7 +48,7 @@ function createAuth(config: AuthConfig): void  {
 
 async function login(): Promise<void> {
     await auth0.loginWithRedirect({
-        redirect_uri: "http://localhost:8080/",
+        redirect_uri: window.location.origin,
     });
 }
 
