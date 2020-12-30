@@ -3,8 +3,8 @@
 
 	import type { AuthConfig } from './services/auth';
 
-	import { createAuth, login, logout, isLoading, isAuthenticated, authToken } from './services/auth';
-	
+	import { isLoading, isAuthenticated, authToken } from './store';
+	import { createAuth, login, logout } from './services/auth';
 
 	const authConfig: AuthConfig = {
 		domain: "traceld.eu.auth0.com",
@@ -18,7 +18,7 @@
 		isLoading: $isLoading,
 		isAuthenticated: $isAuthenticated,
 		authToken: $authToken
-	}
+	}	
 </script>
 
 <main>

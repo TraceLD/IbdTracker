@@ -1,16 +1,12 @@
 import { onMount } from 'svelte';
-import { writable, Writable } from 'svelte/store';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
+import { isAuthenticated, authToken, isLoading } from '../store';
 
 interface AuthConfig {
     domain: string,
     client_id: string,
     audience: string
 }
-
-export const isLoading: Writable<boolean> = writable(true);
-export const isAuthenticated: Writable<boolean> = writable(false);
-export const authToken: Writable<string> = writable('');
 
 const refreshRate: number = 10 * 60 * 60 * 1000;
 let auth0: Auth0Client = null;

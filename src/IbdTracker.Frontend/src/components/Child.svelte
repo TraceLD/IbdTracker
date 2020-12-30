@@ -1,5 +1,5 @@
 <script>
-    import { authToken } from '../services/auth';
+    import { authToken } from '../store';
 </script>
 
 <p>{$authToken}</p>
