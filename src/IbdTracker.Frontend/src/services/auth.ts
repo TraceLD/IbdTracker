@@ -16,7 +16,7 @@ const refreshRate: number = 10 * 60 * 60 * 1000;
 let auth0: Auth0Client = null;
 
 function createAuth(config: AuthConfig): void {
-    let intervalId = undefined;
+    let intervalId: number = undefined;
 
     onMount(async (): Promise<() => void> => {
         auth0 = await createAuth0Client(config);
