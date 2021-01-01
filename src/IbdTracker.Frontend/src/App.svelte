@@ -22,7 +22,7 @@
 </script>
 
 <main>
-	<h1>Hello!</h1>
+	<h1 class="font-bold">Hello!</h1>
 	{#if $isAuthenticated}
 		<p>Logged in!</p>
 		<button on:click={logout}>Log out</button>
@@ -32,6 +32,9 @@
 	<Child />
 </main>
 
-<style>
-
+<style global>
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
 </style>
+  
