@@ -29,7 +29,9 @@
 		{#if $isAuthenticated}
 			<Main />
 		{:else}
-			<Login />
+			<div class="flex h-screen justify-center items-center">
+				<Login />
+			</div>			
 		{/if}
 	</div>
 </main>
