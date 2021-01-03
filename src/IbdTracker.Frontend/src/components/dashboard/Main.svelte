@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Navigation from "./Navigation.svelte";
+    import Navigation from "./navigation/Navigation.svelte";
 
     import { logout } from "../../services/auth";
 </script>
