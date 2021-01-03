@@ -1,10 +1,11 @@
 <script lang="ts">
 	import Login from "./components/login/Login.svelte";
 	import Main from "./components/dashboard/Main.svelte";
+	import Loading from "./components/Loading.svelte";
 
 	import type { AuthConfig } from "./services/auth";
 
-	import { isAuthenticated } from "./store";
+	import { isAuthenticated, isLoading } from "./store";
 	import { createAuth } from "./services/auth";
 
 	const authConfig: AuthConfig = {
@@ -25,13 +26,15 @@
 </style>
 
 <main>
-	<div class="font-body">
-		{#if $isAuthenticated}
+	<div class="font-body bg-gray-100 flex-col min-h-screen">
+		{#if $isLoading}
+			<Loading />
+		{:else if $isAuthenticated}
 			<Main />
 		{:else}
 			<div class="flex h-screen justify-center items-center">
 				<Login />
-			</div>			
+			</div>
 		{/if}
 	</div>
 </main>
