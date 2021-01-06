@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.13.5",
-    "sirv-cli": "^1.0.0"
+    "sirv-cli": "^1.0.0",
+    "svelte-spa-router": "^3.1.0"
   }
 }
