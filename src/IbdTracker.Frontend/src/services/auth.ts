@@ -1,58 +1,54 @@
-import { onMount } from 'svelte';
-import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { isAuthenticated, authToken, isLoading } from '../store';
+import type { Auth0ClientOptions, Auth0Client, User } from "@auth0/auth0-spa-js";
+import { isLoading, isAuthenticated, user } from "../stores/authStore";
+import createAuth0Client from "@auth0/auth0-spa-js";
 
-interface AuthConfig {
-    domain: string,
-    client_id: string,
-    audience: string
-}
-
-const refreshRate: number = 10 * 60 * 60 * 1000;
+const authConfig: Auth0ClientOptions = {
+    domain: "traceld.eu.auth0.com",
+    client_id: "K6e54LHQGgwswqgWE6QEWWsMKCEsC57I",
+    audience: "https://ibdsymptomtracker.com/api",
+    cacheLocation: 'localstorage'
+};
 let auth0: Auth0Client = null;
 
-function createAuth(config: AuthConfig): void {
-    let intervalId: number = undefined;
+async function initAuth(): Promise<void> {
+    isLoading.set(true);
 
-    onMount(async (): Promise<() => void> => {
-        auth0 = await createAuth0Client(config);
-        const params: string = window.location.search;
+    auth0 = await createAuth0Client(authConfig);
+    const _isAuthenticated: boolean = await auth0.isAuthenticated();
 
-        if (params.includes("code=") && params.includes("state=")) {
-            await auth0.handleRedirectCallback();
-            window.history.replaceState({}, document.title, "/");
-        }
+    isAuthenticated.set(_isAuthenticated);
+    
+    if (_isAuthenticated) {
+        const _user: User = await auth0.getUser();
+        user.set(_user);
+    }
 
-        const _isAuthenticated: boolean = await auth0.isAuthenticated();
-        isAuthenticated.set(_isAuthenticated);
-
-        if (_isAuthenticated) {
-            authToken.set(await auth0.getTokenSilently());
-
-            intervalId = setInterval(async (): Promise<void> => {
-                authToken.set(await auth0.getTokenSilently());
-            }, refreshRate)
-        }
-
-        isLoading.set(false);
-
-        return () => {
-            intervalId && clearInterval(intervalId);
-        };
-    });
+    isLoading.set(false);
 }
 
 async function login(): Promise<void> {
     await auth0.loginWithRedirect({
-        redirect_uri: window.location.origin,
+        redirect_uri: "http://localhost:8080/callback",
     });
 }
 
-async function logout(): Promise<void> {
+async function callback(): Promise<void> {
+    await auth0.handleRedirectCallback();
+
+    const _isAuthenticated: boolean = await auth0.isAuthenticated();
+
+    isAuthenticated.set(_isAuthenticated);
+    
+    if (_isAuthenticated) {
+        const _user: User = await auth0.getUser();
+        user.set(_user);
+    }
+}
+
+function logout(): void {
     auth0.logout({
-        returnTo: window.location.origin
+        returnTo: "http://localhost:8080/"
     });
 }
 
-export type { AuthConfig };
-export { createAuth, login, logout };
+export { initAuth, login, logout, callback };

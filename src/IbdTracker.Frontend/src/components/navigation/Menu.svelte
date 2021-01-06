@@ -1,20 +1,16 @@
 <script lang="ts">
-    import LogOutButton from "../../common/LogOutButton.svelte";
-    import Lifestyle from "./menu_categories/Lifestyle.svelte";
-    import Symptoms from "./menu_categories/Symptoms.svelte";
-    import Treatment from "./menu_categories/Treatment.svelte";
-    import Settings from "./menu_categories/Settings.svelte";
+    import LogOut from "../buttons/LogOut.svelte";
+    import Lifestyle from "./categories/Lifestyle.svelte";
+    import Symptoms from "./categories/Symptoms.svelte";
+    import Treatment from "./categories/Treatment.svelte";
+    import Settings from "./categories/Settings.svelte";
 
     import { fly } from "svelte/transition";
 
-    export let menuOpened: Boolean;
-</script>
+    export let menuOpened: boolean;
 
-<style>
-    #menu {
-        width: 70%;
-    }
-</style>
+    console.log(innerWidth);
+</script>
 
 {#if menuOpened}
     <div
@@ -22,10 +18,9 @@
         class="absolute top-0 z-10 min-h-screen w-full"
         transition:fly={{ x: -200 }}
         on:click />
-
     <div
         id="menu"
-        class="absolute top-0 z-20 min-h-screen bg-gray-50 rounded-tr-3xl rounded-br-3xl"
+        class="absolute top-0 z-20 min-h-screen bg-gray-50 rounded-tr-3xl rounded-br-3xl w-64 md:w-72"
         transition:fly={{ x: -200 }}>
         <div id="menuContent" class="flex flex-col min-h-screen">
             <p id="title" class="text-center font-semibold text-xl mt-6">
@@ -48,7 +43,7 @@
                 </ul>
             </div>
             <div class="mt-auto mb-6 w-auto flex justify-center">
-                <LogOutButton />
+                <LogOut />
             </div>
         </div>
     </div>

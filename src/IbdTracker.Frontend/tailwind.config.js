@@ -1,5 +1,15 @@
+const production = !process.env.ROLLUP_WATCH;
+
 module.exports = {
-  purge: [],
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
+  plugins: [],
+  purge: {
+    content: ["./src/**/*.svelte"],
+    enabled: production,
+  },
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
@@ -7,9 +17,5 @@ module.exports = {
         body: ["Inter"]
       }
     },
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-}
+  }
+};
