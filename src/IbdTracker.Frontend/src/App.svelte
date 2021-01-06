@@ -1,21 +1,18 @@
 <script lang="ts">
-	import Router from "svelte-spa-router";
-	import { replace } from "svelte-spa-router";
-	import { routes, setupRoutes } from "./routes";
+  import { Router } from "@roxi/routify";
+  import { routes } from "../.routify/routes";
+  import { initAuth } from "./services/auth";
 
-	setupRoutes();
-
-	function conditionsFailedHandler() {
-    	replace("/");
-	}
+  // we need to queue our init till after Routify has been initialized
+	setTimeout(() => window.routify.inBrowser && initAuth())
 </script>
 
 <style global>
-	@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 </style>
 
-<Router {routes} on:conditionsFailed={ conditionsFailedHandler } />
+<div class="flex-col min-h-screen font-body bg-gray-100">
+  <Router {routes} />
+</div>
