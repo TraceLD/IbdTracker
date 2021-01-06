@@ -1,40 +1,40 @@
 <script lang="ts">
-	import Child from './components/Child.svelte';
+	import Login from "./components/login/Login.svelte";
+	import Main from "./components/dashboard/Main.svelte";
+	import Loading from "./components/Loading.svelte";
 
-	import type { AuthConfig } from './services/auth';
+	import type { AuthConfig } from "./services/auth";
 
-	import { isLoading, isAuthenticated, authToken } from './store';
-	import { createAuth, login, logout } from './services/auth';
+	import { isAuthenticated, isLoading } from "./store";
+	import { createAuth } from "./services/auth";
 
 	const authConfig: AuthConfig = {
 		domain: "traceld.eu.auth0.com",
 		client_id: "K6e54LHQGgwswqgWE6QEWWsMKCEsC57I",
-		audience: "https://ibdsymptomtracker.com/api"
+		audience: "https://ibdsymptomtracker.com/api",
 	};
 
 	createAuth(authConfig);
-
-	$: state = {
-		isLoading: $isLoading,
-		isAuthenticated: $isAuthenticated,
-		authToken: $authToken
-	}	
 </script>
 
-<main>
-	<h1 class="font-bold">Hello!</h1>
-	{#if $isAuthenticated}
-		<p>Logged in!</p>
-		<button on:click={logout}>Log out</button>
-	{:else}
-		<button on:click={login}>Log in</button>
-	{/if}
-	<Child />
-</main>
-
 <style global>
+	@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
 	@tailwind base;
 	@tailwind components;
 	@tailwind utilities;
 </style>
-  
+
+<main>
+	<div class="font-body flex-col min-h-screen bg-gray-100 text-gray-900">
+		{#if $isLoading}
+			<Loading />
+		{:else if $isAuthenticated}
+			<Main />
+		{:else}
+			<div class="flex h-screen justify-center items-center">
+				<Login />
+			</div>
+		{/if}
+	</div>
+</main>
