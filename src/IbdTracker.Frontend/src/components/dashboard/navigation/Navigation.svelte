@@ -2,7 +2,7 @@
     import Headbar from "./Headbar.svelte";
     import Menu from "./Menu.svelte";
 
-    let menuOpened: Boolean = true;
+    let menuOpened: Boolean = false;
 
     function openMenu(): void {
         menuOpened = true;

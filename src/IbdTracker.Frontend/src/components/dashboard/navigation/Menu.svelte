@@ -22,7 +22,6 @@
         class="absolute top-0 z-10 min-h-screen w-full"
         transition:fly={{ x: -200 }}
         on:click />
-
     <div
         id="menu"
         class="absolute top-0 z-20 min-h-screen bg-gray-50 rounded-tr-3xl rounded-br-3xl"
