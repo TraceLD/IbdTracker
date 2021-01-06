@@ -26,7 +26,7 @@
 </style>
 
 <main>
-	<div class="font-body bg-gray-100 flex-col min-h-screen">
+	<div class="font-body flex-col min-h-screen bg-gray-100 text-gray-900">
 		{#if $isLoading}
 			<Loading />
 		{:else if $isAuthenticated}
