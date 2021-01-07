@@ -15,8 +15,8 @@
 {#if menuOpened}
     <div
         id="menu-overlay"
-        class="absolute top-0 z-10 min-h-screen w-full"
-        transition:fly={{ x: -200 }}
+        class="absolute top-0 z-10 min-h-screen w-full bg-black bg-opacity-10"
+        transition:fly={{ x: 20 }}
         on:click />
     <div
         id="menu"
