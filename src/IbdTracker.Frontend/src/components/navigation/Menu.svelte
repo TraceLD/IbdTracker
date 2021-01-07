@@ -8,8 +8,6 @@
     import { fly } from "svelte/transition";
 
     export let menuOpened: boolean;
-
-    console.log(innerWidth);
 </script>
 
 {#if menuOpened}
@@ -23,18 +21,18 @@
         class="absolute top-0 z-20 min-h-screen bg-gray-50 rounded-tr-3xl rounded-br-3xl w-64 md:w-72"
         transition:fly={{ x: -200 }}>
         <div id="menuContent" class="flex flex-col min-h-screen">
-            <p id="title" class="text-center font-semibold text-xl mt-6">
+            <a id="title" class="text-center font-semibold text-xl mt-6" href="/">
                 IBD Tracker
-            </p>
+            </a>
             <div class="mt-6 ml-4">
                 <ul>
-                    <li class="mb-2">
+                    <li class="mb-6">
                         <Lifestyle />
                     </li>
-                    <li class="mb-2">
+                    <li class="mb-6">
                         <Symptoms />
                     </li>
-                    <li class="mb-2">
+                    <li class="mb-6">
                         <Treatment />
                     </li>
                     <li>
