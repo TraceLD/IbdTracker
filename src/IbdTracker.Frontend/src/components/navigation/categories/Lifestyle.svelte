@@ -1,5 +1,5 @@
 <div>
-    <p class="font-semibold text-xs text-gray-400">Lifestyle</p>
+    <p class="font-semibold text-xs text-gray-400 mb-0.5">Lifestyle</p>
     <ul>
         <li>
             <div class="flex items-center">
