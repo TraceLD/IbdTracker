@@ -87,7 +87,9 @@ namespace IbdTracker
                     options.AddDefaultPolicy(
                         builder =>
                         {
-                            builder.WithOrigins("http://localhost:8080");
+                            builder.WithOrigins("http://localhost:8080")
+                                .AllowCredentials()
+                                .AllowAnyHeader();
                         });
                 });
             }
