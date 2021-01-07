@@ -8,7 +8,7 @@
         time: "4pm",
         doctorName: "Joe Bloggs",
         location: "GP Clinic",
-        finished: false,
+        notes: "some note",
     };
 </script>
 
