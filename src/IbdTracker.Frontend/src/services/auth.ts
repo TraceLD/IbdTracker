@@ -26,6 +26,10 @@ async function initAuth(): Promise<void> {
     isLoading.set(false);
 }
 
+async function getToken(): Promise<any> {
+    return await auth0.getTokenSilently();
+}
+
 async function login(): Promise<void> {
     await auth0.loginWithRedirect({
         redirect_uri: "http://localhost:8080/callback",
@@ -51,4 +55,4 @@ function logout(): void {
     });
 }
 
-export { initAuth, login, logout, callback };
+export { initAuth, login, logout, callback, getToken };
