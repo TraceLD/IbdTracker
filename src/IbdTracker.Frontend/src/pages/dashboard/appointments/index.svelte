@@ -12,7 +12,7 @@
     };
 </script>
 
-<div class="mx-5">
-    <h1 class="text-lg text-gray-600 font-semibold mb-3">Upcoming appointments</h1>
+<div>
+    <h2 class="text-lg text-gray-600 font-semibold mb-2">Upcoming appointments</h2>
     <AppointmentCard appointmentCardData={a} />
 </div>
