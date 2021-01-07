@@ -26,7 +26,7 @@ namespace IbdTracker.Features.Patients
         [HttpGet]
         public async Task<ActionResult<PatientDto>> Get()
         {
-            var res = await _mediator.Send(new Get.Query {AuthId = User.Identity?.Name});
+            var res = await _mediator.Send(new Get.Query {PatientId = User.Identity?.Name});
             if (res is null) return NotFound();
             return Ok(res);
         }
@@ -36,7 +36,7 @@ namespace IbdTracker.Features.Patients
         [HttpGet("assigned")]
         public async Task<ActionResult<IEnumerable<Patient>>> GetAssigned()
         {
-            var res = await _mediator.Send(new GetAssigned.Query{AuthId = User.Identity?.Name});
+            var res = await _mediator.Send(new GetAssigned.Query{DoctorId = User.Identity?.Name});
             return Ok(res);
         }
         

@@ -20,11 +20,6 @@ namespace IbdTracker.Core
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // to search patients and doctors via ID from Auth0 JWT;
-            modelBuilder.Entity<Patient>()
-                .HasIndex(p => p.AuthId);
-            modelBuilder.Entity<Doctor>()
-                .HasIndex(d => d.AuthId);
         }
     }
 }

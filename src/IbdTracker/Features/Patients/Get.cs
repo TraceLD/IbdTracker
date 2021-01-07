@@ -13,7 +13,7 @@ namespace IbdTracker.Features.Patients
     {
         public class Query : IRequest<PatientDto?>
         {
-            public string? AuthId { get; set; }
+            public string? PatientId { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -21,7 +21,7 @@ namespace IbdTracker.Features.Patients
             public QueryValidator()
             {
                 // fails if null, empty or whitespace;
-                RuleFor(q => q.AuthId)
+                RuleFor(q => q.PatientId)
                     .NotEmpty();
             }
         }
@@ -39,7 +39,7 @@ namespace IbdTracker.Features.Patients
             {
                 return await _context.Patients
                     .AsNoTracking()
-                    .Where(p => p.AuthId.Equals(request.AuthId))
+                    .Where(p => p.PatientId.Equals(request.PatientId))
                     .Select(p => new PatientDto
                     {
                         PatientId = p.PatientId,

@@ -24,7 +24,7 @@ namespace IbdTracker.Features.Appointments
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Get.Result>>> GetAppointments()
         {
-            var res = await _mediator.Send(new Get.Query {AuthId = User.Identity?.Name});
+            var res = await _mediator.Send(new Get.Query {PatientId = User.Identity?.Name});
             return Ok(res);
         }
     }

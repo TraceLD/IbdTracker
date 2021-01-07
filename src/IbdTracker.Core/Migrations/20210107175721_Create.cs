@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,11 +11,8 @@ namespace IbdTracker.Core.Migrations
                 name: "Doctors",
                 columns: table => new
                 {
-                    DoctorId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AuthId = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false)
+                    DoctorId = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,8 +23,7 @@ namespace IbdTracker.Core.Migrations
                 name: "Medications",
                 columns: table => new
                 {
-                    MedicationId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MedicationId = table.Column<Guid>(type: "uuid", nullable: false),
                     ActiveIngredient = table.Column<string>(type: "text", nullable: false),
                     BrandName = table.Column<string>(type: "text", nullable: true)
                 },
@@ -41,14 +36,11 @@ namespace IbdTracker.Core.Migrations
                 name: "Patients",
                 columns: table => new
                 {
-                    PatientId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AuthId = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
+                    PatientId = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DateDiagnosed = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    DoctorId = table.Column<int>(type: "integer", nullable: true)
+                    DoctorId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,12 +54,40 @@ namespace IbdTracker.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    AppointmentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PatientId = table.Column<string>(type: "text", nullable: false),
+                    DoctorId = table.Column<string>(type: "text", nullable: false),
+                    StartDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false),
+                    Notes = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.AppointmentId);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BowelMovementEvents",
                 columns: table => new
                 {
-                    BowelMovementEventId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PatientId = table.Column<int>(type: "integer", nullable: false),
+                    BowelMovementEventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PatientId = table.Column<string>(type: "text", nullable: false),
                     DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ContainedBlood = table.Column<bool>(type: "boolean", nullable: false),
                     ContainedMucus = table.Column<bool>(type: "boolean", nullable: false)
@@ -87,9 +107,8 @@ namespace IbdTracker.Core.Migrations
                 name: "PainEvents",
                 columns: table => new
                 {
-                    PainEventId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PatientId = table.Column<int>(type: "integer", nullable: false),
+                    PainEventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PatientId = table.Column<string>(type: "text", nullable: false),
                     DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     MinutesDuration = table.Column<int>(type: "integer", nullable: false),
                     PainScore = table.Column<int>(type: "integer", nullable: false)
@@ -109,11 +128,10 @@ namespace IbdTracker.Core.Migrations
                 name: "Prescriptions",
                 columns: table => new
                 {
-                    PrescriptionId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PrescriptionId = table.Column<Guid>(type: "uuid", nullable: false),
                     Dosage = table.Column<string>(type: "text", nullable: false),
-                    PatientId = table.Column<int>(type: "integer", nullable: false),
-                    MedicationId = table.Column<int>(type: "integer", nullable: false)
+                    PatientId = table.Column<string>(type: "text", nullable: false),
+                    MedicationId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,24 +151,24 @@ namespace IbdTracker.Core.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Appointments_DoctorId",
+                table: "Appointments",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_PatientId",
+                table: "Appointments",
+                column: "PatientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BowelMovementEvents_PatientId",
                 table: "BowelMovementEvents",
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Doctors_AuthId",
-                table: "Doctors",
-                column: "AuthId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PainEvents_PatientId",
                 table: "PainEvents",
                 column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Patients_AuthId",
-                table: "Patients",
-                column: "AuthId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Patients_DoctorId",
@@ -170,6 +188,9 @@ namespace IbdTracker.Core.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Appointments");
+
             migrationBuilder.DropTable(
                 name: "BowelMovementEvents");
 

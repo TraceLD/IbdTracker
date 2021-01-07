@@ -16,7 +16,7 @@ namespace IbdTracker.Features.Patients
     {
         public class Query : IRequest<IList<PatientDto>>
         {
-            public string? AuthId { get; set; }
+            public string? DoctorId { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -24,7 +24,7 @@ namespace IbdTracker.Features.Patients
             public QueryValidator()
             {
                 // fails if null, empty or whitespace;
-                RuleFor(q => q.AuthId)
+                RuleFor(q => q.DoctorId)
                     .NotEmpty();
             }
         }

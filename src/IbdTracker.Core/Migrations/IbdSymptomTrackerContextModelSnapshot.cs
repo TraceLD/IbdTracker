@@ -21,13 +21,13 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Appointment", b =>
                 {
-                    b.Property<int>("AppointmentId")
+                    b.Property<Guid>("AppointmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("integer");
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("timestamp without time zone");
@@ -39,8 +39,9 @@ namespace IbdTracker.Core.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("integer");
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("timestamp without time zone");
@@ -56,10 +57,9 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.BowelMovementEvent", b =>
                 {
-                    b.Property<int>("BowelMovementEventId")
+                    b.Property<Guid>("BowelMovementEventId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("ContainedBlood")
                         .HasColumnType("boolean");
@@ -70,8 +70,9 @@ namespace IbdTracker.Core.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("integer");
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("BowelMovementEventId");
 
@@ -82,13 +83,7 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Doctor", b =>
                 {
-                    b.Property<int>("DoctorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<string>("AuthId")
-                        .IsRequired()
+                    b.Property<string>("DoctorId")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -97,17 +92,14 @@ namespace IbdTracker.Core.Migrations
 
                     b.HasKey("DoctorId");
 
-                    b.HasIndex("AuthId");
-
                     b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Medication", b =>
                 {
-                    b.Property<int>("MedicationId")
+                    b.Property<Guid>("MedicationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ActiveIngredient")
                         .IsRequired()
@@ -123,10 +115,9 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.PainEvent", b =>
                 {
-                    b.Property<int>("PainEventId")
+                    b.Property<Guid>("PainEventId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone");
@@ -137,8 +128,9 @@ namespace IbdTracker.Core.Migrations
                     b.Property<int>("PainScore")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("integer");
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("PainEventId");
 
@@ -149,13 +141,7 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Patient", b =>
                 {
-                    b.Property<int>("PatientId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<string>("AuthId")
-                        .IsRequired()
+                    b.Property<string>("PatientId")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DateDiagnosed")
@@ -164,16 +150,14 @@ namespace IbdTracker.Core.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("integer");
+                    b.Property<string>("DoctorId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("PatientId");
-
-                    b.HasIndex("AuthId");
 
                     b.HasIndex("DoctorId");
 
@@ -182,20 +166,20 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Prescription", b =>
                 {
-                    b.Property<int>("PrescriptionId")
+                    b.Property<Guid>("PrescriptionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Dosage")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("MedicationId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("MedicationId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("integer");
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("PrescriptionId");
 

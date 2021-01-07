@@ -14,23 +14,23 @@ namespace IbdTracker.Features.Appointments
     {
         public class Query : IRequest<IList<Result>>
         {
-            public string? AuthId { get; set; }
+            public string? PatientId { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
             {
-                RuleFor(q => q.AuthId)
+                RuleFor(q => q.PatientId)
                     .NotEmpty();
             }
         }
 
         public class Result
         {
-            public int AppointmentId { get; set; }
-            public int PatientId { get; set; }
-            public int DoctorId { get; set; }
+            public Guid AppointmentId { get; set; }
+            public string PatientId { get; set; } = null!;
+            public string DoctorId { get; set; } = null!;
             public string DoctorName { get; set; } = null!;
             public DateTime StartDateTime { get; set; }
             public DateTime EndDateTime { get; set; }
@@ -49,15 +49,9 @@ namespace IbdTracker.Features.Appointments
 
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
-                // get the patient;
-                var patient = await _context.Patients
-                    .AsNoTracking()
-                    .Where(p => p.AuthId.Equals(request.AuthId))
-                    .FirstOrDefaultAsync(cancellationToken);
-                // get the appointments;
                 return await _context.Appointments
                     .AsNoTracking()
-                    .Where(a => a.PatientId == patient.PatientId)
+                    .Where(a => a.PatientId.Equals(request.PatientId))
                     .Include(a => a.Doctor)
                     .Select(a => new Result
                     {

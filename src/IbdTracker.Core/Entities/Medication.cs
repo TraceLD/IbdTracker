@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace IbdTracker.Core.Entities
 {
     public class Medication
     {
-        public int MedicationId { get; set; }
+        public Guid MedicationId { get; set; }
         public string ActiveIngredient { get; set; }
         public string? BrandName { get; set; }
 
