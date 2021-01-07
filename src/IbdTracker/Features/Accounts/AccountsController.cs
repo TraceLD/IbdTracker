@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using IbdTracker.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,6 @@ namespace IbdTracker.Features.Accounts
         {
             _logger = logger;
             _mediator = mediator;
-        }
-
-        [HttpGet("test")]
-        public async Task<ActionResult<string>> Test()
-        {
-            return Ok("testString");
         }
 
         [Authorize]
