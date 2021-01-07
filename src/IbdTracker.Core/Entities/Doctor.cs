@@ -6,9 +6,9 @@ namespace IbdTracker.Core.Entities
     {
         public int DoctorId { get; set; }
         public string AuthId { get; set; } = null!;
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
-        public List<Patient> Patients { get; } = new List<Patient>();
+        public List<Patient> Patients { get; } = new();
+        public List<Appointment> Appointments { get; } = new();
     }
 }

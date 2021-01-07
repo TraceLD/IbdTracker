@@ -7,6 +7,7 @@ namespace IbdTracker.Core.Entities
         public int AppointmentId { get; set; }
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
+        public Doctor? Doctor { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public string Location { get; set; }

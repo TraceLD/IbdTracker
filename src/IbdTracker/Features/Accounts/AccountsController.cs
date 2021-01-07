@@ -18,8 +18,14 @@ namespace IbdTracker.Features.Accounts
             _mediator = mediator;
         }
 
+        [HttpGet("test")]
+        public async Task<ActionResult<string>> Test()
+        {
+            return Ok("testString");
+        }
+
         [Authorize]
-        [HttpGet("/isregistered")]
+        [HttpGet("isregistered")]
         public async Task<ActionResult<IsRegistered.Result>> IsRegistered()
         {
             var res = await _mediator.Send(new IsRegistered.Query {AuthId = User.Identity?.Name});
