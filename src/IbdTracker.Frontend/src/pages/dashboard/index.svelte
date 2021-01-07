@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { user } from "../../stores/authStore";
-
-    console.log($user);
+    import { patient } from "../../stores/authStore";    
 </script>
 
-<h1>Logged in</h1>
+<h2 class="text-lg text-gray-600 font-semibold mb-2">Hello, {$patient.name}</h2>
