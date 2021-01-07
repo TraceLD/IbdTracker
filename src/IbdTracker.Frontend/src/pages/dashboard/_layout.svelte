@@ -14,7 +14,9 @@
         <div />
     {:else if $isAuthenticated}
         <Navigation />
-        <slot />
+        <div class="mx-6">
+            <slot />
+        </div>        
     {:else}
         <Login />
     {/if}
