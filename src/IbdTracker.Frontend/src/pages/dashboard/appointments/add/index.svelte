@@ -1,7 +1,6 @@
 <script lang="ts">
     import GoBack from "../../../../components/buttons/GoBack.svelte";
     import Error from "../../../../components/Error.svelte";
-    import CancelConfirmationModal from "../../../../components/modals/CancelConfirmationModal.svelte";
 
     import { goto } from "@roxi/routify";
     import { patient } from "../../../../stores/authStore";
@@ -9,9 +8,7 @@
         combineInputs,
         isInTheFuture,
     } from "../../../../services/datetime";
-    import { post } from "../../../../services/requests";    
-
-    let showCancelModal: boolean = false;
+    import { post } from "../../../../services/requests";
 
     let dateInput: string;
     let timeInput: string;
@@ -55,14 +52,6 @@
             errorMsg = "Oops. Something is broken on our end. Please try again later.";
         }
     }
-
-    function cancel(): void {
-        showCancelModal = true;
-    }
-
-    function abortCancel(): void {
-        showCancelModal = false;
-    }
 </script>
 
 <style>
@@ -72,13 +61,13 @@
 
     input,
     select {
-        @apply mb-2 mt-0.5 h-8 px-2 outline-none focus:ring-4 border border-transparent focus:border-blue-500 w-full shadow-sm text-gray-800 font-light text-sm rounded-md;
+        @apply mb-3 mt-0.5 h-8 px-2 outline-none focus:ring-4 border border-transparent focus:border-blue-500 w-full shadow-sm text-gray-800 font-light text-sm rounded-md;
     }
 </style>
 
-<div class="flex items-center mb-3">
+<div class="flex items-center mt-4 mb-4">
     <div class="w-4 h-4 mr-2 text-red-500">
-        <GoBack on:click={cancel} />
+        <GoBack on:click={$goto("/dashboard/appointments")} />
     </div>
     <p class="text-lg text-gray-600 font-semibold">Schedule an appointment</p>
 </div>
@@ -86,10 +75,6 @@
 
 {#if errorMsg}
     <Error errorMsg={errorMsg} />
-{/if}
-
-{#if showCancelModal}
-    <CancelConfirmationModal yesHref="/dashboard/appointments" noClick={abortCancel} />
 {/if}
 
 <div class="rounded-lg bg-gray-50 shadow-md">
