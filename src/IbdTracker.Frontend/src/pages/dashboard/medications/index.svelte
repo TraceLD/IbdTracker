@@ -1,0 +1,1 @@
+<h2 class="text-lg text-gray-600 font-semibold mb-1">Medications</h2>
