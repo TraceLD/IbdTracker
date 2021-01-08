@@ -1,4 +1,4 @@
-import type { AppointmentDto } from "./dtos";
+import type { AppointmentDto, PrescriptionDto } from "./dtos";
 
 export interface Appointments {
     doctorName: string,
@@ -21,5 +21,25 @@ export class Appointment {
         this.durationMinutes = this.durationMinutes;
         this.location = dto.location;
         this.notes = dto.notes;
+    }
+}
+
+export class Prescription {
+    prescriptionId: string;
+    patientId: string;
+    dosage: string;
+    endDateTime: Date;
+    medicationId: string;
+    activeIngredient: string;
+    brandName?: string;
+
+    constructor(dto: PrescriptionDto) {
+        this.prescriptionId = dto.prescriptionId;
+        this.patientId = dto.patientId;
+        this.dosage = dto.dosage;
+        this.endDateTime = new Date(dto.endDateTime + "Z");
+        this.medicationId = dto.medicationId;
+        this.activeIngredient = dto.activeIngredient;
+        this.brandName = dto.brandName;
     }
 }

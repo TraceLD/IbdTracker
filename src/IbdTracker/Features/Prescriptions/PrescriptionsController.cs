@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,17 @@ namespace IbdTracker.Features.Prescriptions
 
         [Authorize("read:prescriptions")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Get.Result>>> Get()
+        public async Task<ActionResult<IEnumerable<PrescriptionDto>>> Get()
         {
             var res = await _mediator.Send(new Get.Query {PatientId = User.Identity?.Name});
+            return Ok(res);
+        }
+
+        [Authorize("read:prescriptions")]
+        [HttpGet("active")]
+        public async Task<ActionResult<IEnumerable<PrescriptionDto>>> GetActive()
+        {
+            var res = await _mediator.Send(new GetActive.Query {PatientId = User.Identity?.Name});
             return Ok(res);
         }
     }

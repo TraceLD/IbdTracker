@@ -65,7 +65,8 @@ namespace IbdTracker
                     "read:patient",
                     "read:assignedpatients",
                     "read:appointments",
-                    "write:appointments"
+                    "write:appointments",
+                    "read:prescriptions"
                 };
                 
                 foreach (var policy in policies)
