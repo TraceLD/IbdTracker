@@ -61,5 +61,5 @@
         {/each}
     </div>
 {:catch}
-    <Error />
+    <Error errorMsg={"API error."} />
 {/await}

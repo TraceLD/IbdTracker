@@ -16,3 +16,13 @@ export interface AppointmentDto {
     location: string,
     notes?: string
 }
+
+export interface PrescriptionDto {
+    prescriptionId: string,
+    patientId: string,
+    dosage: string,
+    endDateTime: string,
+    medicationId: string,
+    activeIngredient: string,
+    brandName?: string
+}
