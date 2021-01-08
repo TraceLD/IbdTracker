@@ -9,7 +9,7 @@
 
 <button
     on:click={$goto(popularItem.href)}
-    class="flex items-center min-w-full rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-indigo-600 focus:ring-opacity-50">
+    class="flex items-center min-w-full rounded-lg px-4 py-2 cursor-pointer focus:outline-none focus:ring-4 focus:ring-indigo-600 focus:ring-opacity-50">
     <div class="h-4 w-4 mr-2 text-indigo-600">
         <GoTo />
     </div>
