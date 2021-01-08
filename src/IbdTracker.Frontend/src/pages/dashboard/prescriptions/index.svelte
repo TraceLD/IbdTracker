@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Error from "../../../components/Error.svelte";
+    import Error from "../../../components/notifications/Error.svelte";
     import Loading from "../../../components/Loading.svelte";
     import PrescriptionCard from "../../../components/cards/PrescriptionCard.svelte";
 
