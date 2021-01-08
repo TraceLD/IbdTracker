@@ -46,7 +46,6 @@
     </div>
     <div>
         <h2 class="text-2xl text-gray-600 font-semibold mb-1">Upcoming appointments</h2>
-        <p class="text-sm font-light">Click on a card to see more details about a given appointment</p>
         <div class="mt-4" />
         {#each res.upcoming as _appointment}
             <div class="mb-6">

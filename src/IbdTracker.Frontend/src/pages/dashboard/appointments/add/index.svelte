@@ -66,10 +66,10 @@
 </style>
 
 <div class="flex items-center mt-4 mb-4">
-    <div class="w-4 h-4 mr-2">
+    <div class="w-5 h-5 mr-2">
         <GoBack href={"/dashboard/appointments"} />
     </div>
-    <p class="text-lg text-gray-600 font-semibold">Schedule an appointment</p>
+    <p class="text-2xl text-gray-600 font-semibold">Schedule an appointment</p>
 </div>
 
 
