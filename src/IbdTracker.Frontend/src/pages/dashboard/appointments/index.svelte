@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Error from "../../../components/Error.svelte";
+    import Error from "../../../components/notifications/Error.svelte";
     import Loading from "../../../components/Loading.svelte";
     import AppointmentCard from "../../../components/cards/AppointmentCard.svelte";
     import Add from "../../../components/buttons/Add.svelte";
@@ -45,7 +45,7 @@
         <Add on:click={$goto("/dashboard/appointments/add")} />
     </div>
     <div>
-        <h2 class="text-lg text-gray-600 font-semibold mb-1">Upcoming appointments</h2>
+        <h2 class="text-2xl text-gray-600 font-semibold mb-1">Upcoming appointments</h2>
         <p class="text-sm font-light">Click on a card to see more details about a given appointment</p>
         <div class="mt-4" />
         {#each res.upcoming as _appointment}

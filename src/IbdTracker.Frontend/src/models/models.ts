@@ -1,13 +1,5 @@
 import type { AppointmentDto, PrescriptionDto } from "./dtos";
 
-export interface Appointments {
-    doctorName: string,
-    startDateTime: Date,
-    endDateTime: Date,
-    location: string,
-    notes?: string
-}
-
 export class Appointment {
     doctorName: string;
     startDateTime: Date;
@@ -42,4 +34,9 @@ export class Prescription {
         this.activeIngredient = dto.activeIngredient;
         this.brandName = dto.brandName;
     }
+}
+
+export interface PopularItem {
+    href: string,
+    description: string
 }

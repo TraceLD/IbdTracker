@@ -1,6 +1,6 @@
 <script lang="ts">
     import GoBack from "../../../../components/buttons/GoBack.svelte";
-    import Error from "../../../../components/Error.svelte";
+    import Error from "../../../../components/notifications/Error.svelte";
 
     import { goto } from "@roxi/routify";
     import { patient } from "../../../../stores/authStore";
@@ -66,8 +66,8 @@
 </style>
 
 <div class="flex items-center mt-4 mb-4">
-    <div class="w-4 h-4 mr-2 text-red-500">
-        <GoBack on:click={$goto("/dashboard/appointments")} />
+    <div class="w-4 h-4 mr-2">
+        <GoBack href={"/dashboard/appointments"} />
     </div>
     <p class="text-lg text-gray-600 font-semibold">Schedule an appointment</p>
 </div>
