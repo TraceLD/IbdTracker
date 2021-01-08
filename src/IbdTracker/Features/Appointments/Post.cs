@@ -20,7 +20,7 @@ namespace IbdTracker.Features.Appointments
             public string? Notes { get; set; }
         }
 
-        public class CommandValidator : AbstractValidator<AppointmentDto>
+        public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
@@ -39,16 +39,6 @@ namespace IbdTracker.Features.Appointments
             }
         }
 
-        public class Result 
-        {
-            public Guid AppointmentId { get; set; }
-            public string PatientId { get; set; } = null!;
-            public string DoctorId { get; set; } = null!;
-            public DateTime StartDateTime { get; set; }
-            public int DurationMinutes { get; set; }
-            public string? Notes { get; set; }
-        }
-        
         public class Handler : IRequestHandler<Command, AppointmentDto>
         {
             private readonly IbdSymptomTrackerContext _context;

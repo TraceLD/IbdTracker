@@ -16,3 +16,9 @@ export function isInTheFuture(date: Date): boolean {
     
     return date > dateNow;
 }
+
+export function isInThePast(date: Date): boolean {
+    const dateNow: Date = new Date();
+
+    return date < dateNow;
+}
