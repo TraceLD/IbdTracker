@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,23 +10,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Appointments
 {
-    public class Get
+    public class GetById
     {
-        public class Query : IRequest<IList<AppointmentDto>>
+        public class Query : IRequest<AppointmentDto?>
         {
-            public string? PatientId { get; set; }
+            public Guid AppointmentId { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
             {
-                RuleFor(q => q.PatientId)
-                    .NotEmpty();
+                RuleFor(x => x.AppointmentId)
+                    .NotNull();
             }
         }
-
-        public class Handler : IRequestHandler<Query, IList<AppointmentDto>>
+        
+        public class Handler : IRequestHandler<Query, AppointmentDto?>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -36,14 +35,13 @@ namespace IbdTracker.Features.Appointments
                 _context = context;
             }
 
-            public async Task<IList<AppointmentDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<AppointmentDto?> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Appointments
+                var res = await _context.Appointments
                     .AsNoTracking()
-                    .Where(a => a.PatientId.Equals(request.PatientId))
-                    .Include(a => a.Doctor)
-                    .Select(a => a.ToDto())
-                    .ToListAsync(cancellationToken);
+                    .Where(a => a.AppointmentId == request.AppointmentId)
+                    .FirstOrDefaultAsync(cancellationToken);
+                return res.ToDto();
             }
         }
     }

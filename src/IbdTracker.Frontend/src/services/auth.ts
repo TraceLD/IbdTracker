@@ -1,5 +1,5 @@
 import type { Auth0ClientOptions, Auth0Client, User } from "@auth0/auth0-spa-js";
-import type { Patient } from "../models/responses";
+import type { PatientDto } from "../models/dtos";
 import createAuth0Client from "@auth0/auth0-spa-js";
 import { isLoading, isAuthenticated, user, patient } from "../stores/authStore";
 import { get } from "./requests";
@@ -31,7 +31,7 @@ async function handleIsAuthenticated(): Promise<void> {
         const _user: User = await auth0.getUser();
         user.set(_user);
 
-        const _patient: Patient = await get<Patient>("patients");
+        const _patient: PatientDto = await get<PatientDto>("patients");
         patient.set(_patient);
 }
 

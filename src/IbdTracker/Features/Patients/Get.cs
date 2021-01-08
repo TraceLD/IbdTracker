@@ -45,7 +45,8 @@ namespace IbdTracker.Features.Patients
                         PatientId = p.PatientId,
                         Name = p.Name,
                         DateOfBirth = p.DateOfBirth,
-                        DateDiagnosed = p.DateDiagnosed
+                        DateDiagnosed = p.DateDiagnosed,
+                        DoctorId = p.DoctorId
                     })
                     .FirstOrDefaultAsync(cancellationToken);
             }

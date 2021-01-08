@@ -11,8 +11,12 @@
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
+
+  body {
+    @apply font-body bg-gray-100 text-gray-800;
+  }
 </style>
 
-<div class="flex-col min-h-screen font-body bg-gray-100">
+<div>
   <Router {routes} />
 </div>

@@ -60,9 +60,20 @@ namespace IbdTracker
                 });
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("read:patient",
-                    builder => builder.Requirements.Add(new HasPermissionRequirement("read:patient",
-                        Configuration["Auth0:Domain"])));
+                var policies = new List<string>
+                {
+                    "read:patient",
+                    "read:assignedpatients",
+                    "read:appointments",
+                    "write:appointments"
+                };
+                
+                foreach (var policy in policies)
+                {
+                    options.AddPolicy(policy,
+                        builder => builder.Requirements.Add(
+                            new HasPermissionRequirement(policy, Configuration["Auth0:Domain"])));
+                }
             });
             services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
 

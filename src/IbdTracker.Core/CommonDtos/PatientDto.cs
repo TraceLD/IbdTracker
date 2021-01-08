@@ -8,5 +8,6 @@ namespace IbdTracker.Core.CommonDtos
         public string Name { get; set; } = null!;
         public DateTime DateOfBirth { get; set; }
         public DateTime DateDiagnosed { get; set; }
+        public string? DoctorId { get; set; }
     }
 }

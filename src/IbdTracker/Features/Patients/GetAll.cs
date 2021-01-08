@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using IbdTracker.Core;
-using IbdTracker.Core.Entities;
+using IbdTracker.Core.CommonDtos;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients
 {
     public class GetAll
     {
-        public class Query : IRequest<IList<Patient>>
+        public class Query : IRequest<IList<PatientDto>>
         {
         }
         
-        public class Handler : IRequestHandler<Query, IList<Patient>>
+        public class Handler : IRequestHandler<Query, IList<PatientDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -23,9 +23,9 @@ namespace IbdTracker.Features.Patients
                 _context = context;
             }
 
-            public async Task<IList<Patient>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IList<PatientDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Patients.ToListAsync(cancellationToken);
+                throw new NotImplementedException();
             }
         }
     }

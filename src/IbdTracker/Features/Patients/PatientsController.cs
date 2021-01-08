@@ -34,7 +34,7 @@ namespace IbdTracker.Features.Patients
         // gets patients assigned to currently logged in doctor;
         [Authorize("read:assignedpatients")]
         [HttpGet("assigned")]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetAssigned()
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAssigned()
         {
             var res = await _mediator.Send(new GetAssigned.Query{DoctorId = User.Identity?.Name});
             return Ok(res);
@@ -43,7 +43,7 @@ namespace IbdTracker.Features.Patients
         // gets all patients
         [Authorize("read:allpatients")]
         [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetAll()
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll()
         {
             var res = await _mediator.Send(new GetAll.Query());
             return Ok(res);
