@@ -1,13 +1,15 @@
-﻿namespace IbdTracker.Core.Entities
+﻿using System;
+
+namespace IbdTracker.Core.Entities
 {
     public class Prescription
     {
-        public int PrescriptionId { get; set; }
+        public Guid PrescriptionId { get; set; }
         public string Dosage { get; set; } = null!;
+
+        public string PatientId { get; set; } = null!;
         
-        public int PatientId { get; set; }
-        
-        public int MedicationId { get; set; }
+        public Guid MedicationId { get; set; }
         public Medication Medication { get; set; } = null!;
     }
 }

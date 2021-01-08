@@ -49,14 +49,14 @@ namespace IbdTracker.Features.Accounts
                 // check if exists as a patient;
                 var patientRes = await _context.Patients
                     .AsNoTracking()
-                    .Where(p => p.AuthId.Equals(request.AuthId))
+                    .Where(p => p.PatientId.Equals(request.AuthId))
                     .FirstOrDefaultAsync(cancellationToken);
                 if (patientRes is not null) return new Result(true);
                 
                 // if not, check if exists as a doctor;
                 var doctorRes = await _context.Doctors
                     .AsNoTracking()
-                    .Where(d => d.AuthId.Equals(request.AuthId))
+                    .Where(d => d.DoctorId.Equals(request.AuthId))
                     .FirstOrDefaultAsync(cancellationToken);
                 return doctorRes is not null ? new Result(true) : new Result(false);
             }

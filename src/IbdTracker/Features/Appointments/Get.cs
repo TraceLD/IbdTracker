@@ -6,30 +6,28 @@ using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
-using IbdTracker.Core.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Patients
+namespace IbdTracker.Features.Appointments
 {
-    public class GetAssigned
+    public class Get
     {
-        public class Query : IRequest<IList<PatientDto>>
+        public class Query : IRequest<IList<AppointmentDto>>
         {
-            public string? DoctorId { get; set; }
+            public string? PatientId { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
             {
-                // fails if null, empty or whitespace;
-                RuleFor(q => q.DoctorId)
+                RuleFor(q => q.PatientId)
                     .NotEmpty();
             }
         }
 
-        public class Handler : IRequestHandler<Query, IList<PatientDto>>
+        public class Handler : IRequestHandler<Query, IList<AppointmentDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -38,9 +36,14 @@ namespace IbdTracker.Features.Patients
                 _context = context;
             }
 
-            public async Task<IList<PatientDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IList<AppointmentDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                throw new NotImplementedException();
+                return await _context.Appointments
+                    .AsNoTracking()
+                    .Where(a => a.PatientId.Equals(request.PatientId))
+                    .Include(a => a.Doctor)
+                    .Select(a => a.ToDto())
+                    .ToListAsync(cancellationToken);
             }
         }
     }

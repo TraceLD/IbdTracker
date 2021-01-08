@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using IbdTracker.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace IbdTracker.Features.Accounts
         }
 
         [Authorize]
-        [HttpGet("/isregistered")]
+        [HttpGet("isregistered")]
         public async Task<ActionResult<IsRegistered.Result>> IsRegistered()
         {
             var res = await _mediator.Send(new IsRegistered.Query {AuthId = User.Identity?.Name});

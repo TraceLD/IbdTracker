@@ -6,7 +6,7 @@
     handle();
     $ready();
 
-    async function handle() {
+    async function handle(): Promise<void> {
         if ($isAuthenticated) {
             $redirect("/dashboard");
         } else {

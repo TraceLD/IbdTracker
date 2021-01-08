@@ -1,6 +1,8 @@
 import type { Auth0ClientOptions, Auth0Client, User } from "@auth0/auth0-spa-js";
-import { isLoading, isAuthenticated, user } from "../stores/authStore";
+import type { PatientDto } from "../models/dtos";
 import createAuth0Client from "@auth0/auth0-spa-js";
+import { isLoading, isAuthenticated, user, patient } from "../stores/authStore";
+import { get } from "./requests";
 
 const authConfig: Auth0ClientOptions = {
     domain: "traceld.eu.auth0.com",
@@ -19,11 +21,22 @@ async function initAuth(): Promise<void> {
     isAuthenticated.set(_isAuthenticated);
     
     if (_isAuthenticated) {
-        const _user: User = await auth0.getUser();
-        user.set(_user);
+        await handleIsAuthenticated();
     }
 
     isLoading.set(false);
+}
+
+async function handleIsAuthenticated(): Promise<void> {
+        const _user: User = await auth0.getUser();
+        user.set(_user);
+
+        const _patient: PatientDto = await get<PatientDto>("patients");
+        patient.set(_patient);
+}
+
+async function getToken(): Promise<any> {
+    return await auth0.getTokenSilently();
 }
 
 async function login(): Promise<void> {
@@ -40,8 +53,7 @@ async function callback(): Promise<void> {
     isAuthenticated.set(_isAuthenticated);
     
     if (_isAuthenticated) {
-        const _user: User = await auth0.getUser();
-        user.set(_user);
+        await handleIsAuthenticated();
     }
 }
 
@@ -51,4 +63,4 @@ function logout(): void {
     });
 }
 
-export { initAuth, login, logout, callback };
+export { initAuth, login, logout, callback, getToken };
