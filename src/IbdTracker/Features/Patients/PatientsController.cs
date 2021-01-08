@@ -21,12 +21,21 @@ namespace IbdTracker.Features.Patients
             _mediator = mediator;
         }
         
+        // gets all patients
+        [Authorize("read:allpatients")]
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll()
+        {
+            var res = await _mediator.Send(new Get.Query());
+            return Ok(res);
+        }
+        
         // gets patient object corresponding to currently logged in user;
         [Authorize("read:patient")]
         [HttpGet]
         public async Task<ActionResult<PatientDto>> Get()
         {
-            var res = await _mediator.Send(new Get.Query {PatientId = User.Identity?.Name});
+            var res = await _mediator.Send(new GetCurrent.Query {PatientId = User.Identity?.Name});
             if (res is null) return NotFound();
             return Ok(res);
         }
@@ -37,15 +46,6 @@ namespace IbdTracker.Features.Patients
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetAssigned()
         {
             var res = await _mediator.Send(new GetAssigned.Query{DoctorId = User.Identity?.Name});
-            return Ok(res);
-        }
-        
-        // gets all patients
-        [Authorize("read:allpatients")]
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll()
-        {
-            var res = await _mediator.Send(new GetAll.Query());
             return Ok(res);
         }
     }
