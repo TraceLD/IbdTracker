@@ -1,4 +1,5 @@
 <script lang="ts">
+    import GoBack from "../../../../components/buttons/GoBack.svelte";
     import Error from "../../../../components/Error.svelte";
     import CancelConfirmationModal from "../../../../components/modals/CancelConfirmationModal.svelte";
 
@@ -75,9 +76,13 @@
     }
 </style>
 
-<h2 class="text-lg text-gray-600 font-semibold mb-2">
-    Schedule an appointment
-</h2>
+<div class="flex items-center mb-3">
+    <div class="w-4 h-4 mr-2 text-red-500">
+        <GoBack on:click={cancel} />
+    </div>
+    <p class="text-lg text-gray-600 font-semibold">Schedule an appointment</p>
+</div>
+
 
 {#if errorMsg}
     <Error errorMsg={errorMsg} />
@@ -87,8 +92,8 @@
     <CancelConfirmationModal yesHref="/dashboard/appointments" noClick={abortCancel} />
 {/if}
 
-<div class="rounded-lg bg-gray-50 px-6 py-4 shadow-md">
-    <div>
+<div class="rounded-lg bg-gray-50 shadow-md">
+    <div class="px-6 py-4">
         <label for="date">Date</label>
         <input bind:value={dateInput} type="date" name="date" id="date" />
 
@@ -100,19 +105,13 @@
             <option value="15">15 minutes</option>
             <option value="30">30 minutes</option>
             <option value="60">60 minutes</option>
-        </select>
-
-        <div id="buttons" class="flex mt-3 justify-center">
-            <button
-                on:click={submit}
-                class="bg-green-500 py-1 px-4 mr-2 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50">
-                Schedule
-            </button>
-            <button
-                on:click={cancel}
-                class="bg-red-500 py-1 px-6 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50">
-                Cancel
-            </button>
-        </div>
+        </select>        
+    </div>
+    <div class="flex mt-2 bg-gray-100 py-4 px-6 rounded-b-lg">
+        <button
+            on:click={submit}
+            class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50">
+            Schedule
+        </button>
     </div>
 </div>
