@@ -23,7 +23,7 @@ namespace IbdTracker.Features.Appointments
         // gets currently logged in patients' appointments;
         [Authorize("read:appointments")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointments()
+        public async Task<ActionResult<IEnumerable<AppointmentDto>>> Get()
         {
             var res = await _mediator.Send(new Get.Query {PatientId = User.Identity?.Name});
             return Ok(res);
