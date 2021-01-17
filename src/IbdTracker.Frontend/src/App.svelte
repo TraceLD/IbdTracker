@@ -17,7 +17,7 @@
   }
 
   h1 {
-    @apply text-3xl text-gray-600 font-semibold mb-4 mt-6;
+    @apply text-3xl text-gray-600 font-semibold mb-4;
   }
 
   h2 {

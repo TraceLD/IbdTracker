@@ -13,9 +13,11 @@
     {:else if $isLoading}
         <div />
     {:else if $isAuthenticated}
-        <Navigation />
-        <div class="mx-6">
-            <slot />
+        <div class="lg:flex w-full">
+            <Navigation />
+            <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-full">
+                <slot />
+            </div>
         </div>        
     {:else}
         <Login />
