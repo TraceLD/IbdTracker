@@ -1,7 +1,7 @@
 <script lang="ts">
     import LogOut from "../buttons/LogOut.svelte";
 
-    import { isActive, url } from "@roxi/routify";
+    import { isActive } from "@roxi/routify";
 
     interface MenuCategory {
         name: string;

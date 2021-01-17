@@ -1,24 +1,22 @@
 <script lang="ts">
+    import MobileMenu from "./MobileMenu.svelte";
     import MenuContent from "./MenuContent.svelte";
 
-    import { fly } from "svelte/transition";
+    import { menuOpened } from "../../stores/menuStore";
 
-    export let menuOpened: boolean;
+    function openMenu(): void {
+        $menuOpened = true;
+    }
+
+    function closeMenu(): void {
+        $menuOpened = false;
+    }
 </script>
 
-{#if menuOpened}
-    <div
-        id="menu-overlay"
-        class="absolute top-0 z-10 min-h-full w-full bg-black bg-opacity-20"
-        transition:fly={{ x: 20 }}
-        on:click
-    />
+<div class="lg:hidden">
+    <MobileMenu on:click={closeMenu} />
+</div>
 
-    <div
-        id="menu"
-        class="absolute top-0 z-20"
-        transition:fly={{ x: -200 }}
-    >
-        <MenuContent />
-    </div>    
-{/if}
+<div class="hidden lg:flex">
+    <MenuContent />
+</div>
