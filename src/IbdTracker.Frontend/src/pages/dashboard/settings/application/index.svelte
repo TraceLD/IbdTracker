@@ -2,7 +2,7 @@
     let shareData: string;
 </script>
 
-<h2 class="text-2xl text-gray-600 font-semibold mt-4 mb-4">
+<h2>
     Application settings
 </h2>
 

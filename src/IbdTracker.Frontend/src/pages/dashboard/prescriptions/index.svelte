@@ -24,7 +24,7 @@
 {#await loadPrescriptionsPromise}
     <Loading />
 {:then res}
-    <h2 class="text-2xl text-gray-600 font-semibold mb-1">Active prescriptions</h2>
+    <h2>Active prescriptions</h2>
     <div class="mt-4" />
 
     {#each res as prescription}
