@@ -1,5 +1,5 @@
 <script lang="ts">
-    import GoBack from "../../../../components/buttons/GoBack.svelte";
+    import SubpageHeader from "../../../../components/navigation/SubpageHeader.svelte";
     import Error from "../../../../components/notifications/Error.svelte";
 
     import { goto } from "@roxi/routify";
@@ -62,12 +62,10 @@
     }
 </style>
 
-<div class="flex items-center mt-4 mb-4">
-    <div class="w-5 h-5 mr-2">
-        <GoBack href={"/dashboard/bms"} />
-    </div>
-    <p class="text-2xl text-gray-600 font-semibold">Report a BM</p>
-</div>
+<SubpageHeader
+    buttonHref={"/dashboard/bms"}
+    text="Report a BM"
+/>
 
 {#if errorMsg}
     <Error {errorMsg} />
