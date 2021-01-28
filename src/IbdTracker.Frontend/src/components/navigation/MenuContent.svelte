@@ -71,7 +71,7 @@
                     {#each menuCategories as category}
                         <li class="mb-6">
                             <h3
-                                class="ml-3 mb-0.5 font-bold text-sm text-gray-400 uppercase tracking-tight"
+                                class="ml-3 mb-0.5 font-semibold text-sm text-gray-400 uppercase tracking-wide"
                             >
                                 {category.name}
                             </h3>
