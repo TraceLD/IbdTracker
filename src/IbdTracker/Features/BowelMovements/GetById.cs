@@ -12,7 +12,7 @@ namespace IbdTracker.Features.BowelMovements
 {
     public class GetById
     {
-        public class Query : IRequest<BowelMovementDto?>
+        public class Query : IRequest<BowelMovementEventDto?>
         {
             public Guid BowelMovementId { get; set; }
         }
@@ -26,7 +26,7 @@ namespace IbdTracker.Features.BowelMovements
             }
         }
 
-        public class Handler : IRequestHandler<Query, BowelMovementDto?>
+        public class Handler : IRequestHandler<Query, BowelMovementEventDto?>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -35,12 +35,12 @@ namespace IbdTracker.Features.BowelMovements
                 _context = context;
             }
 
-            public async Task<BowelMovementDto?> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<BowelMovementEventDto?> Handle(Query request, CancellationToken cancellationToken)
             {
                 var res = await _context.BowelMovementEvents
                     .AsNoTracking()
                     .Where(b => b.BowelMovementEventId == request.BowelMovementId)
-                    .Select(b => new BowelMovementDto
+                    .Select(b => new BowelMovementEventDto
                     {
                         BowelMovementEventId = b.BowelMovementEventId,
                         PatientId = b.PatientId,

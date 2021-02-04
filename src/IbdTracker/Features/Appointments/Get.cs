@@ -38,6 +38,12 @@ namespace IbdTracker.Features.Appointments
 
             public async Task<IList<AppointmentDto>> Handle(Query request, CancellationToken cancellationToken)
             {
+                var a = _context.Appointments
+                    .AsNoTracking()
+                    .GroupBy(ap => ap.StartDateTime.DayOfYear)
+                    .Where(grouping => grouping.Key >= )
+                    .ToListAsync(cancellationToken);
+                
                 return await _context.Appointments
                     .AsNoTracking()
                     .Where(a => a.PatientId.Equals(request.PatientId))

@@ -11,7 +11,7 @@ namespace IbdTracker.Features.BowelMovements
 {
     public class Post
     {
-        public class Command : IRequest<BowelMovementDto>
+        public class Command : IRequest<BowelMovementEventDto>
         {
             public string PatientId { get; set; } = null!;
             public DateTime DateTime { get; set; }
@@ -37,7 +37,7 @@ namespace IbdTracker.Features.BowelMovements
             }
         }
         
-        public class Handler : IRequestHandler<Command, BowelMovementDto>
+        public class Handler : IRequestHandler<Command, BowelMovementEventDto>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -46,7 +46,7 @@ namespace IbdTracker.Features.BowelMovements
                 _context = context;
             }
 
-            public async Task<BowelMovementDto> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<BowelMovementEventDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 var bm = new BowelMovementEvent
                 {
@@ -59,7 +59,7 @@ namespace IbdTracker.Features.BowelMovements
                 await _context.BowelMovementEvents.AddAsync(bm, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return new BowelMovementDto
+                return new BowelMovementEventDto
                 {
                     BowelMovementEventId = bm.BowelMovementEventId,
                     PatientId = bm.PatientId,

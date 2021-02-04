@@ -23,6 +23,10 @@
   h2 {
     @apply text-2xl text-gray-600 font-semibold mb-4;
   }
+
+  h3 {
+    @apply text-xl text-gray-600 font-semibold mb-4;
+  }
 </style>
 
 <div>

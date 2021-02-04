@@ -21,7 +21,7 @@ namespace IbdTracker.Features.BowelMovements
 
         [Authorize("read:bms")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<BowelMovementDto>> GetById([FromRoute] GetById.Query query)
+        public async Task<ActionResult<BowelMovementEventDto>> GetById([FromRoute] GetById.Query query)
         {
             var res = await _mediator.Send(query);
             if (res is null)
@@ -31,7 +31,7 @@ namespace IbdTracker.Features.BowelMovements
         
         [Authorize("write:bms")]
         [HttpPost]
-        public async Task<ActionResult<AppointmentDto>> Post([FromBody] Post.Command command)
+        public async Task<ActionResult<BowelMovementEventDto>> Post([FromBody] Post.Command command)
         {
             var res = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id = res.BowelMovementEventId }, res);
