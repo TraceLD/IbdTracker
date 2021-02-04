@@ -63,10 +63,13 @@ namespace IbdTracker
                 var policies = new List<string>
                 {
                     "read:patient",
+                    "read:allpatients",
                     "read:assignedpatients",
                     "read:appointments",
                     "write:appointments",
-                    "read:prescriptions"
+                    "read:prescriptions",
+                    "read:bms",
+                    "write:bms"
                 };
                 
                 foreach (var policy in policies)
