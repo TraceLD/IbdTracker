@@ -27,18 +27,6 @@
         // @ts-ignore
         Plotly.purge(plotDiv);
     });
-
-    let loadRecentBmsPromise: any = loadRecentBms();
-
-    async function loadRecentBms(): Promise<any> {
-        return await get<Array<any>>("patients/@me/bms/recent");
-    }
 </script>
 
 <div bind:this={plotDiv} />
-
-{#await loadRecentBmsPromise}
-    <Loading />
-{:then res} 
-    {JSON.stringify(res)}
-{/await}

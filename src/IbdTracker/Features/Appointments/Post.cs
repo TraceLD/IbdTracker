@@ -31,6 +31,7 @@ namespace IbdTracker.Features.Appointments
                     .NotEmpty();
 
                 RuleFor(c => c.StartDateTime)
+                    .NotEmpty()
                     .GreaterThan(DateTime.Now);
 
                 RuleFor(c => c.DurationMinutes)

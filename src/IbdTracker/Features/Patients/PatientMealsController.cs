@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
+using IbdTracker.Features.Patients.Meals;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,13 +31,11 @@ namespace IbdTracker.Features.Patients
         
         /// <summary>
         /// Obtains meals for the currently logged in patient.
-        ///
-        /// Requires "read:meals" policy.
         /// </summary>
         /// <returns>Meals for the currently logged in patient.</returns>
         [Authorize("read:meals")]
         [HttpGet("@me/meals")]
-        public async Task<ActionResult<IEnumerable<MealDto>>> Get()
+        public async Task<ActionResult<IEnumerable<MealDto>>> GetForMe()
         {
             var res = await _mediator.Send(new Meals.Get.Query {PatientId = User.Identity?.Name});
             return Ok(res);
@@ -44,17 +43,48 @@ namespace IbdTracker.Features.Patients
         
         /// <summary>
         /// Obtains meals by patient ID.
-        ///
-        /// Requires "read:allpatients" policy.
         /// </summary>
         /// <param name="query">Patient ID obtained from the request route.</param>
         /// <returns>Meals for the given patient.</returns>
         [Authorize("read:allpatients")]
         [HttpGet("{patientId}/meals")]
-        public async Task<ActionResult<IEnumerable<MealDto>>> GetRecent([FromRoute] Meals.Get.Query query)
+        public async Task<ActionResult<IEnumerable<MealDto>>> Get([FromRoute] Meals.Get.Query query)
         {
             var res = await _mediator.Send(query);
             return Ok(res);
+        }
+        
+        /// <summary>
+        /// Obtains a meal belonging to the currently logged in patient by ID.
+        /// </summary>
+        /// <param name="query">The meal ID obtained from the route URL.</param>
+        /// <returns></returns>
+        [Authorize("read:meals")]
+        [HttpGet("@me/meals/{id}")]
+        public async Task<ActionResult<MealDto>> GetForMeById([FromRoute] GetById.Query query)
+        {
+            var res = await _mediator.Send(query);
+
+            if (!res.AuthSucceeded) return Forbid();
+            if (res.Payload is null)
+            {
+                return NotFound();
+            }
+                
+            return Ok(res);
+        }
+        
+        /// <summary>
+        /// Creates a new meal for the currently logged in patient.
+        /// </summary>
+        /// <param name="command">Meal to be created.</param>
+        /// <returns>CreatedAtAction representing creation of the meal.</returns>
+        [Authorize("write:meals")]
+        [HttpPost("@me/meals")]
+        public async Task<ActionResult<Post.Result>> PostForMe([FromBody] Post.Command command)
+        {
+            var res = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetForMeById), new {id = res.MealId}, res);
         }
     }
 }
