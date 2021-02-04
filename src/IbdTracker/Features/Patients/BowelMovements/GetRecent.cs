@@ -41,6 +41,7 @@ namespace IbdTracker.Features.Patients.BowelMovements
                 var sevenDaysAgo = DateTime.UtcNow.AddDays(-7);
                 
                 return await _context.BowelMovementEvents
+                    .AsNoTracking()
                     .Where(bm => bm.PatientId.Equals(request.PatientId) && bm.DateTime >= sevenDaysAgo)
                     .Select(bm => new BowelMovementEventDto
                     {

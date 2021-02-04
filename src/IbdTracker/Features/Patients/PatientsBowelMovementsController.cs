@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 namespace IbdTracker.Features.Patients
 {
     /// <summary>
-    /// Controller for obtaining BM's belonging to a patient.
+    /// Controller for BM's belonging to a patient.
     /// </summary>
-    [Route("/api/patients")]
+    [Route("api/patients")]
     public class PatientsBowelMovementsController : ControllerBase
     {
         private readonly ILogger<PatientsBowelMovementsController> _logger;
@@ -52,7 +52,7 @@ namespace IbdTracker.Features.Patients
         /// <param name="query">Patient ID obtained from the request route.</param>
         /// <returns>Bowel movement events for the given patient.</returns>
         [Authorize("read:allpatients")]
-        [HttpGet("{patientId}/recent")]
+        [HttpGet("{patientId}/bms/recent")]
         public async Task<ActionResult<IEnumerable<BowelMovementEventDto>>> GetRecent([FromRoute] GetRecent.Query query)
         {
             var res = await _mediator.Send(query);

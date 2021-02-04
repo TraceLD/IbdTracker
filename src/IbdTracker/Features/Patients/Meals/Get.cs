@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,15 +8,15 @@ using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Appointments
+namespace IbdTracker.Features.Patients.Meals
 {
     public class Get
     {
-        public class Query : IRequest<IList<AppointmentDto>>
+        public class Query : IRequest<IList<MealDto>>
         {
             public string? PatientId { get; set; }
         }
-
+        
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
@@ -26,8 +25,8 @@ namespace IbdTracker.Features.Appointments
                     .NotEmpty();
             }
         }
-
-        public class Handler : IRequestHandler<Query, IList<AppointmentDto>>
+        
+        public class Handler : IRequestHandler<Query, IList<MealDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -36,13 +35,20 @@ namespace IbdTracker.Features.Appointments
                 _context = context;
             }
 
-            public async Task<IList<AppointmentDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IList<MealDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Appointments
+                return await _context.Meals
                     .AsNoTracking()
-                    .Where(a => a.PatientId.Equals(request.PatientId))
-                    .Include(a => a.Doctor)
-                    .Select(a => a.ToDto())
+                    .Where(m => m.PatientId.Equals(request.PatientId))
+                    .Include(m => m.FoodItem)
+                    .Select(m => new MealDto
+                    {
+                        MealId = m.MealId,
+                        PatientId = m.PatientId,
+                        DateTime = m.DateTime,
+                        FoodItemId = m.FoodItemId,
+                        FoodItemName = m.FoodItem.Name
+                    })
                     .ToListAsync(cancellationToken);
             }
         }

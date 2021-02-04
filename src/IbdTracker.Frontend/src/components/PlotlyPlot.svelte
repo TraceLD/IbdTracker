@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
-    import { get } from "../services/requests";
     import Loading from "./Loading.svelte";
+
+    import { onDestroy, onMount } from "svelte";
+    import { get } from "../services/requests";    
 
     // has to be any due to no plotly type defs because of no working npm package;
     export let data: Array<any>;
