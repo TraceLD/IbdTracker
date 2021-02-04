@@ -9,6 +9,7 @@ namespace IbdTracker.Core
         public DbSet<Patient> Patients { get; set; } = null!;
         public DbSet<Medication> Medications { get; set; } = null!;
         public DbSet<Prescription> Prescriptions { get; set; } = null!;
+        public DbSet<SideEffectEvent> SideEffectEvents { get; set; } = null!;
         public DbSet<PainEvent> PainEvents { get; set; } = null!;
         public DbSet<BowelMovementEvent> BowelMovementEvents { get; set; } = null!;
         public DbSet<Appointment> Appointments { get; set; } = null!;
