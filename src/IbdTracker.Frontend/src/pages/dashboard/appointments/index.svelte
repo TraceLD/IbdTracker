@@ -45,14 +45,13 @@
         <Add on:click={$goto("/dashboard/appointments/add")} />
     </div>
     <div>
-        <h2 class="text-2xl text-gray-600 font-semibold mb-1">Upcoming appointments</h2>
-        <div class="mt-4" />
+        <h2>Upcoming appointments</h2>        
         {#each res.upcoming as _appointment}
             <div class="mb-6">
                 <AppointmentCard appointment={_appointment} />
             </div>
         {/each}
-        <h2 class="text-lg text-gray-600 font-semibold mb-2">Past appointments</h2>
+        <h2>Past appointments</h2>
         {#each res.past as _appointment}
             <div class="mb-6">
                 <AppointmentCard appointment={_appointment} />

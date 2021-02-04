@@ -2,7 +2,7 @@
     export let href: string;
 </script>
 
-<a {href} class="text-pink-500">
+<a href={href} class="text-pink-500">
     <svg
         aria-hidden="true"
         focusable="false"

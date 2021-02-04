@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors');
+
 const production = !process.env.ROLLUP_WATCH;
 
 module.exports = {
@@ -14,8 +16,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        body: ["Inter"]
-      }
+        body: ["Inter", "sans-serif"],
+        logo: ["Comfortaa", "cursive"]
+      },
+      colors: {
+        gray: colors.blueGray
+      },
     },
   }
 };

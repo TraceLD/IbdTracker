@@ -15,6 +15,14 @@
   body {
     @apply font-body bg-gray-100 text-gray-800;
   }
+
+  h1 {
+    @apply text-3xl text-gray-600 font-semibold mb-4;
+  }
+
+  h2 {
+    @apply text-2xl text-gray-600 font-semibold mb-4;
+  }
 </style>
 
 <div>

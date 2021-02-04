@@ -1,5 +1,5 @@
 <script lang="ts">
-    import GoBack from "../../../../components/buttons/GoBack.svelte";
+    import SubpageHeader from "../../../../components/navigation/SubpageHeader.svelte";
     import Error from "../../../../components/notifications/Error.svelte";
 
     import { goto } from "@roxi/routify";
@@ -49,32 +49,19 @@
         if (res.ok) {
             $goto("/dashboard/appointments");
         } else {
-            errorMsg = "Oops. Something is broken on our end. Please try again later.";
+            errorMsg =
+                "Oops. Something is broken on our end. Please try again later.";
         }
     }
 </script>
 
-<style>
-    label {
-        @apply text-sm font-medium text-gray-500;
-    }
-
-    input,
-    select {
-        @apply mb-3 mt-0.5 h-8 px-2 outline-none focus:ring-4 border border-transparent focus:border-blue-500 w-full shadow-sm text-gray-800 font-light text-sm rounded-md;
-    }
-</style>
-
-<div class="flex items-center mt-4 mb-4">
-    <div class="w-5 h-5 mr-2">
-        <GoBack href={"/dashboard/appointments"} />
-    </div>
-    <p class="text-2xl text-gray-600 font-semibold">Schedule an appointment</p>
-</div>
-
+<SubpageHeader
+    buttonHref={"/dashboard/appointments"}
+    text="Schedule an appointment"
+/>
 
 {#if errorMsg}
-    <Error errorMsg={errorMsg} />
+    <Error {errorMsg} />
 {/if}
 
 <div class="rounded-lg bg-gray-50 shadow-md">
@@ -90,7 +77,7 @@
             <option value="15">15 minutes</option>
             <option value="30">30 minutes</option>
             <option value="60">60 minutes</option>
-        </select>        
+        </select>
     </div>
     <div class="flex mt-2 bg-gray-100 py-4 px-6 rounded-b-lg">
         <button
@@ -100,3 +87,14 @@
         </button>
     </div>
 </div>
+
+<style>
+    label {
+        @apply text-sm font-medium text-gray-500;
+    }
+
+    input,
+    select {
+        @apply mb-3 mt-0.5 h-8 px-2 outline-none focus:ring-4 border border-transparent focus:border-blue-500 w-full shadow-sm text-gray-800 font-light text-sm rounded-md;
+    }
+</style>
