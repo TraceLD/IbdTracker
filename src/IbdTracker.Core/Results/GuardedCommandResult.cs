@@ -1,4 +1,4 @@
-﻿namespace IbdTracker.Infrastructure.Authorization
+﻿namespace IbdTracker.Core.Results
 {
     public class GuardedCommandResult<T>
     {
