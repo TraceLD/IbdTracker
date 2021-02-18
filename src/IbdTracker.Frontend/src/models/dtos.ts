@@ -26,3 +26,11 @@ export interface PrescriptionDto {
     activeIngredient: string,
     brandName?: string
 }
+
+export interface MealDto {
+    mealId: string,
+    patientId: string,
+    dateTime: string,
+    foodItemId: string,
+    foodItemName: string
+}

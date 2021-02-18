@@ -2,7 +2,7 @@
 
 namespace IbdTracker.Core.CommonDtos
 {
-    public class BowelMovementDto
+    public class BowelMovementEventDto
     {
         public Guid BowelMovementEventId { get; set; }
         public string PatientId { get; set; } = null!;

@@ -1,11 +1,19 @@
-<button on:click title="Add an appointment" class="w-16 h-16 text-pink-500 focus:outline-none focus-within:ring-4 focus-within:ring-pink-500 focus-within:ring-opacity-50">
+<button
+    on:click
+    title="Add an appointment"
+    class="w-14 h-14 bg-pink-600 rounded-full px-1 py-1 text-gray-50 focus:outline-none focus-within:ring-4 focus-within:ring-pink-500 focus-within:ring-opacity-50"
+>
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor">
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+    >
         <path
-            fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-            clip-rule="evenodd" />
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+        />
     </svg>
 </button>
