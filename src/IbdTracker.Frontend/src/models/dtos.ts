@@ -34,3 +34,16 @@ export interface MealDto {
     foodItemId: string,
     foodItemName: string
 }
+
+export interface BowelMovementEventDto {
+    bowelMovementEventId: string,
+    patientId: string,
+    dateTime: string,
+    containedBlood: boolean,
+    containedMucus: boolean
+}
+
+export interface BowelMovementEventsGroupedDto {
+    day: number,
+    bowelMovementEventsOnDay: Array<BowelMovementEventDto>
+}

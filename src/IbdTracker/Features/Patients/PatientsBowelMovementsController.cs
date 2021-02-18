@@ -45,6 +45,18 @@ namespace IbdTracker.Features.Patients
         }
         
         /// <summary>
+        /// Obtains bowel movement events for the currently logged in patient grouped by day of year.
+        /// </summary>
+        /// <returns>Bowel movement events for the currently logged in patient grouped by day of year.</returns>
+        [Authorize("read:bms")]
+        [HttpGet("@me/bms/recent/grouped")]
+        public async Task<ActionResult<IEnumerable<GetRecentGrouped.Result>>> GetRecentGrouped()
+        {
+            var res = await _mediator.Send(new GetRecentGrouped.Query {PatientId = User.Identity?.Name});
+            return Ok(res);
+        }
+        
+        /// <summary>
         /// Obtains bowel movement events by patient ID.
         ///
         /// Requires "read:allpatients" policy.
