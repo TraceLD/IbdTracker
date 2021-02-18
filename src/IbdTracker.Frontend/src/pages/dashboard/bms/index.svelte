@@ -7,13 +7,16 @@
     import { goto } from "@roxi/routify";
     import { get } from "../../../services/requests";
     import { toHtmlInputFormat } from "../../../services/datetime";
-    import type { BowelMovementEventDto, BowelMovementEventsGroupedDto } from "../../../models/dtos";
+    import type {
+        BowelMovementEventDto,
+        BowelMovementEventsGroupedDto,
+    } from "../../../models/dtos";
 
     let loadRecentBmsPromise: Promise<any> = loadRecentBmsChart();
     let plotLayout = {
         // hex for TailwindCSS' bg-gray-50;
-        plot_bgcolor:"#f8fafc",
-        paper_bgcolor:"#f8fafc",
+        plot_bgcolor: "#f8fafc",
+        paper_bgcolor: "#f8fafc",
         font: {
             family: "Inter",
         },
@@ -30,10 +33,12 @@
     };
 
     async function loadRecentBmsChart(): Promise<any> {
-        let response: Array<BowelMovementEventsGroupedDto> = await get<Array<BowelMovementEventsGroupedDto>>(
-            "patients/@me/bms/recent/grouped"
+        let response: Array<BowelMovementEventsGroupedDto> = await get<
+            Array<BowelMovementEventsGroupedDto>
+        >("patients/@me/bms/recent/grouped");
+        const x: Array<string> = response.map((v) =>
+            toHtmlInputFormat(new Date(v.bowelMovementEventsOnDay[0].dateTime))
         );
-        const x: Array<string> = response.map((v) => toHtmlInputFormat(new Date(v.bowelMovementEventsOnDay[0].dateTime)));
         let traces = [
             {
                 x: x,
@@ -41,8 +46,8 @@
                 name: "Normal",
                 type: "bar",
                 marker: {
-                    color: "#22C55E"
-                }
+                    color: "#22C55E",
+                },
             },
             {
                 x: x,
@@ -50,8 +55,8 @@
                 name: "Blood & Mucus",
                 type: "bar",
                 marker: {
-                    color: "#F97316"
-                }
+                    color: "#F97316",
+                },
             },
             {
                 x: x,
@@ -59,8 +64,8 @@
                 name: "Blood",
                 type: "bar",
                 marker: {
-                    color: "#EF4444"
-                }
+                    color: "#EF4444",
+                },
             },
             {
                 x: x,
@@ -68,13 +73,14 @@
                 name: "Mucus",
                 type: "bar",
                 marker: {
-                    color: "#6366F1"
-                }
+                    color: "#6366F1",
+                },
             },
         ];
 
         for (let i: number = 0; i < response.length; i++) {
-            let bmsOnDay: Array<BowelMovementEventDto> = response[i].bowelMovementEventsOnDay;
+            let bmsOnDay: Array<BowelMovementEventDto> =
+                response[i].bowelMovementEventsOnDay;
 
             bmsOnDay.forEach((bm) => {
                 if (!bm.containedBlood && !bm.containedMucus) {
