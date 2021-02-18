@@ -16,11 +16,11 @@
     {:else if $isLoading}
         <div />
     {:else if $isAuthenticated}
-        <div class="lg:flex w-full">
+        <div class="lg:flex w-screen">
             <Menu />
-            <div class:max-h-screen={$menuOpened} class:overflow-hidden={$menuOpened}>
+            <div class:max-h-screen={$menuOpened} class:overflow-hidden={$menuOpened} class="w-screen">
                 <Header />
-                <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-full">
+                <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-1/3">
                     <slot />
                 </div>
             </div>

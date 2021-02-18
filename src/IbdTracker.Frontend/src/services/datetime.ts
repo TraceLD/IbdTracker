@@ -22,3 +22,7 @@ export function isInThePast(date: Date): boolean {
 
     return date < dateNow;
 }
+
+export function toHtmlInputFormat(date: Date): string {
+    return date.toISOString().slice(0,10);
+}

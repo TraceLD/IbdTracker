@@ -1,4 +1,4 @@
-import type { AppointmentDto, MealDto, PrescriptionDto } from "./dtos";
+import type { AppointmentDto, BowelMovementEventDto, MealDto, PrescriptionDto } from "./dtos";
 
 export class Appointment {
     doctorName: string;
@@ -60,4 +60,20 @@ export interface PopularItem {
 export interface FoodItem {
     foodItemId: string,
     name: string
+}
+
+export class BowelMovementEvent {
+    bowelMovementEventId: string;
+    patientId: string;
+    dateTime: Date;
+    containedBlood: boolean;
+    containedMucus: boolean;
+
+    constructor(dto: BowelMovementEventDto) {
+        this.bowelMovementEventId = dto.bowelMovementEventId;
+        this.patientId = dto.patientId;
+        this.dateTime = new Date(dto.dateTime + "Z");
+        this.containedBlood = dto.containedBlood;
+        this.containedMucus = dto.containedMucus;
+    }
 }

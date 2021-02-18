@@ -1,16 +1,25 @@
 <script lang="ts">
-    import Loading from "./Loading.svelte";
-
     import { onDestroy, onMount } from "svelte";
-    import { get } from "../services/requests";    
 
     // has to be any due to no plotly type defs because of no working npm package;
     export let data: Array<any>;
     export let layout: any = {
         // hex for TailwindCSS' bg-gray-50;
         plot_bgcolor:"#f8fafc",
-        paper_bgcolor:"#f8fafc"
-    }
+        paper_bgcolor:"#f8fafc",
+        font: {
+            family: "Inter",
+        },
+        showlegend: true,
+        legend: {
+            orientation: "h",
+            y: 2,
+        },
+        margin: {
+            l: 30,
+            r: 30
+        },
+    };
     export let config: any = {
         responsive: true,
     };
