@@ -109,3 +109,9 @@ export interface IContextualMenuItemContent {
     onClick: () => Promise<void>,
     textColour?: string,
 }
+
+export interface Doctor {
+    doctorId: string,
+    name: string,
+    location: string,
+}

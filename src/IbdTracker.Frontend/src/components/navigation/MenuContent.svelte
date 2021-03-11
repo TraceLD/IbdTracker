@@ -42,10 +42,10 @@
             ],
         },
         {
-            name: "Settings",
+            name: "Application",
             items: [
                 {
-                    name: "Profile settings",
+                    name: "Profile information",
                     href: "/dashboard/settings/profile",
                 },
                 {
