@@ -1,4 +1,4 @@
-import type { AppointmentDto, BowelMovementEventDto, MealDto, PainEventDto, PrescriptionDto } from "./dtos";
+import type { AppointmentDto, BowelMovementEventDto, MealEventDto, PainEventDto, PrescriptionDto } from "./dtos";
 
 export class Appointment {
     appointmentId: string;
@@ -40,22 +40,6 @@ export class Prescription {
     }
 }
 
-export class Meal {
-    mealId: string;
-    patientId: string;
-    dateTime: Date;
-    foodItemId: string;
-    foodItemName: string;
-
-    constructor(dto: MealDto) {
-        this.mealId = dto.mealId;
-        this.patientId = dto.patientId;
-        this.dateTime = new Date(dto.dateTime + "Z");
-        this.foodItemId = dto.foodItemId;
-        this.foodItemName = dto.foodItemName;
-    }
-}
-
 export interface PopularItem {
     href: string,
     description: string
@@ -63,7 +47,29 @@ export interface PopularItem {
 
 export interface FoodItem {
     foodItemId: string,
-    name: string
+    name: string,
+    pictureUrl?: string
+}
+
+export interface Meal {
+    mealId: string,
+    patientId: string,
+    name: string,
+    foodItems: Array<FoodItem>
+}
+
+export class MealEvent {
+    mealEventId: string;
+    patientId: string;
+    mealId: string;
+    dateTime: Date;
+
+    constructor(dto: MealEventDto) {
+        this.mealEventId = dto.mealEventId;
+        this.patientId = dto.patientId;
+        this.mealId = dto.mealId;
+        this.dateTime = new Date(dto.dateTime + "Z");
+    }
 }
 
 export class BowelMovementEvent {

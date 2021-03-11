@@ -28,14 +28,6 @@ export interface PrescriptionDto {
     brandName?: string
 }
 
-export interface MealDto {
-    mealId: string,
-    patientId: string,
-    dateTime: string,
-    foodItemId: string,
-    foodItemName: string
-}
-
 export interface BowelMovementEventDto {
     bowelMovementEventId: string,
     patientId: string,
@@ -62,4 +54,11 @@ export interface PainEventAvgsDto {
     averageIntensity: number,
     averageDuration: number,
     count: number
+}
+
+export interface MealEventDto {
+    mealEventId: string,
+    patientId: string,
+    mealId: string,
+    dateTime: string,
 }

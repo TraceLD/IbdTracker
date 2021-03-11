@@ -1,6 +1,5 @@
 <script lang="ts">
     import SubpageHeader from "../../../../../components/navigation/SubpageHeader.svelte";
-    import Error from "../../../../../components/notifications/Error.svelte";
     import QrReader from "../../../../../components/QrReader.svelte";
 
     const gotoDestination: string = "/dashboard/food";

@@ -45,7 +45,7 @@ export async function patch(url: string, body: any): Promise<Response> {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(body);
+        body: JSON.stringify(body),
     });
 
     return res;
