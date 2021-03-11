@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { url } from "@roxi/routify";
-
     import MealCard from "../../../components/cards/MealCard.svelte";
     import Loading from "../../../components/Loading.svelte";
     import Error from "../../../components/notifications/Error.svelte";
+    import Add from "../../../components/buttons/Add.svelte";
 
     import type { Meal } from "../../../models/models";
+    import { goto, url } from "@roxi/routify";
     import { get } from "../../../services/requests";
 
     async function loadMeals(): Promise<Array<Meal>> {
@@ -17,6 +17,10 @@
 {#await loadMeals()}
     <Loading />
 {:then res}
+    <div class="fixed bottom-0 right-0 p-4">
+        <Add on:click={$goto("/dashboard/food/add")} />
+    </div>
+
     <h2>My meals</h2>
     <div class="mt-4" />
 

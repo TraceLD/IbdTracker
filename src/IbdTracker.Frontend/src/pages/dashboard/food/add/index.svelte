@@ -61,7 +61,7 @@
     }
 </script>
 
-<SubpageHeader buttonHref={"/dashboard/food"} text="Report a meal" />
+<SubpageHeader buttonHref={"/dashboard/food"} text="Add a meal" />
 
 {#if errorMsg}
     <Error {errorMsg} />
@@ -70,15 +70,10 @@
 {#await loadMealsPromise}
     <Loading />
 {:then res} 
-    <h3>Date and time</h3>
-
     <div class="mb-4 rounded-lg bg-gray-50 shadow-md">
-        <div class="px-6 py-4">
-            <label for="date">Date</label>
-            <input bind:value={dateInput} type="date" name="date" id="date" />
-
-            <label for="time">Time</label>
-            <input bind:value={timeInput} type="time" name="time" id="time" />
+        <div class="p-4">
+            <p>// need to add suggestions based on what the user eats the most</p>
+            <p class="my-2 text-sm font-light">{JSON.stringify(res)}</p>
         </div>
         <div class="flex mt-2 bg-gray-100 py-4 px-6 rounded-b-lg">
             <button
@@ -88,11 +83,7 @@
                 Submit
             </button>
         </div>
-    </div>
-
-    <h3>Food</h3>
-    <p>// need to add suggestions based on what the user eats the most</p>
-    <p class="my-2 text-sm font-light">{JSON.stringify(res)}</p>
+    </div>    
 {/await}
 
 <style>

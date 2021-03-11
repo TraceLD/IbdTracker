@@ -17,9 +17,15 @@
         {
             name: "Lifestyle",
             items: [
-                { name: "Food", href: "/dashboard/food" },
                 { name: "Exercise", href: "/dashboard/exercise" },
             ],
+        },
+        {
+            name: "Food",
+            items: [
+                { name: "Meals", href: "/dashboard/food" },
+                { name: "Meal history", href: "/dashboard/mealevents" }
+            ]
         },
         {
             name: "Symptoms",
