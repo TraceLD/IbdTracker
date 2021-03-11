@@ -81,7 +81,7 @@ namespace IbdTracker.Features.Patients
         /// <returns>CreatedAtAction representing creation of the meal.</returns>
         [Authorize("write:meals")]
         [HttpPost("@me/meals")]
-        public async Task<ActionResult<Post.Result>> PostForMe([FromBody] Post.Command command)
+        public async Task<ActionResult<MealDto>> PostForMe([FromBody] Post.Command command)
         {
             var res = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetForMeById), new {id = res.MealId}, res);

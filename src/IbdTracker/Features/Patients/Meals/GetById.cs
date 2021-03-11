@@ -6,9 +6,7 @@ using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Results;
-using IbdTracker.Infrastructure.Authorization;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Meals
@@ -47,14 +45,18 @@ namespace IbdTracker.Features.Patients.Meals
                 var res = await _context.Meals
                     .AsNoTracking()
                     .Where(m => m.MealId == request.MealId)
-                    .Include(m => m.FoodItem)
+                    .Include(m => m.FoodItems)
                     .Select(m => new MealDto
                     {
                         MealId = m.MealId,
                         PatientId = m.PatientId,
                         DateTime = m.DateTime,
-                        FoodItemId = m.FoodItemId,
-                        FoodItemName = m.FoodItem.Name
+                        FoodItems = m.FoodItems.Select(fi => new FoodItemDto
+                        {
+                            FoodItemId = fi.FoodItemId,
+                            Name = fi.Name, 
+                            PictureUrl = fi.PictureUrl
+                        }).ToList()
                     })
                     .FirstOrDefaultAsync(cancellationToken);
 

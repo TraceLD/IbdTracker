@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
+using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
 using MediatR;
 
@@ -10,11 +13,12 @@ namespace IbdTracker.Features.Patients.Meals
 {
     public class Post
     {
-        public class Command : IRequest<Result>
+        public class Command : IRequest<MealDto>
         {
             public string PatientId { get; set; } = null!;
+            public string Name { get; set; } = null!;
             public DateTime? DateTime { get; set; }
-            public Guid FoodItemId { get; set; }
+            public List<FoodItemDto> FoodItemDtos { get; set; } = null!;
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -28,20 +32,12 @@ namespace IbdTracker.Features.Patients.Meals
                     .LessThanOrEqualTo(DateTime.UtcNow)
                     .When(c => c.DateTime is not null);
 
-                RuleFor(c => c.FoodItemId)
+                RuleFor(c => c.FoodItemDtos)
                     .NotEmpty();
             }
         }
 
-        public class Result
-        {
-            public Guid MealId { get; set; }
-            public string PatientId { get; set; } = null!;
-            public DateTime DateTime { get; set; }
-            public Guid FoodItemId { get; set; }
-        }
-
-        public class Handler : IRequestHandler<Command, Result>
+        public class Handler : IRequestHandler<Command, MealDto>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -50,27 +46,31 @@ namespace IbdTracker.Features.Patients.Meals
                 _context = context;
             }
 
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<MealDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 // convert to EFCore Meal entity;
                 var meal = new Meal
                 {
                     PatientId = request.PatientId,
-                    DateTime = request.DateTime ?? DateTime.UtcNow,
-                    FoodItemId = request.FoodItemId
+                    Name = request.Name,
+                    DateTime = request.DateTime ?? DateTime.UtcNow
                 };
+
+                meal.FoodItems.AddRange(request.FoodItemDtos.Select(dto =>
+                    new FoodItem(dto.FoodItemId, dto.Name, dto.PictureUrl)));
                 
                 // add to db and save;
                 await _context.Meals.AddAsync(meal, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 
                 // convert to dto so can be returned with ActionResult;
-                return new Result
+                return new()
                 {
                     MealId = meal.MealId,
+                    Name = meal.Name,
                     PatientId = meal.PatientId,
                     DateTime = meal.DateTime,
-                    FoodItemId = meal.FoodItemId
+                    FoodItems = request.FoodItemDtos
                 };
             }
         }

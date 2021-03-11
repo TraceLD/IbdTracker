@@ -3,36 +3,23 @@ using System;
 using IbdTracker.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    partial class IbdSymptomTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20210311093550_MultipleFoodItemsPerMeal")]
+    partial class MultipleFoodItemsPerMeal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.1");
-
-            modelBuilder.Entity("FoodItemMeal", b =>
-                {
-                    b.Property<Guid>("FoodItemsFoodItemId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("MealsMealId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("FoodItemsFoodItemId", "MealsMealId");
-
-                    b.HasIndex("MealsMealId");
-
-                    b.ToTable("FoodItemMeal");
-                });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Appointment", b =>
                 {
@@ -119,14 +106,16 @@ namespace IbdTracker.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("MealId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PictureUrl")
-                        .HasColumnType("text");
-
                     b.HasKey("FoodItemId");
+
+                    b.HasIndex("MealId");
 
                     b.ToTable("FoodItems");
                 });
@@ -273,21 +262,6 @@ namespace IbdTracker.Core.Migrations
                     b.ToTable("SideEffectEvents");
                 });
 
-            modelBuilder.Entity("FoodItemMeal", b =>
-                {
-                    b.HasOne("IbdTracker.Core.Entities.FoodItem", null)
-                        .WithMany()
-                        .HasForeignKey("FoodItemsFoodItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IbdTracker.Core.Entities.Meal", null)
-                        .WithMany()
-                        .HasForeignKey("MealsMealId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("IbdTracker.Core.Entities.Appointment", b =>
                 {
                     b.HasOne("IbdTracker.Core.Entities.Doctor", "Doctor")
@@ -312,6 +286,13 @@ namespace IbdTracker.Core.Migrations
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("IbdTracker.Core.Entities.FoodItem", b =>
+                {
+                    b.HasOne("IbdTracker.Core.Entities.Meal", null)
+                        .WithMany("FoodItems")
+                        .HasForeignKey("MealId");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Meal", b =>
@@ -372,6 +353,11 @@ namespace IbdTracker.Core.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Patients");
+                });
+
+            modelBuilder.Entity("IbdTracker.Core.Entities.Meal", b =>
+                {
+                    b.Navigation("FoodItems");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Medication", b =>
