@@ -17,7 +17,6 @@ namespace IbdTracker.Features.Patients.Meals
         {
             public string PatientId { get; set; } = null!;
             public string Name { get; set; } = null!;
-            public DateTime? DateTime { get; set; }
             public List<FoodItemDto> FoodItemDtos { get; set; } = null!;
         }
 
@@ -27,10 +26,6 @@ namespace IbdTracker.Features.Patients.Meals
             {
                 RuleFor(c => c.PatientId)
                     .NotEmpty();
-
-                RuleFor(c => c.DateTime)
-                    .LessThanOrEqualTo(DateTime.UtcNow)
-                    .When(c => c.DateTime is not null);
 
                 RuleFor(c => c.FoodItemDtos)
                     .NotEmpty();
@@ -53,7 +48,6 @@ namespace IbdTracker.Features.Patients.Meals
                 {
                     PatientId = request.PatientId,
                     Name = request.Name,
-                    DateTime = request.DateTime ?? DateTime.UtcNow
                 };
 
                 meal.FoodItems.AddRange(request.FoodItemDtos.Select(dto =>
@@ -69,7 +63,6 @@ namespace IbdTracker.Features.Patients.Meals
                     MealId = meal.MealId,
                     Name = meal.Name,
                     PatientId = meal.PatientId,
-                    DateTime = meal.DateTime,
                     FoodItems = request.FoodItemDtos
                 };
             }

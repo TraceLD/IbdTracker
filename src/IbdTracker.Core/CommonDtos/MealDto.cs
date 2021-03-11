@@ -8,7 +8,6 @@ namespace IbdTracker.Core.CommonDtos
         public Guid MealId { get; set; }
         public string PatientId { get; set; } = null!;
         public string Name { get; set; } = null!;
-        public DateTime DateTime { get; set; }
         public List<FoodItemDto> FoodItems { get; set; } = null!;
     }
 }

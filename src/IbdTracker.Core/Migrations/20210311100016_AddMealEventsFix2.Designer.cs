@@ -3,15 +3,17 @@ using System;
 using IbdTracker.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    partial class IbdSymptomTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20210311100016_AddMealEventsFix2")]
+    partial class AddMealEventsFix2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,8 +171,6 @@ namespace IbdTracker.Core.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("MealEventId");
-
-                    b.HasIndex("MealId");
 
                     b.HasIndex("PatientId");
 
@@ -347,12 +347,6 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.MealEvent", b =>
                 {
-                    b.HasOne("IbdTracker.Core.Entities.Meal", null)
-                        .WithMany("MealEvents")
-                        .HasForeignKey("MealId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("IbdTracker.Core.Entities.Patient", null)
                         .WithMany("MealEvents")
                         .HasForeignKey("PatientId")
@@ -409,11 +403,6 @@ namespace IbdTracker.Core.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Patients");
-                });
-
-            modelBuilder.Entity("IbdTracker.Core.Entities.Meal", b =>
-                {
-                    b.Navigation("MealEvents");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Medication", b =>

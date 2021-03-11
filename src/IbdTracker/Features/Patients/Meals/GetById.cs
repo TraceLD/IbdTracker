@@ -50,7 +50,7 @@ namespace IbdTracker.Features.Patients.Meals
                     {
                         MealId = m.MealId,
                         PatientId = m.PatientId,
-                        DateTime = m.DateTime,
+                        Name = m.Name,
                         FoodItems = m.FoodItems.Select(fi => new FoodItemDto
                         {
                             FoodItemId = fi.FoodItemId,
