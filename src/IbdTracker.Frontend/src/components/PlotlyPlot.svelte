@@ -13,11 +13,11 @@
         showlegend: true,
         legend: {
             orientation: "h",
-            y: 2,
+            y: -0.4,
         },
         margin: {
             l: 30,
-            r: 30
+            r: 30,
         },
     };
     export let config: any = {

@@ -18,6 +18,7 @@ namespace IbdTracker.Core.Entities
         public List<BowelMovementEvent> BowelMovementEvents { get; } = new();
         public List<Appointment> Appointments { get; } = new();
         public List<Meal> Meals { get; } = new();
+        public List<MealEvent> MealEvents { get; } = new();
 
         public Patient(string name, DateTime dateOfBirth, DateTime dateDiagnosed, string? doctorId = null)
         {

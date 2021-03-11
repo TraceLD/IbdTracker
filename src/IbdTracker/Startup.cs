@@ -92,6 +92,7 @@ namespace IbdTracker
                         {
                             builder.WithOrigins("http://localhost:8080")
                                 .AllowCredentials()
+                                .AllowAnyMethod()
                                 .AllowAnyHeader();
                         });
                 });

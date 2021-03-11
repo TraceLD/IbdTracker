@@ -40,14 +40,18 @@ namespace IbdTracker.Features.Patients.Meals
                 return await _context.Meals
                     .AsNoTracking()
                     .Where(m => m.PatientId.Equals(request.PatientId))
-                    .Include(m => m.FoodItem)
+                    .Include(m => m.FoodItems)
                     .Select(m => new MealDto
                     {
                         MealId = m.MealId,
                         PatientId = m.PatientId,
-                        DateTime = m.DateTime,
-                        FoodItemId = m.FoodItemId,
-                        FoodItemName = m.FoodItem.Name
+                        Name = m.Name,
+                        FoodItems = m.FoodItems.Select(fi => new FoodItemDto
+                        {
+                            FoodItemId = fi.FoodItemId,
+                            Name = fi.Name, 
+                            PictureUrl = fi.PictureUrl
+                        }).ToList()
                     })
                     .ToListAsync(cancellationToken);
             }

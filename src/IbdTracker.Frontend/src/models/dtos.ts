@@ -14,7 +14,8 @@ export interface AppointmentDto {
     startDateTime: string,
     durationMinutes: number,
     location: string,
-    notes?: string
+    doctorsNotes?: string,
+    patientsNotes?: string
 }
 
 export interface PrescriptionDto {
@@ -25,14 +26,6 @@ export interface PrescriptionDto {
     medicationId: string,
     activeIngredient: string,
     brandName?: string
-}
-
-export interface MealDto {
-    mealId: string,
-    patientId: string,
-    dateTime: string,
-    foodItemId: string,
-    foodItemName: string
 }
 
 export interface BowelMovementEventDto {
@@ -46,4 +39,26 @@ export interface BowelMovementEventDto {
 export interface BowelMovementEventsGroupedDto {
     day: number,
     bowelMovementEventsOnDay: Array<BowelMovementEventDto>
+}
+
+export interface PainEventDto {
+    painEventId: string,
+    patientId: string,
+    dateTime: string,
+    minutesDuration: number,
+    painScore: number
+}
+
+export interface PainEventAvgsDto {
+    dateTime: string,
+    averageIntensity: number,
+    averageDuration: number,
+    count: number
+}
+
+export interface MealEventDto {
+    mealEventId: string,
+    patientId: string,
+    mealId: string,
+    dateTime: string,
 }

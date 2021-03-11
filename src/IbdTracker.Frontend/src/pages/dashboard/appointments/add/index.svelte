@@ -41,7 +41,8 @@
             doctorId: $patient.doctorId,
             startDateTime: date.toISOString(),
             durationMinutes: durationInput,
-            notes: null,
+            doctorsNotes: null,
+            patientsNotes: null
         };
 
         const res: Response = await post("appointments", reqBody);

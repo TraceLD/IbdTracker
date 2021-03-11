@@ -11,6 +11,7 @@ namespace IbdTracker.Core.CommonDtos
         public DateTime StartDateTime { get; set; }
         public int DurationMinutes { get; set; }
         public string Location { get; set; } = null!;
-        public string? Notes { get; set; }
+        public string? DoctorsNotes { get; set; }
+        public string? PatientsNotes { get; set; }
     }
 }

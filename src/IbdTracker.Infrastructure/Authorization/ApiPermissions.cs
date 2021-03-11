@@ -15,7 +15,9 @@ namespace IbdTracker.Infrastructure.Authorization
             "read:bms",
             "write:bms",
             "read:meals",
-            "write:meals"
+            "write:meals",
+            "read:pain",
+            "write:pain"
         };
     }
 }

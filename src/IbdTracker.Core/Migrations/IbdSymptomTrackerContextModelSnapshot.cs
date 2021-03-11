@@ -19,6 +19,21 @@ namespace IbdTracker.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.1");
 
+            modelBuilder.Entity("FoodItemMeal", b =>
+                {
+                    b.Property<Guid>("FoodItemsFoodItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MealsMealId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("FoodItemsFoodItemId", "MealsMealId");
+
+                    b.HasIndex("MealsMealId");
+
+                    b.ToTable("FoodItemMeal");
+                });
+
             modelBuilder.Entity("IbdTracker.Core.Entities.Appointment", b =>
                 {
                     b.Property<Guid>("AppointmentId")
@@ -29,14 +44,17 @@ namespace IbdTracker.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("DoctorsNotes")
+                        .HasColumnType("text");
+
                     b.Property<int>("DurationMinutes")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Notes")
-                        .HasColumnType("text");
-
                     b.Property<string>("PatientId")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PatientsNotes")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartDateTime")
@@ -105,6 +123,9 @@ namespace IbdTracker.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("text");
+
                     b.HasKey("FoodItemId");
 
                     b.ToTable("FoodItems");
@@ -116,11 +137,9 @@ namespace IbdTracker.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("FoodItemId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PatientId")
                         .IsRequired()
@@ -128,11 +147,34 @@ namespace IbdTracker.Core.Migrations
 
                     b.HasKey("MealId");
 
-                    b.HasIndex("FoodItemId");
-
                     b.HasIndex("PatientId");
 
                     b.ToTable("Meals");
+                });
+
+            modelBuilder.Entity("IbdTracker.Core.Entities.MealEvent", b =>
+                {
+                    b.Property<Guid>("MealEventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("MealId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("MealEventId");
+
+                    b.HasIndex("MealId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("MealEvents");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Medication", b =>
@@ -253,6 +295,21 @@ namespace IbdTracker.Core.Migrations
                     b.ToTable("SideEffectEvents");
                 });
 
+            modelBuilder.Entity("FoodItemMeal", b =>
+                {
+                    b.HasOne("IbdTracker.Core.Entities.FoodItem", null)
+                        .WithMany()
+                        .HasForeignKey("FoodItemsFoodItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IbdTracker.Core.Entities.Meal", null)
+                        .WithMany()
+                        .HasForeignKey("MealsMealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("IbdTracker.Core.Entities.Appointment", b =>
                 {
                     b.HasOne("IbdTracker.Core.Entities.Doctor", "Doctor")
@@ -281,19 +338,26 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Meal", b =>
                 {
-                    b.HasOne("IbdTracker.Core.Entities.FoodItem", "FoodItem")
-                        .WithMany()
-                        .HasForeignKey("FoodItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("IbdTracker.Core.Entities.Patient", null)
                         .WithMany("Meals")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("FoodItem");
+            modelBuilder.Entity("IbdTracker.Core.Entities.MealEvent", b =>
+                {
+                    b.HasOne("IbdTracker.Core.Entities.Meal", null)
+                        .WithMany("MealEvents")
+                        .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IbdTracker.Core.Entities.Patient", null)
+                        .WithMany("MealEvents")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.PainEvent", b =>
@@ -347,6 +411,11 @@ namespace IbdTracker.Core.Migrations
                     b.Navigation("Patients");
                 });
 
+            modelBuilder.Entity("IbdTracker.Core.Entities.Meal", b =>
+                {
+                    b.Navigation("MealEvents");
+                });
+
             modelBuilder.Entity("IbdTracker.Core.Entities.Medication", b =>
                 {
                     b.Navigation("Prescriptions");
@@ -357,6 +426,8 @@ namespace IbdTracker.Core.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("BowelMovementEvents");
+
+                    b.Navigation("MealEvents");
 
                     b.Navigation("Meals");
 

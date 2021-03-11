@@ -15,7 +15,8 @@ namespace IbdTracker.Core.CommonDtos
                 StartDateTime = appointment.StartDateTime,
                 DurationMinutes = appointment.DurationMinutes,
                 Location = appointment.Doctor.Location,
-                Notes = appointment.Notes
+                DoctorsNotes = appointment.DoctorsNotes,
+                PatientsNotes = appointment.PatientsNotes
             };
         }
     }

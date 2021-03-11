@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace IbdTracker.Core.CommonDtos
 {
@@ -6,8 +7,7 @@ namespace IbdTracker.Core.CommonDtos
     {
         public Guid MealId { get; set; }
         public string PatientId { get; set; } = null!;
-        public DateTime DateTime { get; set; }
-        public Guid FoodItemId { get; set; }
-        public string FoodItemName { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public List<FoodItemDto> FoodItems { get; set; } = null!;
     }
 }

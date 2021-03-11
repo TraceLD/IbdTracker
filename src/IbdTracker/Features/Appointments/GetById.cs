@@ -39,9 +39,10 @@ namespace IbdTracker.Features.Appointments
             {
                 var res = await _context.Appointments
                     .AsNoTracking()
+                    .Include(a => a.Doctor)
                     .Where(a => a.AppointmentId == request.AppointmentId)
                     .FirstOrDefaultAsync(cancellationToken);
-                return res.ToDto();
+                return res?.ToDto();
             }
         }
     }

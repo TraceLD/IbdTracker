@@ -4,13 +4,13 @@
     import Loading from "../../../../components/Loading.svelte";
 
     import { goto } from "@roxi/routify";
-    import { loadMeals } from "../../../../services/meals";
     import { patient } from "../../../../stores/authStore";
     import {
         combineInputs,
         isInTheFuture,
     } from "../../../../services/datetime";
-    import { post } from "../../../../services/requests";
+    import { get, post } from "../../../../services/requests";
+    import type { Meal } from "../../../../models/models";
 
     let dateInput: string;
     let timeInput: string;
@@ -18,6 +18,11 @@
     let errorMsg: string;
 
     const loadMealsPromise: Promise<Array<Meal>> = loadMeals();
+
+    async function loadMeals(): Promise<Array<Meal>> {
+        let res: Array<Meal> = await get<Array<Meal>>("patients/@me/meals");
+        return res;
+    }
 
     async function submit(): Promise<void> {
         if (dateInput == undefined || dateInput === "") {
@@ -42,13 +47,13 @@
         let reqBody = {
             patientId: $patient.patientId,
             dateTime: date.toISOString(),
-            foodItemId: "placeholder"
+            MealId: "placeholder"
         };
 
         const res: Response = await post("patients/@me/meals", reqBody);
 
         if (res.ok) {
-            $goto("/dashboard/appointments");
+            $goto("/dashboard/meals/events");
         } else {
             errorMsg =
                 "Oops. Something is broken on our end. Please try again later.";
@@ -56,7 +61,7 @@
     }
 </script>
 
-<SubpageHeader buttonHref={"/dashboard/food"} text="Report a meal" />
+<SubpageHeader buttonHref={"/dashboard/food"} text="Add a meal" />
 
 {#if errorMsg}
     <Error {errorMsg} />
@@ -65,15 +70,10 @@
 {#await loadMealsPromise}
     <Loading />
 {:then res} 
-    <h3>Date and time</h3>
-
     <div class="mb-4 rounded-lg bg-gray-50 shadow-md">
-        <div class="px-6 py-4">
-            <label for="date">Date</label>
-            <input bind:value={dateInput} type="date" name="date" id="date" />
-
-            <label for="time">Time</label>
-            <input bind:value={timeInput} type="time" name="time" id="time" />
+        <div class="p-4">
+            <p>// need to add suggestions based on what the user eats the most</p>
+            <p class="my-2 text-sm font-light">{JSON.stringify(res)}</p>
         </div>
         <div class="flex mt-2 bg-gray-100 py-4 px-6 rounded-b-lg">
             <button
@@ -83,11 +83,7 @@
                 Submit
             </button>
         </div>
-    </div>
-
-    <h3>Food</h3>
-    <p>// need to add suggestions based on what the user eats the most</p>
-    <p class="my-2 text-sm font-light">{JSON.stringify(res)}</p>
+    </div>    
 {/await}
 
 <style>

@@ -1,18 +1,22 @@
-import type { AppointmentDto, BowelMovementEventDto, MealDto, PrescriptionDto } from "./dtos";
+import type { AppointmentDto, BowelMovementEventDto, MealEventDto, PainEventDto, PrescriptionDto } from "./dtos";
 
 export class Appointment {
+    appointmentId: string;
     doctorName: string;
     startDateTime: Date;
     durationMinutes: number;
     location: string;
-    notes?: string;
+    doctorsNotes?: string;
+    patientsNotes?: string;
 
     constructor(dto: AppointmentDto) {
-        this.doctorName = dto.doctorName,
+        this.appointmentId = dto.appointmentId;
+        this.doctorName = dto.doctorName;
         this.startDateTime = new Date(dto.startDateTime + "Z");
         this.durationMinutes = this.durationMinutes;
         this.location = dto.location;
-        this.notes = dto.notes;
+        this.doctorsNotes = dto.doctorsNotes;
+        this.patientsNotes = dto.patientsNotes;
     }
 }
 
@@ -36,22 +40,6 @@ export class Prescription {
     }
 }
 
-export class Meal {
-    mealId: string;
-    patientId: string;
-    dateTime: Date;
-    foodItemId: string;
-    foodItemName: string;
-
-    constructor(dto: MealDto) {
-        this.mealId = dto.mealId;
-        this.patientId = dto.patientId;
-        this.dateTime = new Date(dto.dateTime + "Z");
-        this.foodItemId = dto.foodItemId;
-        this.foodItemName = dto.foodItemName;
-    }
-}
-
 export interface PopularItem {
     href: string,
     description: string
@@ -59,7 +47,29 @@ export interface PopularItem {
 
 export interface FoodItem {
     foodItemId: string,
-    name: string
+    name: string,
+    pictureUrl?: string
+}
+
+export interface Meal {
+    mealId: string,
+    patientId: string,
+    name: string,
+    foodItems: Array<FoodItem>
+}
+
+export class MealEvent {
+    mealEventId: string;
+    patientId: string;
+    mealId: string;
+    dateTime: Date;
+
+    constructor(dto: MealEventDto) {
+        this.mealEventId = dto.mealEventId;
+        this.patientId = dto.patientId;
+        this.mealId = dto.mealId;
+        this.dateTime = new Date(dto.dateTime + "Z");
+    }
 }
 
 export class BowelMovementEvent {
@@ -76,4 +86,32 @@ export class BowelMovementEvent {
         this.containedBlood = dto.containedBlood;
         this.containedMucus = dto.containedMucus;
     }
+}
+
+export class PainEvent {
+    painEventId: string;
+    patientId: string;
+    dateTime: Date;
+    minutesDuration: number;
+    painScore: number;
+
+    constructor(dto: PainEventDto) {
+        this.painEventId = dto.painEventId;
+        this.patientId = dto.patientId;
+        this.dateTime = new Date(dto.dateTime + "Z");
+        this.minutesDuration = dto.minutesDuration;
+        this.painScore = dto.painScore;
+    }
+}
+
+export interface IContextualMenuItemContent {
+    name: string,
+    onClick: () => Promise<void>,
+    textColour?: string,
+}
+
+export interface Doctor {
+    doctorId: string,
+    name: string,
+    location: string,
 }

@@ -5,19 +5,18 @@ using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
-using IbdTracker.Infrastructure.Authorization;
+using IbdTracker.Core.Results;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Meals
 {
     public class GetById
     {
-        public class Query : IRequest<GuardedCommandResult<MealDto>>
+        public class Query : IRequest<GuardedCommandResult<MealDto?>>
         {
             public Guid MealId { get; set; }
-            public string PatientId { get; set; } = null!;
+            public string? PatientId { get; set; }
         }
         
         public class QueryValidator : AbstractValidator<Query>
@@ -32,7 +31,7 @@ namespace IbdTracker.Features.Patients.Meals
             }
         }
 
-        public class Handler : IRequestHandler<Query, GuardedCommandResult<MealDto>>
+        public class Handler : IRequestHandler<Query, GuardedCommandResult<MealDto?>>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -41,25 +40,31 @@ namespace IbdTracker.Features.Patients.Meals
                 _context = context;
             }
 
-            public async Task<GuardedCommandResult<MealDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<GuardedCommandResult<MealDto?>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var res = await _context.Meals
                     .AsNoTracking()
                     .Where(m => m.MealId == request.MealId)
-                    .Include(m => m.FoodItem)
+                    .Include(m => m.FoodItems)
                     .Select(m => new MealDto
                     {
                         MealId = m.MealId,
                         PatientId = m.PatientId,
-                        DateTime = m.DateTime,
-                        FoodItemId = m.FoodItemId,
-                        FoodItemName = m.FoodItem.Name
+                        Name = m.Name,
+                        FoodItems = m.FoodItems.Select(fi => new FoodItemDto
+                        {
+                            FoodItemId = fi.FoodItemId,
+                            Name = fi.Name, 
+                            PictureUrl = fi.PictureUrl
+                        }).ToList()
                     })
                     .FirstOrDefaultAsync(cancellationToken);
 
+                if (res is null) return new GuardedCommandResult<MealDto?>(null);
+
                 return res.PatientId.Equals(request.PatientId)
-                    ? new GuardedCommandResult<MealDto>(res)
-                    : new GuardedCommandResult<MealDto>();
+                    ? new GuardedCommandResult<MealDto?>(res)
+                    : new GuardedCommandResult<MealDto?>();
             }
         }
     }
