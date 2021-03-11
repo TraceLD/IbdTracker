@@ -37,6 +37,20 @@ export async function post(url: string, body: any): Promise<Response> {
     return res;
 }
 
+export async function patch(url: string, body: any): Promise<Response> {
+    const token: string = await getToken();
+    const res: Response = await fetch(combineUrls(url), {
+        method: "PATCH",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body);
+    });
+
+    return res;
+}
+
 export async function del(url: string, body: any): Promise<Response> {
     const token: string = await getToken();
     const res: Response = await fetch(combineUrls(url), {

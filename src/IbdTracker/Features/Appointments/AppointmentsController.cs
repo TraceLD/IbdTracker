@@ -32,9 +32,9 @@ namespace IbdTracker.Features.Appointments
 
         [Authorize("read:appointments")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppointmentDto>> GetById([FromRoute] GetById.Query query)
+        public async Task<ActionResult<AppointmentDto>> GetById(Guid id)
         {
-            var res = await _mediator.Send(query);
+            var res = await _mediator.Send(new GetById.Query{AppointmentId = id});
             if (res is null)
                 return NotFound();
             return Ok(res);

@@ -58,14 +58,15 @@ namespace IbdTracker.Features.Appointments
                 await _context.Appointments.AddAsync(appointment, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 
-                return new AppointmentDto()
+                return new()
                 {
                     AppointmentId = appointment.AppointmentId,
                     PatientId = appointment.PatientId,
                     DoctorId = appointment.DoctorId,
                     StartDateTime = appointment.StartDateTime,
                     DurationMinutes = appointment.DurationMinutes,
-                    Notes = appointment.Notes
+                    DoctorsNotes = appointment.DoctorsNotes,
+                    PatientsNotes = appointment.PatientsNotes
                 };
             }
         }

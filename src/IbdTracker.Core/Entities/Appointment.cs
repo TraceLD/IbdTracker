@@ -10,16 +10,18 @@ namespace IbdTracker.Core.Entities
         public Doctor Doctor { get; set; } = null!;
         public DateTime StartDateTime { get; set; }
         public int DurationMinutes { get; set; }
-        public string? Notes { get; set; }
+        public string? DoctorsNotes { get; set; }
+        public string? PatientsNotes { get; set; }
 
         public Appointment(string patientId, string doctorId, DateTime startDateTime, int durationMinutes,
-            string? notes = null)
+            string? doctorsNotes = null, string? patientsNotes = null)
         {
             PatientId = patientId;
             DoctorId = doctorId;
             StartDateTime = startDateTime;
             DurationMinutes = durationMinutes;
-            Notes = notes;
+            DoctorsNotes = doctorsNotes;
+            PatientsNotes = patientsNotes;
         }
     }
 }
