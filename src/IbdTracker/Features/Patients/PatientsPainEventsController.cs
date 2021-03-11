@@ -73,8 +73,16 @@ namespace IbdTracker.Features.Patients
             return Ok(res);
         }
 
+        [Authorize("read:pain")]
+        [HttpGet("@me/pain/recent/avgs")]
+        public async Task<ActionResult<PainEvents.GetRecentAvgs.Result>> GetRecentAvgsForMe()
+        {
+            var res = await _mediator.Send(new PainEvents.GetRecentAvgs.Query {PatientId = User.Identity?.Name});
+            return Ok(res);
+        }
+
         [Authorize("write:pain")]
-        [HttpPost("@me/meals")]
+        [HttpPost("@me/pain")]
         public async Task<ActionResult<PainEventDto>> PostForMe([FromBody] PainEvents.Post.Command command)
         {
             var res = await _mediator.Send(command);

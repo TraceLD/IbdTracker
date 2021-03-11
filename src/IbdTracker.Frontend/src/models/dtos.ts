@@ -47,3 +47,18 @@ export interface BowelMovementEventsGroupedDto {
     day: number,
     bowelMovementEventsOnDay: Array<BowelMovementEventDto>
 }
+
+export interface PainEventDto {
+    painEventId: string,
+    patientId: string,
+    dateTime: string,
+    minutesDuration: number,
+    painScore: number
+}
+
+export interface PainEventAvgsDto {
+    dateTime: string,
+    averageIntensity: number,
+    averageDuration: number,
+    count: number
+}

@@ -1,6 +1,7 @@
-import type { AppointmentDto, BowelMovementEventDto, MealDto, PrescriptionDto } from "./dtos";
+import type { AppointmentDto, BowelMovementEventDto, MealDto, PainEventDto, PrescriptionDto } from "./dtos";
 
 export class Appointment {
+    appointmentId: string;
     doctorName: string;
     startDateTime: Date;
     durationMinutes: number;
@@ -8,7 +9,8 @@ export class Appointment {
     notes?: string;
 
     constructor(dto: AppointmentDto) {
-        this.doctorName = dto.doctorName,
+        this.appointmentId = dto.appointmentId;
+        this.doctorName = dto.doctorName;
         this.startDateTime = new Date(dto.startDateTime + "Z");
         this.durationMinutes = this.durationMinutes;
         this.location = dto.location;
@@ -76,4 +78,26 @@ export class BowelMovementEvent {
         this.containedBlood = dto.containedBlood;
         this.containedMucus = dto.containedMucus;
     }
+}
+
+export class PainEvent {
+    painEventId: string;
+    patientId: string;
+    dateTime: Date;
+    minutesDuration: number;
+    painScore: number;
+
+    constructor(dto: PainEventDto) {
+        this.painEventId = dto.painEventId;
+        this.patientId = dto.patientId;
+        this.dateTime = new Date(dto.dateTime + "Z");
+        this.minutesDuration = dto.minutesDuration;
+        this.painScore = dto.painScore;
+    }
+}
+
+export interface IContextualMenuItemContent {
+    name: string,
+    onClick: () => Promise<void>,
+    textColour?: string,
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
 using MediatR;
@@ -46,5 +47,14 @@ namespace IbdTracker.Features.Appointments
             var res = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id = res.AppointmentId }, res);
         }
+
+        [Authorize("write:appointments")]
+        [HttpDelete]
+        public async Task<ActionResult> CancelAppointment([FromBody] CancelMyAppointment.RequestDto body) =>
+            await _mediator.Send(new CancelMyAppointment.Command
+            {
+                AppointmentId = body.AppointmentId,
+                PatientId = User.Identity?.Name
+            });
     }
 }

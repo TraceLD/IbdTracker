@@ -30,6 +30,16 @@
             l: 30,
             r: 30,
         },
+        xaxis: {
+            title: {
+                text: "Date",
+            },
+        },
+        yaxis: {
+            title: {
+                text: "Occurrence per day",
+            },
+        },
     };
 
     async function loadRecentBmsChart(): Promise<any> {
