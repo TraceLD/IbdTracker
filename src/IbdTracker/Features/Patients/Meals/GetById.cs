@@ -13,10 +13,10 @@ namespace IbdTracker.Features.Patients.Meals
 {
     public class GetById
     {
-        public class Query : IRequest<GuardedCommandResult<MealDto>>
+        public class Query : IRequest<GuardedCommandResult<MealDto?>>
         {
             public Guid MealId { get; set; }
-            public string PatientId { get; set; } = null!;
+            public string? PatientId { get; set; }
         }
         
         public class QueryValidator : AbstractValidator<Query>
@@ -31,7 +31,7 @@ namespace IbdTracker.Features.Patients.Meals
             }
         }
 
-        public class Handler : IRequestHandler<Query, GuardedCommandResult<MealDto>>
+        public class Handler : IRequestHandler<Query, GuardedCommandResult<MealDto?>>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -40,7 +40,7 @@ namespace IbdTracker.Features.Patients.Meals
                 _context = context;
             }
 
-            public async Task<GuardedCommandResult<MealDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<GuardedCommandResult<MealDto?>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var res = await _context.Meals
                     .AsNoTracking()
@@ -60,9 +60,11 @@ namespace IbdTracker.Features.Patients.Meals
                     })
                     .FirstOrDefaultAsync(cancellationToken);
 
+                if (res is null) return new GuardedCommandResult<MealDto?>(null);
+
                 return res.PatientId.Equals(request.PatientId)
-                    ? new GuardedCommandResult<MealDto>(res)
-                    : new GuardedCommandResult<MealDto>();
+                    ? new GuardedCommandResult<MealDto?>(res)
+                    : new GuardedCommandResult<MealDto?>();
             }
         }
     }

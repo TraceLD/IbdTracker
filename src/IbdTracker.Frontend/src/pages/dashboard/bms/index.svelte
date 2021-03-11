@@ -11,6 +11,8 @@
         BowelMovementEventDto,
         BowelMovementEventsGroupedDto,
     } from "../../../models/dtos";
+    import BmCard from "../../../components/cards/BmCard.svelte";
+    import { BowelMovementEvent } from "../../../models/models";
 
     let loadRecentBmsPromise: Promise<any> = loadRecentBmsChart();
     let plotLayout = {
@@ -41,6 +43,11 @@
             },
         },
     };
+
+    async function loadRecentBms(): Promise<Array<BowelMovementEvent>> {
+        let response: Array<BowelMovementEventDto> = await get<Array<BowelMovementEventDto>>("patients/@me/bms/recent");
+        return response.map((dto) => new BowelMovementEvent(dto));
+    }
 
     async function loadRecentBmsChart(): Promise<any> {
         let response: Array<BowelMovementEventsGroupedDto> = await get<
@@ -122,6 +129,13 @@
     <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">
         <PlotlyPlot data={res} layout={plotLayout} />
     </div>
+    {#await loadRecentBms()}
+        <Loading />
+    {:then res} 
+        {#each res as bm}
+            <BmCard bm={bm} />
+        {/each}
+    {/await}
 {:catch err}
     <Error errorMsg={err} />
 {/await}

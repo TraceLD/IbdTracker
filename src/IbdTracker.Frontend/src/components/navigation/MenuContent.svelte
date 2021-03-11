@@ -24,7 +24,7 @@
             name: "Food",
             items: [
                 { name: "Meals", href: "/dashboard/food" },
-                { name: "Meal history", href: "/dashboard/mealevents" }
+                { name: "Meals history", href: "/dashboard/mealevents" }
             ]
         },
         {

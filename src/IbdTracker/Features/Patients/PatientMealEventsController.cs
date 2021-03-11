@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IbdTracker.Features.Patients
 {
+    [Route("api/patients")]
     public class PatientMealEventsController : ControllerBase
     {
         private readonly ILogger<PatientMealEventsController> _logger;
@@ -36,7 +37,7 @@ namespace IbdTracker.Features.Patients
         }
         
         [Authorize("read:meals")]
-        [HttpGet("@me/meals/{id}")]
+        [HttpGet("@me/meals/events/{id}")]
         public async Task<ActionResult<MealEventDto>> GetForMeById([FromRoute] MealEvents.GetById.Query query)
         {
             var res = await _mediator.Send(query);
@@ -47,11 +48,11 @@ namespace IbdTracker.Features.Patients
                 return NotFound();
             }
                 
-            return Ok(res);
+            return Ok(res.Payload);
         }
         
         [Authorize("write:meals")]
-        [HttpPost("@me/meals")]
+        [HttpPost("@me/meals/events")]
         public async Task<ActionResult<MealEventDto>> PostForMe([FromBody] MealEvents.Post.Command command)
         {
             var res = await _mediator.Send(command);

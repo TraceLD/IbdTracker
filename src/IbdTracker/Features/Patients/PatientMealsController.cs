@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Features.Patients.Meals;
@@ -57,13 +58,13 @@ namespace IbdTracker.Features.Patients
         /// <summary>
         /// Obtains a meal belonging to the currently logged in patient by ID.
         /// </summary>
-        /// <param name="query">The meal ID obtained from the route URL.</param>
+        /// <param name="id">The meal ID obtained from the route URL.</param>
         /// <returns></returns>
         [Authorize("read:meals")]
         [HttpGet("@me/meals/{id}")]
-        public async Task<ActionResult<MealDto>> GetForMeById([FromRoute] GetById.Query query)
+        public async Task<ActionResult<MealDto>> GetForMeById([FromRoute] Guid id)
         {
-            var res = await _mediator.Send(query);
+            var res = await _mediator.Send(new GetById.Query{MealId = id, PatientId = User.Identity?.Name});
 
             if (!res.AuthSucceeded) return Forbid();
             if (res.Payload is null)
@@ -71,7 +72,7 @@ namespace IbdTracker.Features.Patients
                 return NotFound();
             }
                 
-            return Ok(res);
+            return Ok(res.Payload);
         }
         
         /// <summary>

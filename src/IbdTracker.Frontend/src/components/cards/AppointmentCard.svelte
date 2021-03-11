@@ -12,7 +12,7 @@
     import { goto, url } from "@roxi/routify";
 
     export let appointment: Appointment;
-    export let showOptions: boolean = true;
+    let showOptions: boolean = true;
 
     let errorMsg: string;
     const appointmentTimeString: string = appointment.startDateTime.toLocaleTimeString(
