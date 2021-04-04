@@ -10,6 +10,7 @@ namespace IbdTracker.Features.FoodItems
     /// <summary>
     /// Controller for food items.
     /// </summary>
+    [ApiController]
     [Route("api/fooditems")]
     public class FoodItemsController : ControllerBase
     {

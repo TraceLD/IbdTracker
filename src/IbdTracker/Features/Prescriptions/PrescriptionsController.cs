@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IbdTracker.Features.Prescriptions
 {
+    [ApiController]
     [Route("api/prescriptions")]
     public class PrescriptionsController : ControllerBase
     {

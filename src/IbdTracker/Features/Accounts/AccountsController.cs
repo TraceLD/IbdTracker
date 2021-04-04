@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IbdTracker.Features.Accounts
 {
+    [ApiController]
     [Route("api/accounts")]
     public class AccountsController : ControllerBase
     {

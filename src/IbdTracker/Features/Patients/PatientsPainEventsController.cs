@@ -11,6 +11,7 @@ namespace IbdTracker.Features.Patients
     /// <summary>
     /// Controller for pain events belonging to a patient.
     /// </summary>
+    [ApiController]
     [Route("api/patients")]
     public class PatientsPainEventsController : ControllerBase
     {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IbdTracker.Features.Doctors
 {
+    [ApiController]
     [Route("api/doctors")]
     public class DoctorsController : ControllerBase
     {

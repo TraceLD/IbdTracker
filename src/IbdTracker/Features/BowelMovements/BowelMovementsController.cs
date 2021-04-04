@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IbdTracker.Features.BowelMovements
 {
+    [ApiController]
     [Route("api/bms")]
     public class BowelMovementsController : ControllerBase
     {
