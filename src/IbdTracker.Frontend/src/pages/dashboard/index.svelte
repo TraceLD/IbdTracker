@@ -1,20 +1,27 @@
 <script lang="ts">
-    import StayInformedCard from "../../components/notifications/StayInformed.svelte";
-    import StaySafeCard from "../../components/notifications/StaySafe.svelte";
     import SuggestedCard from "../../components/cards/suggested/SuggestedCard.svelte";
-
     import { patient } from "../../stores/authStore";
+    import { get } from "../../services/requests";
+    import type { GlobalNotification } from "../../models/models";
+    import Loading from "../../components/Loading.svelte";
+    import GenericNotificationCard from "../../components/notifications/GenericNotificationCard.svelte";
+
+    // get notifications;
+    const getNotifications: Promise<Array<GlobalNotification>> = get<Array<GlobalNotification>>("notifications");
 </script>
 
 <h1>Hello, {$patient.name.split(" ")[0]}</h1>
 <h2>Notifications</h2>
 
-<div class="mb-4">
-    <StaySafeCard />
-</div>
-<div class="mb-8">
-    <StayInformedCard />
-</div>
+{#await getNotifications}
+    <Loading />    
+{:then res} 
+    {#each res as notification}
+        <div class="mb-4">
+            <GenericNotificationCard notification={notification} />
+        </div>
+    {/each}
+{/await}
 
-<h2>Suggested</h2>
+<h2 class="mt-4">Suggested</h2>
 <SuggestedCard />

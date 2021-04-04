@@ -19,9 +19,14 @@
         <div class="flex items-center">            
             <h1 class="text-black">Saved meals - QR codes</h1>
         </div>
-        <div class="container">
+        <div class="container">            
             {#each res as meal}
-                <QrCode value={JSON.stringify(meal)} />
+                <div class="flex gap-2">
+                    <div>
+                        <h2 class="text-black">{meal.name}</h2>
+                        <QrCode value={JSON.stringify(meal)} />
+                    </div>
+                </div>
             {/each}
         </div>
 

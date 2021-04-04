@@ -1,5 +1,13 @@
 import type { AppointmentDto, BowelMovementEventDto, MealEventDto, PainEventDto, PrescriptionDto } from "./dtos";
 
+export interface GlobalNotification {
+    globalNotificationId: string,
+    title: string,
+    message: string,
+    tailwindColour: string,
+    url: string
+}
+
 export class Appointment {
     appointmentId: string;
     doctorName: string;

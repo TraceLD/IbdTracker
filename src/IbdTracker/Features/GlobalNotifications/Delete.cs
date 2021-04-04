@@ -7,32 +7,24 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Appointments
+namespace IbdTracker.Features.GlobalNotifications
 {
-    public class CancelMyAppointment
+    public class Delete
     {
-        public class RequestDto
-        {
-            public Guid AppointmentId { get; set; }
-        }
-        
         public class Command : IRequest<ActionResult>
         {
-            public string? PatientId { get; set; }
-            public Guid AppointmentId { get; set; }
+            public Guid GlobalNotificationId { get; set; }
         }
 
-        public class CommandValidator : AbstractValidator<Command>
+        public class QueryValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
+            public QueryValidator()
             {
-                RuleFor(c => c.PatientId)
+                RuleFor(q => q.GlobalNotificationId)
                     .NotEmpty();
-                RuleFor(c => c.AppointmentId)
-                    .NotNull();
             }
         }
-        
+
         public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
@@ -44,19 +36,16 @@ namespace IbdTracker.Features.Appointments
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                var res = await _context.Appointments
-                    .FirstOrDefaultAsync(a => a.AppointmentId == request.AppointmentId, cancellationToken);
-                
+                var res = await _context.GlobalNotifications
+                    .FirstOrDefaultAsync(n => n.GlobalNotificationId == request.GlobalNotificationId,
+                        cancellationToken);
+
                 if (res is null)
                 {
                     return new NotFoundResult();
                 }
-                if (!res.PatientId.Equals(request.PatientId))
-                {
-                    return new ForbidResult();
-                }
 
-                _context.Appointments.Remove(res);
+                _context.GlobalNotifications.Remove(res);
                 await _context.SaveChangesAsync(cancellationToken);
                 return new NoContentResult();
             }
