@@ -9,9 +9,9 @@ using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Prescriptions
+namespace IbdTracker.Features.Patients.Prescriptions
 {
-    public class Get
+    public class GetActive
     {
         public class Query : IRequest<IList<PrescriptionDto>>
         {
@@ -26,7 +26,7 @@ namespace IbdTracker.Features.Prescriptions
                     .NotEmpty();
             }
         }
-
+        
         public class Handler : IRequestHandler<Query, IList<PrescriptionDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
@@ -40,7 +40,7 @@ namespace IbdTracker.Features.Prescriptions
             {
                 return await _context.Prescriptions
                     .AsNoTracking()
-                    .Where(p => p.PatientId.Equals(request.PatientId))
+                    .Where(p => p.PatientId.Equals(request.PatientId) && p.EndDateTime > DateTime.UtcNow)
                     .Include(p => p.Medication)
                     .Select(p => new PrescriptionDto
                     {

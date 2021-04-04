@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
+using IbdTracker.Features.Patients.Prescriptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace IbdTracker.Features.Prescriptions
+namespace IbdTracker.Features.Patients
 {
     [ApiController]
-    [Route("api/prescriptions")]
+    [Route("api/patients/prescriptions")]
     public class PrescriptionsController : ControllerBase
     {
         private readonly ILogger<PrescriptionsController> _logger;
@@ -25,7 +26,7 @@ namespace IbdTracker.Features.Prescriptions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PrescriptionDto>>> Get()
         {
-            var res = await _mediator.Send(new Get.Query {PatientId = User.Identity?.Name});
+            var res = await _mediator.Send(new Prescriptions.Get.Query {PatientId = User.Identity?.Name});
             return Ok(res);
         }
 

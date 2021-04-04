@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,9 +8,9 @@ using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Prescriptions
+namespace IbdTracker.Features.Patients.Prescriptions
 {
-    public class GetActive
+    public class Get
     {
         public class Query : IRequest<IList<PrescriptionDto>>
         {
@@ -26,7 +25,7 @@ namespace IbdTracker.Features.Prescriptions
                     .NotEmpty();
             }
         }
-        
+
         public class Handler : IRequestHandler<Query, IList<PrescriptionDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
@@ -40,7 +39,7 @@ namespace IbdTracker.Features.Prescriptions
             {
                 return await _context.Prescriptions
                     .AsNoTracking()
-                    .Where(p => p.PatientId.Equals(request.PatientId) && p.EndDateTime > DateTime.UtcNow)
+                    .Where(p => p.PatientId.Equals(request.PatientId))
                     .Include(p => p.Medication)
                     .Select(p => new PrescriptionDto
                     {
