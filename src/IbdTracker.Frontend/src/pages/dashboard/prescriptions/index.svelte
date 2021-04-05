@@ -10,7 +10,7 @@
     const loadPrescriptionsPromise: Promise<Array<Prescription>> = loadPrescriptions();
 
     async function loadPrescriptions(): Promise<Array<Prescription>> {
-        const prescriptionDtos: Array<PrescriptionDto> = await get<Array<PrescriptionDto>>("prescriptions");
+        const prescriptionDtos: Array<PrescriptionDto> = await get<Array<PrescriptionDto>>("patients/prescriptions");
         const prescriptions: Array<Prescription> = prescriptionDtos.map((el: PrescriptionDto) => {
             return new Prescription(el);
         });

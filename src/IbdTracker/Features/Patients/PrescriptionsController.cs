@@ -34,7 +34,7 @@ namespace IbdTracker.Features.Patients
         [HttpGet("active")]
         public async Task<ActionResult<IEnumerable<PrescriptionDto>>> GetActive()
         {
-            var res = await _mediator.Send(new GetActive.Query {PatientId = User.Identity?.Name});
+            var res = await _mediator.Send(new Prescriptions.GetActive.Query {PatientId = User.Identity?.Name});
             return Ok(res);
         }
     }
