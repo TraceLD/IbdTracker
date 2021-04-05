@@ -82,7 +82,7 @@
 {#if showConfirmationModal}
     <div transition:fade>
         <ConfirmationModal
-            title="Report a bowel movement"
+            title="Report a BM"
             body="Are you sure you want to report this bowel movement?"
             onConfirm={submit}
             onCancel={() => (showConfirmationModal = false)}
