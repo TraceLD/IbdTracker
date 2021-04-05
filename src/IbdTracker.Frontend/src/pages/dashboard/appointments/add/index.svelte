@@ -1,6 +1,7 @@
 <script lang="ts">
     import SubpageHeader from "../../../../components/navigation/SubpageHeader.svelte";
     import Error from "../../../../components/notifications/Error.svelte";
+    import ConfirmationModal from "../../../../components/ConfirmationModal.svelte";
 
     import { goto } from "@roxi/routify";
     import { patient } from "../../../../stores/authStore";
@@ -9,6 +10,9 @@
         isInTheFuture,
     } from "../../../../services/datetime";
     import { post } from "../../../../services/requests";
+    import { fade } from "svelte/transition";
+
+    let showConfirmationModal: boolean = false;
 
     let dateInput: string;
     let timeInput: string;
@@ -19,11 +23,13 @@
     async function submit(): Promise<void> {
         if (dateInput == undefined || dateInput === "") {
             errorMsg = "Date cannot be empty.";
+            showConfirmationModal = false;
             return;
         }
 
         if (timeInput == undefined || timeInput === "") {
             errorMsg = "Time cannot be empty.";
+            showConfirmationModal = false;
             return;
         }
 
@@ -31,6 +37,7 @@
 
         if (!isInTheFuture(date)) {
             errorMsg = "Date and time must be in the future.";
+            showConfirmationModal = false;
             return;
         }
 
@@ -42,7 +49,7 @@
             startDateTime: date.toISOString(),
             durationMinutes: durationInput,
             doctorsNotes: null,
-            patientsNotes: null
+            patientsNotes: null,
         };
 
         const res: Response = await post("appointments", reqBody);
@@ -52,6 +59,7 @@
         } else {
             errorMsg =
                 "Oops. Something is broken on our end. Please try again later.";
+            showConfirmationModal = false;
         }
     }
 </script>
@@ -63,6 +71,18 @@
 
 {#if errorMsg}
     <Error {errorMsg} />
+{/if}
+
+{#if showConfirmationModal}
+    <div transition:fade>
+        <ConfirmationModal
+            title="Schedule an appointment"
+            body="Are you sure you want to schedule this appointment?"
+            onConfirm={submit}
+            onCancel={() => (showConfirmationModal = false)}
+            actionIsPositive={true}
+        />
+    </div>
 {/if}
 
 <div class="rounded-lg bg-gray-50 shadow-md">
@@ -82,8 +102,9 @@
     </div>
     <div class="flex mt-2 bg-gray-100 py-4 px-6 rounded-b-lg">
         <button
-            on:click={submit}
-            class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50">
+            on:click={() => (showConfirmationModal = true)}
+            class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50"
+        >
             Schedule
         </button>
     </div>
