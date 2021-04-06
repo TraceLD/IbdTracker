@@ -1,8 +1,11 @@
 <script lang="ts">
     import MenuContent from "./MenuContent.svelte";
 
+    import type { MenuCategory } from "../../models/models";
     import { fly } from "svelte/transition";
     import { menuOpened } from "../../stores/menuStore";
+
+    export let menuCategories: Array<MenuCategory>;
 </script>
 
 {#if $menuOpened}
@@ -18,6 +21,6 @@
         class="absolute top-0 z-20 overflow-y-auto max-h-screen"
         transition:fly={{ x: -200 }}
     >
-        <MenuContent />
+        <MenuContent menuCategories={menuCategories} />
     </div>    
 {/if}

@@ -1,5 +1,15 @@
 import type { AppointmentDto, BowelMovementEventDto, MealEventDto, PainEventDto, PrescriptionDto } from "./dtos";
 
+export interface MenuCategory {
+    name: string;
+    items: Array<MenuItem>;
+}
+
+export interface MenuItem {
+    name: string;
+    href: string;
+}
+
 export interface GlobalNotification {
     globalNotificationId: string,
     title: string,

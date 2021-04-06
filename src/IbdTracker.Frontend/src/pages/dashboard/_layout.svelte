@@ -1,11 +1,53 @@
 <script lang="ts">
-    import { ready } from "@roxi/routify";
-    import { isLoading, isAuthenticated } from "../../stores/authStore";
     import Login from "../login/index.svelte";
     import Menu from "../../components/navigation/Menu.svelte";
     import Header from "../../components/navigation/Headbar.svelte";
 
+    import type { MenuCategory } from "../../models/models";
+    import { ready } from "@roxi/routify";
+    import { isLoading, isAuthenticated } from "../../stores/authStore";
     import { menuOpened } from "../../stores/menuStore";
+
+    const menuCategories: Array<MenuCategory> = [
+        {
+            name: "Lifestyle",
+            items: [{ name: "Exercise", href: "/dashboard/exercise" }],
+        },
+        {
+            name: "Food",
+            items: [
+                { name: "Meals", href: "/dashboard/food" },
+                { name: "Meals history", href: "/dashboard/mealevents" },
+            ],
+        },
+        {
+            name: "Symptoms",
+            items: [
+                { name: "Pain", href: "/dashboard/pain" },
+                { name: "Bowel movements", href: "/dashboard/bms" },
+            ],
+        },
+        {
+            name: "Treatment",
+            items: [
+                { name: "Prescriptions", href: "/dashboard/prescriptions" },
+                { name: "Appointments", href: "/dashboard/appointments" },
+            ],
+        },
+        {
+            name: "Application",
+            items: [
+                {
+                    name: "Profile information",
+                    href: "/dashboard/settings/profile",
+                },
+                {
+                    name: "Application settings",
+                    href: "/dashboard/settings/application",
+                },
+            ],
+        },
+    ];
 
     $ready();
 </script>
@@ -17,8 +59,12 @@
         <div />
     {:else if $isAuthenticated}
         <div class="lg:flex w-screen">
-            <Menu />
-            <div class:max-h-screen={$menuOpened} class:overflow-hidden={$menuOpened} class="w-screen">
+            <Menu menuCategories={menuCategories} />
+            <div
+                class:max-h-screen={$menuOpened}
+                class:overflow-hidden={$menuOpened}
+                class="w-screen"
+            >
                 <Header />
                 <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-1/3">
                     <slot />

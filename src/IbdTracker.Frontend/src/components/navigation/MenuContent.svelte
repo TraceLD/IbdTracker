@@ -1,60 +1,10 @@
 <script lang="ts">
     import LogOut from "../buttons/LogOut.svelte";
 
+    import type { MenuCategory } from "../../models/models";
     import { isActive } from "@roxi/routify";
 
-    interface MenuCategory {
-        name: string;
-        items: Array<MenuItem>;
-    }
-
-    interface MenuItem {
-        name: string;
-        href: string;
-    }
-
-    const menuCategories: Array<MenuCategory> = [
-        {
-            name: "Lifestyle",
-            items: [
-                { name: "Exercise", href: "/dashboard/exercise" },
-            ],
-        },
-        {
-            name: "Food",
-            items: [
-                { name: "Meals", href: "/dashboard/food" },
-                { name: "Meals history", href: "/dashboard/mealevents" }
-            ]
-        },
-        {
-            name: "Symptoms",
-            items: [
-                { name: "Pain", href: "/dashboard/pain" },
-                { name: "Bowel movements", href: "/dashboard/bms" },
-            ],
-        },
-        {
-            name: "Treatment",
-            items: [
-                { name: "Prescriptions", href: "/dashboard/prescriptions" },
-                { name: "Appointments", href: "/dashboard/appointments" },
-            ],
-        },
-        {
-            name: "Application",
-            items: [
-                {
-                    name: "Profile information",
-                    href: "/dashboard/settings/profile",
-                },
-                {
-                    name: "Application settings",
-                    href: "/dashboard/settings/application",
-                },
-            ],
-        },
-    ];
+    export let menuCategories: Array<MenuCategory>;    
 
     const itemBasicClasses = "font-semibold rounded-lg px-3 py-2";
     const itemIsActiveClasses = itemBasicClasses + " bg-gray-100 text-gray-800";
