@@ -7,10 +7,6 @@
     import { Prescription } from "../../../models/models";
     import { get } from "../../../services/requests";
 
-    const loadPrescriptionsPromise: Promise<
-        Array<Prescription>
-    > = loadPrescriptions();
-
     async function loadPrescriptions(): Promise<Array<Prescription>> {
         const prescriptionDtos: Array<PrescriptionDto> = await get<
             Array<PrescriptionDto>
@@ -25,7 +21,7 @@
     }
 </script>
 
-{#await loadPrescriptionsPromise}
+{#await loadPrescriptions()}
     <Loading />
 {:then res}
     <h2>Active prescriptions</h2>
@@ -38,7 +34,10 @@
             </div>
         {/each}
     {:else}
-        <p>You do not have any active prescirptions at the moment. If you think something is missing you should contact your doctor.</p>
+        <p>
+            You do not have any active prescirptions at the moment. If you think
+            something is missing you should contact your doctor.
+        </p>
     {/if}
 {:catch err}
     <Error errorMsg={err} />
