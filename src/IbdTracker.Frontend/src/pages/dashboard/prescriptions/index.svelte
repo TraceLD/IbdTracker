@@ -7,19 +7,23 @@
     import { Prescription } from "../../../models/models";
     import { get } from "../../../services/requests";
 
-    const loadPrescriptionsPromise: Promise<Array<Prescription>> = loadPrescriptions();
+    const loadPrescriptionsPromise: Promise<
+        Array<Prescription>
+    > = loadPrescriptions();
 
     async function loadPrescriptions(): Promise<Array<Prescription>> {
-        const prescriptionDtos: Array<PrescriptionDto> = await get<Array<PrescriptionDto>>("patients/prescriptions");
-        const prescriptions: Array<Prescription> = prescriptionDtos.map((el: PrescriptionDto) => {
-            return new Prescription(el);
-        });
+        const prescriptionDtos: Array<PrescriptionDto> = await get<
+            Array<PrescriptionDto>
+        >("patients/prescriptions");
+        const prescriptions: Array<Prescription> = prescriptionDtos.map(
+            (el: PrescriptionDto) => {
+                return new Prescription(el);
+            }
+        );
 
         return prescriptions;
     }
 </script>
-
-
 
 {#await loadPrescriptionsPromise}
     <Loading />
@@ -27,11 +31,15 @@
     <h2>Active prescriptions</h2>
     <div class="mt-4" />
 
-    {#each res as prescription}
-        <div class="mb-6">
-            <PrescriptionCard prescription={prescription} />
-        </div>
-    {/each}
+    {#if res.length !== 0}
+        {#each res as prescription}
+            <div class="mb-6">
+                <PrescriptionCard {prescription} />
+            </div>
+        {/each}
+    {:else}
+        <p>You do not have any active prescirptions at the moment. If you think something is missing you should contact your doctor.</p>
+    {/if}
 {:catch err}
     <Error errorMsg={err} />
 {/await}
