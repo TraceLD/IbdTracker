@@ -30,6 +30,10 @@ namespace IbdTracker.Core
             modelBuilder.Entity<Doctor>()
                 .Property(d => d.OfficeHours)
                 .HasColumnType("jsonb");
+
+            modelBuilder.Entity<Appointment>()
+                .HasIndex(a => new {a.DoctorId, a.StartDateTime})
+                .IsUnique();
         }
     }
 }
