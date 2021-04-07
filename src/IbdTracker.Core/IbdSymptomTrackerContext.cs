@@ -1,4 +1,6 @@
-﻿using IbdTracker.Core.Entities;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using IbdTracker.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Core
@@ -25,6 +27,14 @@ namespace IbdTracker.Core
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Doctor>()
+                .Property(d => d.OfficeHours)
+                .IsRequired()
+                .HasDefaultValue(new List<OfficeHours>())
+                .HasColumnType("jsonb")
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, null),
+                    v => JsonSerializer.Deserialize<List<OfficeHours>>(v, null)!);
         }
     }
 }
