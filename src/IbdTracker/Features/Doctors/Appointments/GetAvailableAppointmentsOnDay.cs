@@ -13,7 +13,7 @@ namespace IbdTracker.Features.Doctors.Appointments
     {
         // do not have to validate for null as it comes from ASP.NET Core query and route args which are validated;
         public record Query(string DoctorId, DateTime AppointmentDayAsDateTime) : IRequest<Result>;
-        public record Result(DateTime Day, IList<DateTime> AvailableAppointmentTimesOnDayUtc);
+        public record Result(string DoctorId, DateTime Day, IList<DateTime> AvailableAppointmentTimesOnDayUtc);
 
         public class Handler : IRequestHandler<Query, Result>
         {
@@ -31,7 +31,7 @@ namespace IbdTracker.Features.Doctors.Appointments
 
                 if (appointmentDayAsDateTime <= DateTime.UtcNow.Date)
                 {
-                    return new(appointmentDayAsDateTime, new List<DateTime>());
+                    return new(request.DoctorId, appointmentDayAsDateTime, new List<DateTime>());
                 }
                 
                 // get office hours for that day of week;
@@ -46,7 +46,7 @@ namespace IbdTracker.Features.Doctors.Appointments
                 // so return empty list;
                 if (officeHours is null)
                 {
-                    return new(appointmentDayAsDateTime, new List<DateTime>());
+                    return new(request.DoctorId, appointmentDayAsDateTime, new List<DateTime>());
                 }
                 
                 // get already booked appointments for that doctor for that day;
@@ -72,7 +72,7 @@ namespace IbdTracker.Features.Doctors.Appointments
 
                 if (appointmentsOnDay is null || !appointmentsOnDay.Any())
                 {
-                    return new Result(appointmentDayAsDateTime, freeTimes);
+                    return new Result(request.DoctorId, appointmentDayAsDateTime, freeTimes);
                 }
 
                 var appointmentDates = appointmentsOnDay
@@ -83,7 +83,7 @@ namespace IbdTracker.Features.Doctors.Appointments
                 freeTimes = freeTimes
                     .Except(appointmentDates)
                     .ToList();
-                return new(appointmentDayAsDateTime, freeTimes);
+                return new(request.DoctorId, appointmentDayAsDateTime, freeTimes);
             }
         }
     }

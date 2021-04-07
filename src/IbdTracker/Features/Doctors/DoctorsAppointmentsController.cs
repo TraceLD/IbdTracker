@@ -22,7 +22,12 @@ namespace IbdTracker.Features.Doctors
         }
 
         [HttpGet("{doctorId}/appointments/available")]
-        public async Task<ActionResult> GetAvailableAppointmentsOnDay([FromRoute] string doctorId, [FromQuery] DateTime day) =>
+        public async Task<ActionResult<GetAvailableAppointmentsOnDay.Result>> GetAvailableAppointmentsOnDay(
+            [FromRoute] string doctorId, [FromQuery] DateTime day) =>
             Ok(await _mediator.Send(new GetAvailableAppointmentsOnDay.Query(doctorId, day)));
+
+        [HttpGet("{doctorId}/appointments/isAvailable")]
+        public async Task<ActionResult> IsAvailable([FromRoute] string doctorId, [FromQuery] DateTime dateTime) =>
+            Ok(await _mediator.Send(new IsAppointmentAvailable.Query(doctorId, dateTime)));
     }
 }
