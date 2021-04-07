@@ -9,8 +9,15 @@
     import { fade } from "svelte/transition";
 
     interface IAvailableAppointmentTime {
-        day: Date;
-        availableAppointmentTimesOnDayUtc: Array<string>;
+        doctorId: string,
+        day: Date,
+        availableAppointmentTimesOnDayUtc: Array<string>,
+    }
+    
+    interface IIsAppointmentAvailableResult {
+        doctorId: string,
+        appointmentTime: string,
+        isAvailable: boolean,
     }
 
     let showConfirmationModal: boolean = false;
@@ -23,10 +30,25 @@
     let errorMsg: string;
 
     async function submit(): Promise<void> {
+        errorMsg = undefined;
+
+        // make sure is still available;
+        const selectedDateTimeIsoString: string = selectedDateTime.toISOString();
+        const avRes: IIsAppointmentAvailableResult = await get<IIsAppointmentAvailableResult>(
+            `doctors/${$patient.doctorId}/appointments/isAvailable?dateTime=${selectedDateTimeIsoString}`
+        );
+
+        if (!avRes.isAvailable) {
+            await onDateInput();
+            errorMsg = "Sorry, that appointment has been taken.";
+            showConfirmationModal = false;
+            return;
+        }
+
         const reqBody = {
             patientId: $patient.patientId,
             doctorId: $patient.doctorId,
-            startDateTime: selectedDateTime.toISOString(),
+            startDateTime: selectedDateTimeIsoString,
             durationMinutes: 30,
             doctorsNotes: null,
             patientsNotes: null,
@@ -131,7 +153,7 @@
         <div class="flex mt-2 bg-gray-100 py-4 px-6 rounded-b-lg">
             <button
                 on:click={() => (showConfirmationModal = true)}
-                class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50"
+                class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50"
             >
                 Schedule
             </button>
