@@ -29,12 +29,7 @@ namespace IbdTracker.Core
         {
             modelBuilder.Entity<Doctor>()
                 .Property(d => d.OfficeHours)
-                .IsRequired()
-                .HasDefaultValue(new List<OfficeHours>())
-                .HasColumnType("jsonb")
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, null),
-                    v => JsonSerializer.Deserialize<List<OfficeHours>>(v, null)!);
+                .HasColumnType("jsonb");
         }
     }
 }
