@@ -13,9 +13,9 @@
     import { goto, url } from "@roxi/routify";
 
     export let appointment: Appointment;
+    export let showOptions: boolean = true;
 
-    let showConfirmationModal: boolean = false;
-    let showOptions: boolean = true;
+    let showConfirmationModal: boolean = false;    
     let errorMsg: string;
 
     const appointmentTimeString: string = appointment.startDateTime.toLocaleTimeString(
@@ -38,9 +38,7 @@
     ];
 
     async function cancelAppointment(): Promise<void> {
-        let res = await del("appointments", {
-            appointmentId: appointment.appointmentId,
-        });
+        let res = await del(`patients/@me/appointments/${appointment.appointmentId}`, {});
 
         if (!res.ok) {
             showConfirmationModal = false;

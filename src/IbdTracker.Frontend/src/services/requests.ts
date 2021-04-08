@@ -37,10 +37,10 @@ export async function post(url: string, body: any): Promise<Response> {
     return res;
 }
 
-export async function patch(url: string, body: any): Promise<Response> {
+export async function put(url: string, body: any): Promise<Response> {
     const token: string = await getToken();
     const res: Response = await fetch(combineUrls(url), {
-        method: "PATCH",
+        method: "PUT",
         headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
 using MediatR;
@@ -22,40 +21,37 @@ namespace IbdTracker.Features.Appointments
             _mediator = mediator;
         }
 
-        // gets currently logged in patients' appointments;
-        [Authorize("read:appointments")]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> Get()
-        {
-            var res = await _mediator.Send(new Get.Query {PatientId = User.Identity?.Name});
-            return Ok(res);
-        }
-
-        [Authorize("read:appointments")]
+        [Authorize("read:allappointments")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppointmentDto>> GetById(Guid id)
+        public async Task<ActionResult<AppointmentDto>> GetById([FromRoute] GetById.Query query)
         {
-            var res = await _mediator.Send(new GetById.Query{AppointmentId = id});
-            if (res is null)
-                return NotFound();
-            return Ok(res);
+            var res = await _mediator.Send(query);
+            return res is null ? NotFound() : Ok(res);
         }
 
-        [Authorize("write:appointments")]
+        [Authorize("write:allappointments")]
         [HttpPost]
-        public async Task<ActionResult<AppointmentDto>> Post([FromBody] Post.Command command)
+        public async Task<ActionResult> Post([FromBody] Post.Command command)
         {
             var res = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetById), new { id = res.AppointmentId }, res);
+            return CreatedAtAction(nameof(GetById), new {id = res.AppointmentId}, res);
+        }
+        
+        [Authorize("write:allappointments")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<AppointmentDto>> Put([FromRoute] Guid id, [FromBody] Put.Command command)
+        {
+            if (id != command.AppointmentId)
+            {
+                return BadRequest();
+            }
+
+            return await _mediator.Send(command);
         }
 
-        [Authorize("write:appointments")]
-        [HttpDelete]
-        public async Task<ActionResult> CancelAppointment([FromBody] CancelMyAppointment.RequestDto body) =>
-            await _mediator.Send(new CancelMyAppointment.Command
-            {
-                AppointmentId = body.AppointmentId,
-                PatientId = User.Identity?.Name
-            });
+        [Authorize("write:allappointments")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete([FromRoute] Delete.Command command) =>
+            await _mediator.Send(command);
     }
 }

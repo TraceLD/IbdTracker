@@ -3,27 +3,31 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
-using IbdTracker.Core.CommonDtos;
-using IbdTracker.Core.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Appointments
+namespace IbdTracker.Features.Patients.Appointments
 {
-    public class Post
+    public class Put
     {
         public record Command(
+            Guid AppointmentId,
             string PatientId,
             string DoctorId,
             DateTime StartDateTime,
             int DurationMinutes,
             string? DoctorNotes,
             string? PatientNotes
-        ) : IRequest<AppointmentDto>;
-
+        ) : IRequest<ActionResult>;
+        
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
+                RuleFor(c => c.AppointmentId)
+                    .NotEmpty();
+                
                 RuleFor(c => c.PatientId)
                     .MinimumLength(6)
                     .NotEmpty();
@@ -44,7 +48,7 @@ namespace IbdTracker.Features.Appointments
             }
         }
         
-        public class Handler : IRequestHandler<Command, AppointmentDto>
+        public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -53,28 +57,28 @@ namespace IbdTracker.Features.Appointments
                 _context = context;
             }
 
-            public async Task<AppointmentDto> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                // convert to appointment;
-                var appointment = new Appointment(request.PatientId, request.DoctorId,
-                    request.StartDateTime,
-                    request.DurationMinutes, request.DoctorNotes,
-                    request.PatientNotes);
-                
-                // add to DB and save changes;
-                await _context.Appointments.AddAsync(appointment, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
-                
-                return new()
+                var appointment =
+                    await _context.Appointments.FirstOrDefaultAsync(
+                        a => a.AppointmentId == request.AppointmentId && a.PatientId.Equals(request.PatientId),
+                        cancellationToken);
+
+                if (appointment is null)
                 {
-                    AppointmentId = appointment.AppointmentId,
-                    PatientId = appointment.PatientId,
-                    DoctorId = appointment.DoctorId,
-                    StartDateTime = appointment.StartDateTime,
-                    DurationMinutes = appointment.DurationMinutes,
-                    DoctorNotes = appointment.DoctorNotes,
-                    PatientNotes = appointment.PatientNotes
-                };
+                    return new NotFoundResult();
+                }
+
+                appointment.PatientId = request.PatientId;
+                appointment.DoctorId = request.DoctorId;
+                appointment.StartDateTime = request.StartDateTime;
+                appointment.DurationMinutes = request.DurationMinutes;
+                appointment.DoctorNotes = request.DoctorNotes;
+                appointment.PatientNotes = request.PatientNotes;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new NoContentResult();
             }
         }
     }

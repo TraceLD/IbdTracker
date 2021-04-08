@@ -5,10 +5,14 @@
         public string Server { get; set; } = null!;
         public int Port { get; set; }
         public string DatabaseName { get; set; } = null!;
+        public string HangfireDatabaseName { get; set; } = null!;
         public string UserId { get; set; } = null!;
         public string Password { get; set; } = null!;
 
         public string ConnectionString =>
             $@"Server={Server};Port={Port};Database={DatabaseName};User Id={UserId};Password={Password};";
+
+        public string HangfireConnectionString =>
+            $@"Server={Server};Port={Port};Database={HangfireDatabaseName};User Id={UserId};Password={Password};";
     }
 }

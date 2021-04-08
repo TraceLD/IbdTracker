@@ -2,32 +2,24 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using Hangfire;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 
-namespace IbdTracker.Features.Appointments
+namespace IbdTracker.Features.Patients.Appointments
 {
     public class Post
     {
-        public record Command(
-            string PatientId,
-            string DoctorId,
-            DateTime StartDateTime,
-            int DurationMinutes,
-            string? DoctorNotes,
-            string? PatientNotes
-        ) : IRequest<AppointmentDto>;
+        public record HttpRequestBody(string DoctorId, DateTime StartDateTime, int DurationMinutes,
+            string? PatientNotes, string? DoctorNotes);
 
-        public class CommandValidator : AbstractValidator<Command>
+        public class HttpRequestBodyValidator : AbstractValidator<HttpRequestBody>
         {
-            public CommandValidator()
+            public HttpRequestBodyValidator()
             {
-                RuleFor(c => c.PatientId)
-                    .MinimumLength(6)
-                    .NotEmpty();
-                
                 RuleFor(c => c.DoctorId)
                     .MinimumLength(6)
                     .NotEmpty();
@@ -43,7 +35,10 @@ namespace IbdTracker.Features.Appointments
                     .GreaterThan(0);
             }
         }
-        
+
+        public record Command
+            (string PatientId, string? PatientEmailAddress, HttpRequestBody HttpRequestBody) : IRequest<AppointmentDto>;
+
         public class Handler : IRequestHandler<Command, AppointmentDto>
         {
             private readonly IbdSymptomTrackerContext _context;
@@ -56,15 +51,24 @@ namespace IbdTracker.Features.Appointments
             public async Task<AppointmentDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 // convert to appointment;
-                var appointment = new Appointment(request.PatientId, request.DoctorId,
-                    request.StartDateTime,
-                    request.DurationMinutes, request.DoctorNotes,
-                    request.PatientNotes);
-                
+                var appointment = new Appointment(request.PatientId, request.HttpRequestBody.DoctorId,
+                    request.HttpRequestBody.StartDateTime,
+                    request.HttpRequestBody.DurationMinutes, request.HttpRequestBody.DoctorNotes,
+                    request.HttpRequestBody.PatientNotes);
+
                 // add to DB and save changes;
                 await _context.Appointments.AddAsync(appointment, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 
+                // send confirmation email to the patient in the background;
+                // in the background so that the HTTP POST response does not have to wait for email to be sent;
+                if (request.PatientEmailAddress is not null)
+                {
+                    BackgroundJob.Enqueue<IEmailService>(s =>
+                        s.SendAppointmentBookingConfirmationEmail(appointment, request.PatientEmailAddress));
+                }
+
+                // convert to DTO so that we don't return the entire EFCore entity with our JSON;
                 return new()
                 {
                     AppointmentId = appointment.AppointmentId,

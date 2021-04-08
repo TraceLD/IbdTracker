@@ -1,25 +1,16 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Appointments
+namespace IbdTracker.Features.Patients.Appointments
 {
-    public class GetById
+    public class GetOne
     {
-        public record Query(Guid Id) : IRequest<AppointmentDto?>;
-
-        public class QueryValidator : AbstractValidator<Query>
-        {
-            public QueryValidator() =>
-                RuleFor(q => q.Id)
-                    .NotEmpty();
-        }
+        public record Query(string PatientId, Guid AppointmentId) : IRequest<AppointmentDto?>;
         
         public class Handler : IRequestHandler<Query, AppointmentDto?>
         {
@@ -30,10 +21,10 @@ namespace IbdTracker.Features.Appointments
 
             public async Task<AppointmentDto?> Handle(Query request, CancellationToken cancellationToken) =>
                 (await _context.Appointments
-                    .AsNoTracking()
                     .Include(a => a.Doctor)
-                    .Where(a => a.AppointmentId == request.Id)
-                    .FirstOrDefaultAsync(cancellationToken))?.ToDto();
+                    .FirstOrDefaultAsync(
+                        a => a.AppointmentId == request.AppointmentId && a.PatientId.Equals(request.PatientId),
+                        cancellationToken))?.ToDto();
         }
     }
 }

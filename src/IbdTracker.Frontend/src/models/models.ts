@@ -24,17 +24,17 @@ export class Appointment {
     startDateTime: Date;
     durationMinutes: number;
     location: string;
-    doctorsNotes?: string;
-    patientsNotes?: string;
+    doctorNotes?: string;
+    patientNotes?: string;
 
     constructor(dto: AppointmentDto) {
         this.appointmentId = dto.appointmentId;
         this.doctorName = dto.doctorName;
         this.startDateTime = new Date(dto.startDateTime + "Z");
-        this.durationMinutes = this.durationMinutes;
+        this.durationMinutes = dto.durationMinutes;
         this.location = dto.location;
-        this.doctorsNotes = dto.doctorsNotes;
-        this.patientsNotes = dto.patientsNotes;
+        this.doctorNotes = dto.doctorNotes;
+        this.patientNotes = dto.patientNotes;
     }
 }
 
