@@ -49,9 +49,9 @@ namespace IbdTracker.Features.Patients
         [HttpPost("@me/appointments")]
         public async Task<ActionResult<AppointmentDto>> PostAppointmentForMe([FromBody] Post.HttpRequestBody requestBody)
         {
-            var email = User.FindFirst(AppJwtClaims.EmailClaim)?.Value;
-            var res = await _mediator.Send(new Post.Command(User.Identity!.Name!, email, requestBody));
-            return Ok(res);
+            var patientEmail = User.FindFirst(AppJwtClaims.EmailClaim)?.Value;
+            var res = await _mediator.Send(new Post.Command(User.Identity!.Name!, patientEmail, requestBody));
+            return CreatedAtAction(nameof(GetForMeById), new {id = res.AppointmentId}, res);
         }
     }
 }

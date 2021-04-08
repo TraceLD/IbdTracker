@@ -1,6 +1,8 @@
 using System;
 using System.Security.Claims;
 using FluentValidation.AspNetCore;
+using Hangfire;
+using Hangfire.PostgreSql;
 using IbdTracker.Core;
 using IbdTracker.Core.Config;
 using IbdTracker.Infrastructure.Authorization;
@@ -85,6 +87,10 @@ namespace IbdTracker
             services.AddScoped<IAuth0Service, Auth0Service>();
 
             services.AddScoped<IEmailService, EmailService>();
+            
+            // add Hangfire;
+            services.AddHangfire((provider, config) =>
+                config.UsePostgreSqlStorage(provider.GetRequiredService<DbConfig>().HangfireConnectionString));
 
             services.AddControllers()
                 .AddFluentValidation(configuration =>
@@ -133,6 +139,8 @@ namespace IbdTracker
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseHangfireServer();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

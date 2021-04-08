@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using Hangfire;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
@@ -41,12 +42,10 @@ namespace IbdTracker.Features.Patients.Appointments
         public class Handler : IRequestHandler<Command, AppointmentDto>
         {
             private readonly IbdSymptomTrackerContext _context;
-            private readonly IEmailService _emailService;
 
-            public Handler(IbdSymptomTrackerContext context, IEmailService emailService)
+            public Handler(IbdSymptomTrackerContext context)
             {
                 _context = context;
-                _emailService = emailService;
             }
 
             public async Task<AppointmentDto> Handle(Command request, CancellationToken cancellationToken)
@@ -61,10 +60,12 @@ namespace IbdTracker.Features.Patients.Appointments
                 await _context.Appointments.AddAsync(appointment, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 
-                // send confirmation email to the patient;
+                // send confirmation email to the patient in the background;
+                // in the background so that the HTTP POST response does not have to wait for email to be sent;
                 if (request.PatientEmailAddress is not null)
                 {
-                    await _emailService.SendAppointmentConfirmationEmail(appointment, request.PatientEmailAddress);
+                    BackgroundJob.Enqueue<IEmailService>(s =>
+                        s.SendAppointmentConfirmationEmail(appointment, request.PatientEmailAddress));
                 }
 
                 // convert to DTO so that we don't return the entire EFCore entity with our JSON;
