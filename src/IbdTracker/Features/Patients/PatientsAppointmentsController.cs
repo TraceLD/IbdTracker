@@ -40,9 +40,17 @@ namespace IbdTracker.Features.Patients
 
         [Authorize("read:appointments")]
         [HttpGet("@me/appointments/{id}")]
-        public async Task<ActionResult<AppointmentDto>> GetForMeById(string id)
+        public async Task<ActionResult<AppointmentDto>> GetOneForMeById(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        [Authorize("write:appointments")]
+        [HttpDelete("@me/appointments/{id}")]
+        public async Task<ActionResult> DeleteAppointmentForMe(Guid id)
+        {
+            var patientEmail = User.FindFirst(AppJwtClaims.EmailClaim)?.Value;
+            return await _mediator.Send(new Cancel.Command(User.Identity!.Name!, patientEmail, id));
         }
 
         [Authorize("write:appointments")]
@@ -51,7 +59,7 @@ namespace IbdTracker.Features.Patients
         {
             var patientEmail = User.FindFirst(AppJwtClaims.EmailClaim)?.Value;
             var res = await _mediator.Send(new Post.Command(User.Identity!.Name!, patientEmail, requestBody));
-            return CreatedAtAction(nameof(GetForMeById), new {id = res.AppointmentId}, res);
+            return CreatedAtAction(nameof(GetOneForMeById), new {id = res.AppointmentId}, res);
         }
     }
 }

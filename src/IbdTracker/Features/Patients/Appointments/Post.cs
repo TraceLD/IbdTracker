@@ -65,7 +65,7 @@ namespace IbdTracker.Features.Patients.Appointments
                 if (request.PatientEmailAddress is not null)
                 {
                     BackgroundJob.Enqueue<IEmailService>(s =>
-                        s.SendAppointmentConfirmationEmail(appointment, request.PatientEmailAddress));
+                        s.SendAppointmentBookingConfirmationEmail(appointment, request.PatientEmailAddress));
                 }
 
                 // convert to DTO so that we don't return the entire EFCore entity with our JSON;

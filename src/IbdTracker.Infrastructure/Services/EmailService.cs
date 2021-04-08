@@ -31,7 +31,15 @@ namespace IbdTracker.Infrastructure.Services
         /// <param name="appointment">Appointment details.</param>
         /// <param name="to">Recipient's email address.</param>
         /// <returns><see cref="Task"/> representing the asynchronous operation.</returns>
-        Task SendAppointmentConfirmationEmail(Appointment appointment, string to);
+        Task SendAppointmentBookingConfirmationEmail(Appointment appointment, string to);
+        
+        /// <summary>
+        /// Sends an email confirming an appointment has been cancelled.
+        /// </summary>
+        /// <param name="appointmentId">ID of the cancelled appointment.</param>
+        /// <param name="to">Recipient's email address.</param>
+        /// <returns><see cref="Task"/> representing the asynchronous operation.</returns>
+        Task SendAppointmentCancellationConfirmationEmail(Guid appointmentId, string to);
     }
     
     /// <inheritdoc />
@@ -72,7 +80,7 @@ namespace IbdTracker.Infrastructure.Services
         }
 
         /// <inheritdoc />
-        public async Task SendAppointmentConfirmationEmail(Appointment appointment, string to)
+        public async Task SendAppointmentBookingConfirmationEmail(Appointment appointment, string to)
         {
             var date = DateTime.SpecifyKind(appointment.StartDateTime, DateTimeKind.Utc);
             var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorId.Equals(appointment.DoctorId));
@@ -91,6 +99,17 @@ namespace IbdTracker.Infrastructure.Services
 <p>Duration: {appointment.DurationMinutes} minutes</p>";
 
             await SendMessage(to, $"Appointment booking confirmation (nr {appointment.AppointmentId})", html);
+        }
+
+        public async Task SendAppointmentCancellationConfirmationEmail(Guid appointmentId, string to)
+        {
+            var html = $@"
+<h1>IBDtracker - IBD Symptom Tracker</h1>
+
+<h2>Appointment nr {appointmentId} cancelled!</h2>
+<h3>Your appointment has been cancelled.</h3>";
+
+            await SendMessage(to, $"Appointment cancelled (nr {appointmentId})", html);
         }
     }
 }
