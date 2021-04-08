@@ -53,7 +53,7 @@
             doctorsNotes: null,
             patientsNotes: null,
         };
-        const res: Response = await post("appointments", reqBody);
+        const res: Response = await post("patients/@me/appointments", reqBody);
 
         if (res.ok) {
             $goto("/dashboard/appointments");

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using Auth0Net.DependencyInjection.Cache;
 using FluentValidation.AspNetCore;
 using IbdTracker.Core;
 using IbdTracker.Core.Config;
@@ -33,12 +31,16 @@ namespace IbdTracker
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use this method to add services to the IoC container.
         public void ConfigureServices(IServiceCollection services)
         {
             // register db config;
             services.Configure<DbConfig>(Configuration.GetSection("Database"));
             services.AddSingleton(provider => provider.GetRequiredService<IOptions<DbConfig>>().Value);
+            
+            // register email config;
+            services.Configure<EmailConfig>(Configuration.GetSection("Email"));
+            services.AddSingleton(provider => provider.GetRequiredService<IOptions<EmailConfig>>().Value);
 
             // add db context;
             services.AddDbContext<IbdSymptomTrackerContext>((provider, builder) =>
@@ -81,6 +83,8 @@ namespace IbdTracker
             });
             services.AddAuth0ManagementClient().AddManagementAccessToken();
             services.AddScoped<IAuth0Service, Auth0Service>();
+
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddControllers()
                 .AddFluentValidation(configuration =>
