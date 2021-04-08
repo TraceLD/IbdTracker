@@ -3,41 +3,59 @@
     import Loading from "../../../components/Loading.svelte";
     import SubpageHeader from "../../../components/navigation/SubpageHeader.svelte";
     import Error from "../../../components/notifications/Error.svelte";
+    import GenericNotificationCard from "../../../components/notifications/GenericNotificationCard.svelte";
 
-    import type { AppointmentDto } from "../../../models/dtos";    
-    import { Appointment } from "../../../models/models";
-    import { get, patch } from "../../../services/requests";
+    import type { AppointmentDto } from "../../../models/dtos";
+    import { Appointment, GlobalNotification } from "../../../models/models";
+    import { get, put } from "../../../services/requests";
     import { patient } from "../../../stores/authStore";
 
     export let appointment: string;
 
+    let notification: GlobalNotification;
     let errorMsg: string;
     let input: string;
 
     async function load(): Promise<Appointment> {
         let dto: AppointmentDto = await get<AppointmentDto>(
-            `appointments/${appointment}`
+            `patients/@me/appointments/${appointment}`
         );
 
-        if (dto.patientsNotes !== null || dto.patientsNotes !== undefined) {
-            input = dto.patientsNotes;
+        if (dto.patientNotes !== null || dto.patientNotes !== undefined) {
+            input = dto.patientNotes;
         }
 
         return new Appointment(dto);
     }
 
     async function onSaveClick(a: Appointment): Promise<void> {
-        errorMsg = "";
+        errorMsg = undefined;
+        notification = undefined;
 
         let dto = {
             appointmentId: a.appointmentId,
             patientId: $patient.patientId,
-            patientsNotes: input
+            doctorId: $patient.doctorId,
+            startDateTime: a.startDateTime.toISOString(),
+            durationMinutes: a.durationMinutes,
+            doctorNotes: a.doctorNotes,
+            patientNotes: input,
         };
-        let res: Response = await patch("appointments", dto);
+        let res: Response = await put(
+            `patients/@me/appointments/${a.appointmentId}`,
+            dto
+        );
 
         if (!res.ok) {
             errorMsg = res.statusText;
+        } else {
+            notification = {
+                globalNotificationId: undefined,
+                title: "Changes saved!",
+                message: "Your changes to the notes have been saved.",
+                tailwindColour: "green",
+                url: undefined,
+            };
         }
     }
 </script>
@@ -47,9 +65,15 @@
     text="Appointment details"
 />
 
-{#if errorMsg}
-    <Error {errorMsg} />
-{/if}
+<div class="mb-8">
+    {#if notification}
+        <GenericNotificationCard {notification} />
+    {/if}
+
+    {#if errorMsg}
+        <Error {errorMsg} />
+    {/if}
+</div>
 
 {#await load()}
     <Loading />
@@ -78,7 +102,7 @@
                     Doctor's notes
                 </p>
                 <p class="bg-white shadow rounded-lg w-full text-gray-800 p-3">
-                    {res.doctorsNotes}
+                    {res.doctorNotes ?? "None"}
                 </p>
             </div>
         </div>

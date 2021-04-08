@@ -17,7 +17,7 @@
     const loadAppointmentsPromise: Promise<AppointmentsCollection> = loadAppointments();
 
     async function loadAppointments(): Promise<AppointmentsCollection> {
-        const appointmentDtos: Array<AppointmentDto> = await get<Array<AppointmentDto>>("appointments");
+        const appointmentDtos: Array<AppointmentDto> = await get<Array<AppointmentDto>>("patients/@me/appointments");
         const upcoming: Array<Appointment> = [];
         const past: Array<Appointment> = [];
         const dateNow: Date = new Date();

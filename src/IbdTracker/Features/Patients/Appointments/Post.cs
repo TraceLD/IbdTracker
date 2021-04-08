@@ -76,8 +76,8 @@ namespace IbdTracker.Features.Patients.Appointments
                     DoctorId = appointment.DoctorId,
                     StartDateTime = appointment.StartDateTime,
                     DurationMinutes = appointment.DurationMinutes,
-                    DoctorsNotes = appointment.DoctorsNotes,
-                    PatientsNotes = appointment.PatientsNotes
+                    DoctorNotes = appointment.DoctorNotes,
+                    PatientNotes = appointment.PatientNotes
                 };
             }
         }

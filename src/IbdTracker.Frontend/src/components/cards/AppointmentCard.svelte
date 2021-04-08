@@ -13,9 +13,9 @@
     import { goto, url } from "@roxi/routify";
 
     export let appointment: Appointment;
+    export let showOptions: boolean = true;
 
-    let showConfirmationModal: boolean = false;
-    let showOptions: boolean = true;
+    let showConfirmationModal: boolean = false;    
     let errorMsg: string;
 
     const appointmentTimeString: string = appointment.startDateTime.toLocaleTimeString(

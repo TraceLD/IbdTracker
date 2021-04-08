@@ -9,28 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Appointments
 {
-    public class CancelMyAppointment
+    public class Delete
     {
-        public class RequestDto
-        {
-            public Guid AppointmentId { get; set; }
-        }
-        
-        public class Command : IRequest<ActionResult>
-        {
-            public string? PatientId { get; set; }
-            public Guid AppointmentId { get; set; }
-        }
+        public record Command(Guid Id) : IRequest<ActionResult>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                RuleFor(c => c.PatientId)
+            public CommandValidator() =>
+                RuleFor(c => c.Id)
                     .NotEmpty();
-                RuleFor(c => c.AppointmentId)
-                    .NotNull();
-            }
         }
         
         public class Handler : IRequestHandler<Command, ActionResult>
@@ -44,20 +31,20 @@ namespace IbdTracker.Features.Appointments
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                var res = await _context.Appointments
-                    .FirstOrDefaultAsync(a => a.AppointmentId == request.AppointmentId, cancellationToken);
-                
-                if (res is null)
+                // get the appointment that has been requested to be deleted;
+                var appointment =
+                    await _context.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == request.Id,
+                        cancellationToken);
+
+                if (appointment is null)
                 {
                     return new NotFoundResult();
                 }
-                if (!res.PatientId.Equals(request.PatientId))
-                {
-                    return new ForbidResult();
-                }
-
-                _context.Appointments.Remove(res);
+                
+                // remove the appointment from DB and save the changes;
+                _context.Appointments.Remove(appointment);
                 await _context.SaveChangesAsync(cancellationToken);
+                
                 return new NoContentResult();
             }
         }

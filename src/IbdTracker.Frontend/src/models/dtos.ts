@@ -14,8 +14,8 @@ export interface AppointmentDto {
     startDateTime: string,
     durationMinutes: number,
     location: string,
-    doctorsNotes?: string,
-    patientsNotes?: string
+    doctorNotes?: string,
+    patientNotes?: string
 }
 
 export interface PrescriptionDto {

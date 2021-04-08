@@ -50,8 +50,8 @@
             doctorId: $patient.doctorId,
             startDateTime: selectedDateTimeIsoString,
             durationMinutes: 30,
-            doctorsNotes: null,
-            patientsNotes: null,
+            doctorNotes: null,
+            patientNotes: null,
         };
         const res: Response = await post("patients/@me/appointments", reqBody);
 

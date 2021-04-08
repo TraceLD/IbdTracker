@@ -24,27 +24,47 @@ namespace IbdTracker.Features.Patients
             _mediator = mediator;
         }
         
-        [Authorize("read:allpatients")]
+        //[Authorize("read:allpatients")]
         [HttpGet("{patientId}/appointments")]
-        public async Task<ActionResult<IEnumerable<AppointmentDto>>> Get(string patientId)
+        public async Task<ActionResult<IEnumerable<AppointmentDto>>> Get([FromRoute] GetAll.Query query)
         {
-            throw new NotImplementedException();
+            var res = await _mediator.Send(query);
+            return Ok(res);
         }
-        
+
         [Authorize("read:appointments")]
         [HttpGet("@me/appointments")]
         public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetForMe()
         {
-            throw new NotImplementedException();
+            var res = await _mediator.Send(new GetAll.Query(User.Identity!.Name!));
+            return Ok(res);
         }
 
         [Authorize("read:appointments")]
         [HttpGet("@me/appointments/{id}")]
         public async Task<ActionResult<AppointmentDto>> GetOneForMeById(Guid id)
         {
-            throw new NotImplementedException();
+            var res = await _mediator.Send(new GetOne.Query(User.Identity!.Name!, id));
+            return res is null ? NotFound() : Ok(res);
         }
 
+        [Authorize("write:appointments")]
+        [HttpPut("@me/appointments/{id}")]
+        public async Task<ActionResult> Put([FromRoute] Guid id, [FromBody] Put.Command command)
+        {
+            if (id != command.AppointmentId)
+            {
+                return BadRequest();
+            }
+
+            if (User.Identity?.Name is null || User.Identity.Name != command.PatientId)
+            {
+                return Unauthorized();
+            }
+
+            return await _mediator.Send(command);
+        }
+        
         [Authorize("write:appointments")]
         [HttpDelete("@me/appointments/{id}")]
         public async Task<ActionResult> DeleteAppointmentForMe(Guid id)
