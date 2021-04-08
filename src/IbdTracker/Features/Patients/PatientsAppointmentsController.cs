@@ -24,7 +24,7 @@ namespace IbdTracker.Features.Patients
             _mediator = mediator;
         }
         
-        //[Authorize("read:allpatients")]
+        [Authorize("read:allpatients")]
         [HttpGet("{patientId}/appointments")]
         public async Task<ActionResult<IEnumerable<AppointmentDto>>> Get([FromRoute] GetAll.Query query)
         {
