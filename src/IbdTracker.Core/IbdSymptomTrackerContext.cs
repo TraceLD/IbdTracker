@@ -25,6 +25,16 @@ namespace IbdTracker.Core
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Doctor>()
+                .Property(d => d.OfficeHours)
+                .HasColumnType("jsonb");
+
+            // prevent the same doctor from having multiple appointments start at the same time;
+            // we don't worry about duration/end time/uneven start times as they are all 30 minutes long
+            // and start at even 00 or 30 minutes. This is validated by the API when an appointment is created.
+            modelBuilder.Entity<Appointment>()
+                .HasIndex(a => new {a.DoctorId, a.StartDateTime})
+                .IsUnique();
         }
     }
 }

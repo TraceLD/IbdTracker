@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Auth0Net.DependencyInjection.Cache;
 using FluentValidation.AspNetCore;
 using IbdTracker.Core;
 using IbdTracker.Core.Config;
 using IbdTracker.Infrastructure.Authorization;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -46,7 +49,7 @@ namespace IbdTracker
 
             services.AddMediatR(typeof(Startup));
 
-            // configure auth;
+            // configure auth0;
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -68,6 +71,16 @@ namespace IbdTracker
                 }
             });
             services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
+            services.AddAuth0AuthenticationClient(config =>
+            {
+                config.Domain = Configuration["Auth0:Domain"];
+                var auth0Section = Configuration.GetSection("Auth0");
+                config.ClientId = auth0Section["ManagementApi:ClientId"];
+                config.ClientSecret = auth0Section["ManagementApi:ClientSecret"];
+                config.TokenExpiryBuffer = TimeSpan.FromDays(2);
+            });
+            services.AddAuth0ManagementClient().AddManagementAccessToken();
+            services.AddScoped<IAuth0Service, Auth0Service>();
 
             services.AddControllers()
                 .AddFluentValidation(configuration =>

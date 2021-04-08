@@ -3,6 +3,7 @@
     import LocationIcon from "../icons/LocationIcon.svelte";
     import ContextualMenu from "../../components/navigation/contextualmenu/ContextualMenu.svelte";
     import Error from "../notifications/Error.svelte";
+    import ConfirmationModal from "../ConfirmationModal.svelte";
 
     import type {
         Appointment,
@@ -12,15 +13,14 @@
     import { goto, url } from "@roxi/routify";
 
     export let appointment: Appointment;
-    let showOptions: boolean = true;
 
+    let showConfirmationModal: boolean = false;
+    let showOptions: boolean = true;
     let errorMsg: string;
+
     const appointmentTimeString: string = appointment.startDateTime.toLocaleTimeString(
         [],
-        {
-            hour: "2-digit",
-            minute: "2-digit",
-        }
+        { timeStyle: "short" }
     );
     const contextMenuContent: Array<IContextualMenuItemContent> = [
         {
@@ -31,7 +31,9 @@
         {
             name: "Cancel appointment",
             textColour: "red-500",
-            onClick: cancelAppointment,
+            onClick: async () => {
+                showConfirmationModal = true;
+            },
         },
     ];
 
@@ -41,6 +43,7 @@
         });
 
         if (!res.ok) {
+            showConfirmationModal = false;
             errorMsg = "API Error.";
         }
 
@@ -50,6 +53,16 @@
 
 {#if errorMsg}
     <Error {errorMsg} />
+{/if}
+
+{#if showConfirmationModal}
+    <ConfirmationModal
+        title="Cancel an appointment"
+        body="Are you sure you want to cancel this appointment?"
+        onConfirm={cancelAppointment}
+        onCancel={() => (showConfirmationModal = false)}
+        actionIsPositive={false}
+    />
 {/if}
 
 <div class="rounded-lg bg-gray-50 py-4 px-6 shadow-md">
