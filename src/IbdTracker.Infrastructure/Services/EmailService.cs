@@ -101,6 +101,7 @@ namespace IbdTracker.Infrastructure.Services
             await SendMessage(to, $"Appointment booking confirmation (nr {appointment.AppointmentId})", html);
         }
 
+        /// <inheritdoc />
         public async Task SendAppointmentCancellationConfirmationEmail(Guid appointmentId, string to)
         {
             var html = $@"
