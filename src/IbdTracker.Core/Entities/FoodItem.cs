@@ -11,9 +11,8 @@ namespace IbdTracker.Core.Entities
         
         public List<Meal> Meals { get; } = new();
 
-        public FoodItem(Guid foodItemId, string name, string? pictureUrl = null)
+        public FoodItem(string name, string? pictureUrl = null)
         {
-            FoodItemId = foodItemId;
             Name = name;
             PictureUrl = pictureUrl;
         }

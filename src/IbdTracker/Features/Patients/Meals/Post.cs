@@ -51,7 +51,7 @@ namespace IbdTracker.Features.Patients.Meals
                 };
 
                 meal.FoodItems.AddRange(request.FoodItemDtos.Select(dto =>
-                    new FoodItem(dto.FoodItemId, dto.Name, dto.PictureUrl)));
+                    new FoodItem(dto.Name, dto.PictureUrl) {FoodItemId = dto.FoodItemId}));
                 
                 // add to db and save;
                 await _context.Meals.AddAsync(meal, cancellationToken);
