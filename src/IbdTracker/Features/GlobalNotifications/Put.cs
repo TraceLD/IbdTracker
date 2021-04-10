@@ -1,26 +1,31 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
-using IbdTracker.Core.CommonDtos;
-using IbdTracker.Core.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.GlobalNotifications
 {
-    public class Post
+    public class Put
     {
         public record Command(
+            Guid GlobalNotificationId,
             string Title,
             string Message,
             string TailwindColour,
             string? Url
-        ) : IRequest<GlobalNotificationDto>;
+        ) : IRequest<ActionResult>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
+                RuleFor(c => c.GlobalNotificationId)
+                    .NotEmpty();
+                
                 RuleFor(c => c.Title)
                     .NotEmpty()
                     .MinimumLength(5);
@@ -41,7 +46,7 @@ namespace IbdTracker.Features.GlobalNotifications
             }
         }
         
-        public class Handler : IRequestHandler<Command, GlobalNotificationDto>
+        public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -50,22 +55,23 @@ namespace IbdTracker.Features.GlobalNotifications
                 _context = context;
             }
 
-            public async Task<GlobalNotificationDto> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                // convert to EFCore entity;
-                var notification = new GlobalNotification(request.Title, request.Message, request.Url);
+                var notification = await _context.GlobalNotifications.FirstOrDefaultAsync(
+                    gn => gn.GlobalNotificationId == request.GlobalNotificationId, cancellationToken);
 
-                await _context.GlobalNotifications.AddAsync(notification, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                // convert result of the insertion to dto;
-                return new()
+                if (notification is null)
                 {
-                    GlobalNotificationId = notification.GlobalNotificationId,
-                    Message = notification.Message,
-                    Title = notification.Title,
-                    Url = notification.Url
-                };
+                    return new NotFoundResult();
+                }
+
+                notification.Title = request.Title;
+                notification.Message = request.Message;
+                notification.TailwindColour = request.TailwindColour;
+                notification.Url = request.Url;
+
+                await _context.SaveChangesAsync(cancellationToken);
+                return new NoContentResult();
             }
         }
     }

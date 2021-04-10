@@ -30,13 +30,10 @@ namespace IbdTracker.Features.GlobalNotifications
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GlobalNotificationDto>> GetById(Guid id)
+        public async Task<ActionResult<GlobalNotificationDto>> GetById(GetById.Query query)
         {
-            var res = await _mediator.Send(new GetById.Query {GlobalNotificationId = id});
-            
-            if (res is null) return NotFound();
-            
-            return Ok(res);
+            var res = await _mediator.Send(query);
+            return res is null ? NotFound() : Ok(res);
         }
 
         [Authorize("write:notifications")]
@@ -48,8 +45,20 @@ namespace IbdTracker.Features.GlobalNotifications
         }
 
         [Authorize("write:notifications")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put([FromRoute] Guid id, [FromBody] Put.Command command)
+        {
+            if (id != command.GlobalNotificationId)
+            {
+                return BadRequest();
+            }
+
+            return await _mediator.Send(command);
+        }
+        
+        [Authorize("write:notifications")]
         [HttpDelete]
-        public async Task<ActionResult> Delete(Guid id) =>
-            await _mediator.Send(new Delete.Command {GlobalNotificationId = id});
+        public async Task<ActionResult> Delete(Delete.Command command) =>
+            await _mediator.Send(command);
     }
 }

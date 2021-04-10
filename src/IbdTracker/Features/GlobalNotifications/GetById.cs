@@ -12,16 +12,13 @@ namespace IbdTracker.Features.GlobalNotifications
 {
     public class GetById
     {
-        public class Query : IRequest<GlobalNotificationDto?>
-        {
-            public Guid GlobalNotificationId { get; set; }
-        }
+        public record Query(Guid Id) : IRequest<GlobalNotificationDto?>;
 
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
             {
-                RuleFor(q => q.GlobalNotificationId)
+                RuleFor(q => q.Id)
                     .NotEmpty();
             }
         }
@@ -38,7 +35,7 @@ namespace IbdTracker.Features.GlobalNotifications
             public async Task<GlobalNotificationDto?> Handle(Query request, CancellationToken cancellationToken) =>
                 await _context.GlobalNotifications
                     .AsNoTracking()
-                    .Where(n => n.GlobalNotificationId == request.GlobalNotificationId)
+                    .Where(n => n.GlobalNotificationId == request.Id)
                     .Select(n => new GlobalNotificationDto
                     {
                         GlobalNotificationId = n.GlobalNotificationId,

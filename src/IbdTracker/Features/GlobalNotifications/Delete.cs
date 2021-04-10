@@ -11,16 +11,13 @@ namespace IbdTracker.Features.GlobalNotifications
 {
     public class Delete
     {
-        public class Command : IRequest<ActionResult>
-        {
-            public Guid GlobalNotificationId { get; set; }
-        }
+        public record Command(Guid Id) : IRequest<ActionResult>;
 
         public class QueryValidator : AbstractValidator<Command>
         {
             public QueryValidator()
             {
-                RuleFor(q => q.GlobalNotificationId)
+                RuleFor(q => q.Id)
                     .NotEmpty();
             }
         }
@@ -37,7 +34,7 @@ namespace IbdTracker.Features.GlobalNotifications
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
                 var res = await _context.GlobalNotifications
-                    .FirstOrDefaultAsync(n => n.GlobalNotificationId == request.GlobalNotificationId,
+                    .FirstOrDefaultAsync(n => n.GlobalNotificationId == request.Id,
                         cancellationToken);
 
                 if (res is null)

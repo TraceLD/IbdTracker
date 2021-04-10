@@ -12,9 +12,7 @@ namespace IbdTracker.Features.GlobalNotifications
 {
     public class Get
     {
-        public class Query : IRequest<IList<GlobalNotificationDto>>
-        {
-        }
+        public record Query : IRequest<IList<GlobalNotificationDto>>;
 
         public class Handler : IRequestHandler<Query, IList<GlobalNotificationDto>>
         {
