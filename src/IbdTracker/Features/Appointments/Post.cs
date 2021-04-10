@@ -34,7 +34,7 @@ namespace IbdTracker.Features.Appointments
 
                 RuleFor(c => c.StartDateTime)
                     .NotEmpty()
-                    .GreaterThan(DateTime.Now)
+                    .GreaterThan(DateTime.UtcNow)
                     .Must(x => x.Minute == 0 || x.Minute == 30)
                     .Must(x => x.Second == 0);
 
