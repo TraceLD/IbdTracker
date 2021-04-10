@@ -36,7 +36,7 @@ namespace IbdTracker.Features.FoodItems
             return res is null ? NotFound() : Ok(res);
         }
 
-        [Authorize("write:allfooditems")]
+        [Authorize("write:fooditems")]
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Post.Command command)
         {
@@ -44,7 +44,7 @@ namespace IbdTracker.Features.FoodItems
             return CreatedAtAction(nameof(GetById), new {id = res.FoodItemId}, res);
         }
 
-        [Authorize("write:allfooditems")]
+        [Authorize("write:fooditems")]
         [HttpPut("{id}")]
         public async Task<ActionResult> Put([FromRoute] Guid id, [FromBody] Put.Command command)
         {
@@ -56,7 +56,7 @@ namespace IbdTracker.Features.FoodItems
             return await _mediator.Send(command);
         }
 
-        [Authorize("write:allfooditems")]
+        [Authorize("write:fooditems")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete([FromRoute] Delete.Command command) =>
             await _mediator.Send(command);
