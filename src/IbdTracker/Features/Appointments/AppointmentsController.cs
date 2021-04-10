@@ -39,7 +39,7 @@ namespace IbdTracker.Features.Appointments
         
         [Authorize("write:allappointments")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<AppointmentDto>> Put([FromRoute] Guid id, [FromBody] Put.Command command)
+        public async Task<ActionResult> Put([FromRoute] Guid id, [FromBody] Put.Command command)
         {
             if (id != command.AppointmentId)
             {
