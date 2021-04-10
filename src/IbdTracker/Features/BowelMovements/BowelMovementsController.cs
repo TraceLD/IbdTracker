@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,22 +21,37 @@ namespace IbdTracker.Features.BowelMovements
             _mediator = mediator;
         }
 
-        [Authorize("read:bms")]
+        [Authorize("read:allbms")]
         [HttpGet("{id}")]
         public async Task<ActionResult<BowelMovementEventDto>> GetById([FromRoute] GetById.Query query)
         {
             var res = await _mediator.Send(query);
-            if (res is null)
-                return NotFound();
-            return Ok(res);
+            return res is null ? NotFound() : Ok(res);
         }
-        
-        [Authorize("write:bms")]
+
+        [Authorize("write:allbms")]
         [HttpPost]
-        public async Task<ActionResult<BowelMovementEventDto>> Post([FromBody] Post.Command command)
+        public async Task<ActionResult> Post([FromBody] Post.Command command)
         {
             var res = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetById), new { id = res.BowelMovementEventId }, res);
+            return CreatedAtAction(nameof(GetById), new {id = res.BowelMovementEventId}, res);
         }
+
+        [Authorize("write:allbms")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<BowelMovementEventDto>> Put([FromRoute] Guid id, [FromBody] Put.Command command)
+        {
+            if (id != command.BowelMovementEventId)
+            {
+                return BadRequest();
+            }
+
+            return await _mediator.Send(command);
+        }
+
+        [Authorize("write:allbms")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete([FromRoute] Delete.Command command) =>
+            await _mediator.Send(command);
     }
 }
