@@ -69,8 +69,12 @@ namespace IbdTracker.Features.Patients.Appointments
                     return new NotFoundResult();
                 }
 
-                appointment.PatientId = request.PatientId;
-                appointment.DoctorId = request.DoctorId;
+                // the patient should not be able to assign an appointment to another patient or doctor;
+                if (!request.PatientId.Equals(appointment.PatientId) || !request.DoctorId.Equals(appointment.DoctorId))
+                {
+                    return new UnauthorizedResult();
+                }
+                
                 appointment.StartDateTime = request.StartDateTime;
                 appointment.DurationMinutes = request.DurationMinutes;
                 appointment.DoctorNotes = request.DoctorNotes;
