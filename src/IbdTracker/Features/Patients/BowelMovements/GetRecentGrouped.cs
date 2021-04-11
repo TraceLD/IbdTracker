@@ -14,17 +14,15 @@ namespace IbdTracker.Features.Patients.BowelMovements
 {
     public class GetRecentGrouped
     {
-        public class Query : IRequest<IList<Result>>
-        {
-            public string? PatientId { get; set; }
-        }
-        
+        public record Query(string PatientId) : IRequest<IList<Result>>;
+
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
             {
                 RuleFor(q => q.PatientId)
-                    .NotEmpty();
+                    .NotEmpty()
+                    .MinimumLength(6);
             }
         }
 
