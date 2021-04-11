@@ -21,6 +21,7 @@ namespace IbdTracker.Features.Patients.Appointments
 
             public async Task<AppointmentDto?> Handle(Query request, CancellationToken cancellationToken) =>
                 (await _context.Appointments
+                    .AsNoTracking()
                     .Include(a => a.Doctor)
                     .FirstOrDefaultAsync(
                         a => a.AppointmentId == request.AppointmentId && a.PatientId.Equals(request.PatientId),
