@@ -48,7 +48,7 @@
             containedMucus: mucusInput,
         };
 
-        const res: Response = await post("bms", reqBody);
+        const res: Response = await post("patients/@me/bms", reqBody);
 
         if (res.ok) {
             $goto("/dashboard/bms");

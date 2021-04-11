@@ -14,7 +14,6 @@
     import BmCard from "../../../components/cards/BmCard.svelte";
     import { BowelMovementEvent } from "../../../models/models";
 
-    let loadRecentBmsPromise: Promise<any> = loadRecentBmsChart();
     let plotLayout = {
         // hex for TailwindCSS' bg-gray-50;
         plot_bgcolor: "#f8fafc",
@@ -122,7 +121,7 @@
     <Add on:click={$goto("/dashboard/bms/add")} />
 </div>
 
-{#await loadRecentBmsPromise}
+{#await loadRecentBmsChart()}
     <Loading />
 {:then res}
     <h3>Last 7 days</h3>
