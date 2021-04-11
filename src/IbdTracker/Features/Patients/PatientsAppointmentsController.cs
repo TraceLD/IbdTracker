@@ -50,7 +50,7 @@ namespace IbdTracker.Features.Patients
 
         [Authorize("write:appointments")]
         [HttpPut("@me/appointments/{id}")]
-        public async Task<ActionResult> Put([FromRoute] Guid id, [FromBody] Put.Command command)
+        public async Task<ActionResult> PutForMe([FromRoute] Guid id, [FromBody] Put.Command command)
         {
             if (id != command.AppointmentId)
             {
