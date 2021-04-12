@@ -8,6 +8,7 @@ using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Meals
 {
@@ -17,7 +18,7 @@ namespace IbdTracker.Features.Patients.Meals
         {
             public string PatientId { get; set; } = null!;
             public string Name { get; set; } = null!;
-            public List<FoodItemDto> FoodItemDtos { get; set; } = null!;
+            public List<Guid> FoodItemIds { get; set; } = null!;
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -27,8 +28,9 @@ namespace IbdTracker.Features.Patients.Meals
                 RuleFor(c => c.PatientId)
                     .NotEmpty();
 
-                RuleFor(c => c.FoodItemDtos)
-                    .NotEmpty();
+                RuleFor(c => c.FoodItemIds)
+                    .NotNull()
+                    .Must(c => c.Any());
             }
         }
 
@@ -50,9 +52,19 @@ namespace IbdTracker.Features.Patients.Meals
                     Name = request.Name,
                 };
 
-                meal.FoodItems.AddRange(request.FoodItemDtos.Select(dto =>
-                    new FoodItem(dto.Name, dto.PictureUrl) {FoodItemId = dto.FoodItemId}));
-                
+                foreach (var foodItemId in request.FoodItemIds)
+                {
+                    var fi = await _context.FoodItems.FirstOrDefaultAsync(f => f.FoodItemId == foodItemId,
+                        cancellationToken);
+                    
+                    if (fi is null)
+                    {
+                        throw new NullReferenceException($"FoodItem with ID {foodItemId.ToString()} does not exist");
+                    }
+                    
+                    meal.FoodItems.Add(fi);
+                }
+
                 // add to db and save;
                 await _context.Meals.AddAsync(meal, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
@@ -63,7 +75,12 @@ namespace IbdTracker.Features.Patients.Meals
                     MealId = meal.MealId,
                     Name = meal.Name,
                     PatientId = meal.PatientId,
-                    FoodItems = request.FoodItemDtos
+                    FoodItems = meal.FoodItems.Select(fi => new FoodItemDto
+                    {
+                        FoodItemId = fi.FoodItemId,
+                        Name = fi.Name,
+                        PictureUrl = fi.PictureUrl
+                    }).ToList()
                 };
             }
         }
