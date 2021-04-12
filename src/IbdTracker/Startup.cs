@@ -43,6 +43,10 @@ namespace IbdTracker
             // register email config;
             services.Configure<EmailConfig>(Configuration.GetSection("Email"));
             services.AddSingleton(provider => provider.GetRequiredService<IOptions<EmailConfig>>().Value);
+            
+            // register recommendations microservice config;
+            services.Configure<PythonMicroserviceConfig>(Configuration.GetSection("PythonMicroservice"));
+            services.AddSingleton(provider => provider.GetRequiredService<IOptions<PythonMicroserviceConfig>>().Value);
 
             // add db context;
             services.AddDbContext<IbdSymptomTrackerContext>((provider, builder) =>
@@ -52,6 +56,8 @@ namespace IbdTracker
             });
 
             services.AddMediatR(typeof(Startup));
+
+            services.AddHttpClient<IRecommendationsService, RecommendationsService>();
 
             // configure auth0;
             services

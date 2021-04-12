@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from models import FoodItemRecommendationData
+
 app = FastAPI()
 
 # only ASP.NET Core should be able to call this microservice over localhost.
@@ -20,6 +22,13 @@ app.add_middleware(
 )
 
 
-@app.get("/recommendations")
+@app.get("/")
 async def root():
     return {"isOnline": True}
+
+
+@app.post("/recommendations")
+async def recommendations(data: list[FoodItemRecommendationData]):
+    for d in data:
+        print(d.foodItemPainInfo)
+    return []

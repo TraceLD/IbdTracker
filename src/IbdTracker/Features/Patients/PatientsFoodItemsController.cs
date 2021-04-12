@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IbdTracker.Core.Recommendations;
 using IbdTracker.Features.Patients.FoodItems;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +25,7 @@ namespace IbdTracker.Features.Patients
 
         //[Authorize("read:recommendations")]
         [HttpGet("@me/fooditems/recommendations")]
-        public async Task<ActionResult<IEnumerable<GetRecommended.FoodItemRecommendationData>>> GetFoodItemsRecommendationsForMe()
+        public async Task<ActionResult<IEnumerable<FoodItemRecommendationData>>> GetFoodItemsRecommendationsForMe()
         {
             var res = await _mediator.Send(new GetRecommended.Query(User.Identity!.Name!));
             return Ok(res);

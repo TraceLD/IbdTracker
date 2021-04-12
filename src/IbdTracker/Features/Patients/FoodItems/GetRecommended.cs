@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using IbdTracker.Core;
 using IbdTracker.Core.Entities;
+using IbdTracker.Core.Recommendations;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,26 +14,20 @@ namespace IbdTracker.Features.Patients.FoodItems
 {
     public class GetRecommended
     {
-        public record Query(string PatientId) : IRequest<IList<FoodItemRecommendationData>>;
+        public record Query(string PatientId) : IRequest<IEnumerable<FoodItemRecommendation>>;
 
-        public record FoodItemRecommendationData(
-            Guid FoodItemId,
-            double PercentageOfAllMeals,
-            double PercentageAssociatedWithPain,
-            double AveragePainIntensity,
-            double AveragePainDuration
-        ); 
-        
-        public class Handler : IRequestHandler<Query, IList<FoodItemRecommendationData>>
+        public class Handler : IRequestHandler<Query, IEnumerable<FoodItemRecommendation>>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IRecommendationsService _recommendationsService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IRecommendationsService recommendationsService)
             {
                 _context = context;
+                _recommendationsService = recommendationsService;
             }
 
-            public async Task<IList<FoodItemRecommendationData>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IEnumerable<FoodItemRecommendation>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var foodItems = await _context.FoodItems.ToListAsync(cancellationToken);
                 var mECount = _context.MealEvents.Count(me => me.PatientId.Equals(request.PatientId));
@@ -50,7 +46,7 @@ namespace IbdTracker.Features.Patients.FoodItems
 
                     if (!meals.Any())
                     {
-                        foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, 0, 0, 0, 0));
+                        foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, 0, null));
                     }
                     else
                     {
@@ -75,22 +71,21 @@ namespace IbdTracker.Features.Patients.FoodItems
                     
                         var timesEaten = meals.Count;
                         var percentageEaten = (double)timesEaten / mECount * 100;
-                        var percentageAssociatedWithPain = (double)countOfTimesPainHappenedAfterEating / timesEaten * 100;
-
+                        
                         if (!matchedPainEvents.Any())
                         {
                             foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, percentageEaten,
-                                percentageAssociatedWithPain, 0, 0));
+                                null));
                         }
-                        
+                        var percentageAssociatedWithPain = (double)countOfTimesPainHappenedAfterEating / timesEaten * 100;
                         var averageIntensity = matchedPainEvents.Average(x => x.PainScore);
                         var averageDuration = matchedPainEvents.Average(x => x.MinutesDuration);
                         foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, percentageEaten,
-                            percentageAssociatedWithPain, averageIntensity, averageDuration));
+                            new FoodItemPainInfo(percentageAssociatedWithPain, averageIntensity, averageDuration)));
                     }
                 }
 
-                return foodItemDetails;
+                return await _recommendationsService.GetFoodItemRecommendations(foodItemDetails);
             }
         }
     }
