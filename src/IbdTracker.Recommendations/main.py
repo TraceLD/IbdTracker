@@ -5,7 +5,7 @@ from models import FoodItemRecommendationData
 
 app = FastAPI()
 
-# only ASP.NET Core should be able to call this microservice over localhost.
+# Only ASP.NET Core should be able to call this microservice over localhost.
 # Users should not be able to call it directly as it does not have auth.
 origins = [
     "http://localhost"
