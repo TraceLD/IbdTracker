@@ -23,7 +23,7 @@ namespace IbdTracker.Features.Patients
             _mediator = mediator;
         }
 
-        //[Authorize("read:recommendations")]
+        [Authorize("read:recommendations")]
         [HttpGet("@me/fooditems/recommendations")]
         public async Task<ActionResult<IEnumerable<FoodItemRecommendationData>>> GetFoodItemsRecommendationsForMe()
         {
