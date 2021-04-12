@@ -1,3 +1,6 @@
+import concurrent.futures
+import asyncio
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -31,4 +34,16 @@ async def root():
 async def recommendations(data: list[FoodItemRecommendationData]):
     for d in data:
         print(d.foodItemPainInfo)
+
     return []
+
+
+@app.get("/test")
+async def test():
+    with concurrent.futures.ProcessPoolExecutor() as pool:
+        pil_args = ["hello"]
+        print(await asyncio.get_event_loop().run_in_executor(pool, test_some_long_method, *pil_args))
+
+
+def test_some_long_method(some_string: str):
+    return some_string
