@@ -15,24 +15,28 @@ let auth0: Auth0Client = null;
 async function initAuth(): Promise<void> {
     isLoading.set(true);
 
-    auth0 = await createAuth0Client(authConfig);
-    const _isAuthenticated: boolean = await auth0.isAuthenticated();
+    try {
+        auth0 = await createAuth0Client(authConfig);
+        const _isAuthenticated: boolean = await auth0.isAuthenticated();
 
-    isAuthenticated.set(_isAuthenticated);
-    
-    if (_isAuthenticated) {
-        await handleIsAuthenticated();
+        isAuthenticated.set(_isAuthenticated);
+
+        if (_isAuthenticated) {
+            await handleIsAuthenticated();
+        }
+
+        isLoading.set(false);
+    } catch {
+        alert("Error while accessing the Authentication API. Try refreshing the page. If the error persists please try again later.");
     }
-
-    isLoading.set(false);
 }
 
 async function handleIsAuthenticated(): Promise<void> {
-        const _user: User = await auth0.getUser();
-        user.set(_user);
+    const _user: User = await auth0.getUser();
+    user.set(_user);
 
-        const _patient: PatientDto = await get<PatientDto>("patients");
-        patient.set(_patient);
+    const _patient: PatientDto = await get<PatientDto>("patients");
+    patient.set(_patient);
 }
 
 async function getToken(): Promise<any> {
@@ -51,7 +55,7 @@ async function callback(): Promise<void> {
     const _isAuthenticated: boolean = await auth0.isAuthenticated();
 
     isAuthenticated.set(_isAuthenticated);
-    
+
     if (_isAuthenticated) {
         await handleIsAuthenticated();
     }
