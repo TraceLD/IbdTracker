@@ -52,9 +52,8 @@ namespace IbdTracker.Infrastructure.Services
         /// <inheritdoc />
         public async Task<IEnumerable<FoodItemRecommendation>> GetFoodItemRecommendations(IEnumerable<FoodItemRecommendationData> recommendationData)
         {
-            var requestBodyString = JsonSerializer.Serialize(recommendationData, _serializerOptions);
-            var requestBody = new StringContent(requestBodyString, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("/recommendations/fi", requestBody);
+            var response =
+                await _httpClient.PostAsJsonAsync("/recommendations/fi", recommendationData, _serializerOptions);
             
             response.EnsureSuccessStatusCode();
 
