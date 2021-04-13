@@ -23,7 +23,8 @@ recommendation_percentage = ctrl.Consequent(np.arange(0, 101, 1), "recommendatio
 ########################
 all_meals_percentage.automf(3, names=["low", "medium", "high"])
 pain_percentage.automf(3, names=["low", "medium", "high"])
-recommendation_percentage.automf(5, names=["not_recommended", "low", "moderate", "high", "very high"])
+recommendation_percentage.automf(4, names=["not_recommended", "slightly_recommended", "moderately_recommended",
+                                           "highly_recommended"])
 
 pain_intensity["mild"] = fuzz.trapmf(pain_intensity.universe, [0, 0, 3, 5])
 pain_intensity["moderate"] = fuzz.trimf(pain_intensity.universe, [4, 5, 7])
