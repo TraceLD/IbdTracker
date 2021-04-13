@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.models import FoodItemRecommendationData
+from api.fuzzy_recommendations import food_items_recommendations as fir
 
 app = FastAPI()
 
@@ -30,20 +31,9 @@ async def root():
     return {"isOnline": True}
 
 
-@app.post("/recommendations")
+@app.post("/recommendations/fi")
 async def recommendations(data: list[FoodItemRecommendationData]):
-    for d in data:
-        print(d.foodItemPainInfo)
-
-    return []
-
-
-@app.get("/test")
-async def test():
     with concurrent.futures.ProcessPoolExecutor() as pool:
-        pil_args = ["hello"]
-        print(await asyncio.get_event_loop().run_in_executor(pool, test_some_long_method, *pil_args))
-
-
-def test_some_long_method(some_string: str):
-    return some_string
+        pil_args = [data]
+        res = await asyncio.get_event_loop().run_in_executor(pool, fir.process_all_fis, *pil_args)
+        return res
