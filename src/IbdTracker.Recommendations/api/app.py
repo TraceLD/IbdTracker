@@ -4,7 +4,7 @@ import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from models import FoodItemRecommendationData
+from api.models import FoodItemRecommendationData
 
 app = FastAPI()
 
