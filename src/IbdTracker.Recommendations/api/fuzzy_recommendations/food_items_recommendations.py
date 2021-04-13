@@ -4,23 +4,17 @@ from skfuzzy import control as ctrl
 
 from api.models import FoodItemRecommendationData, FoodItemRecommendation
 
-##########
-# INPUTS #
-##########
+# INPUTS
 all_meals_percentage = ctrl.Antecedent(np.arange(0, 101, 1), "all_meals_percentage")
 pain_percentage = ctrl.Antecedent(np.arange(0, 101, 1), "pain_percentage")
 pain_intensity = ctrl.Antecedent(np.arange(0, 11, 1), "pain_intensity")
 # pain duration is in minutes
 pain_duration = ctrl.Antecedent(np.arange(0, 1440, 1), "pain_duration")
 
-##########
-# OUTPUT #
-##########
+# OUTPUT
 recommendation_percentage = ctrl.Consequent(np.arange(0, 101, 1), "recommendation_percentage")
 
-########################
-# MEMBERSHIP FUNCTIONS #
-########################
+# MEMBERSHIP FUNCTIONS
 all_meals_percentage.automf(3, names=["low", "medium", "high"])
 pain_percentage.automf(3, names=["low", "medium", "high"])
 recommendation_percentage.automf(4, names=["not_recommended", "slightly_recommended", "moderately_recommended",
@@ -35,9 +29,7 @@ pain_duration["short"] = fuzz.trapmf(pain_duration.universe, [0, 0, 20, 30])
 pain_duration["moderate"] = fuzz.trapmf(pain_duration.universe, [20, 40, 90, 120])
 pain_duration["long"] = fuzz.trapmf(pain_duration.universe, [90, 120, 1441, 1441])
 
-#########
-# RULES #
-#########
+# RULES
 
 
 def process_all_fis(fis_data: list[FoodItemRecommendationData]) -> list[FoodItemRecommendation]:
