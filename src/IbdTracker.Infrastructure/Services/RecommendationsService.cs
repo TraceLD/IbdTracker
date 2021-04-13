@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using IbdTracker.Core;
@@ -30,6 +31,11 @@ namespace IbdTracker.Infrastructure.Services
     {
         private readonly HttpClient _httpClient;
 
+        private readonly JsonSerializerOptions _serializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         /// <summary>
         /// Instantiates a new instance of <see cref="RecommendationsService"/>.
         /// </summary>
@@ -46,13 +52,15 @@ namespace IbdTracker.Infrastructure.Services
         /// <inheritdoc />
         public async Task<IEnumerable<FoodItemRecommendation>> GetFoodItemRecommendations(IEnumerable<FoodItemRecommendationData> recommendationData)
         {
-            var response = await _httpClient.PostAsJsonAsync("/recommendations", recommendationData);
+            var requestBodyString = JsonSerializer.Serialize(recommendationData, _serializerOptions);
+            var requestBody = new StringContent(requestBodyString, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("/recommendations/fi", requestBody);
             
             response.EnsureSuccessStatusCode();
 
             await using var responseStream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<IEnumerable<FoodItemRecommendation>>(responseStream) ??
-                   Enumerable.Empty<FoodItemRecommendation>();
+            return await JsonSerializer.DeserializeAsync<IEnumerable<FoodItemRecommendation>>(responseStream,
+                _serializerOptions) ?? Enumerable.Empty<FoodItemRecommendation>();
         }
     }
 }

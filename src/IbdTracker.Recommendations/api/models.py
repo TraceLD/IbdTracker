@@ -17,4 +17,4 @@ class FoodItemRecommendationData(BaseModel):
 
 class FoodItemRecommendation(BaseModel):
     foodItemId: str
-    recommendationValue: float
+    recommendationValue: Optional[float] = None

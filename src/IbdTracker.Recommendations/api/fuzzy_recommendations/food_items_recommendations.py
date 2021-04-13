@@ -97,6 +97,9 @@ def process_all_fis(fis_data: list[FoodItemRecommendationData]) -> list[FoodItem
 
 
 def process_one_fi(fi_data: FoodItemRecommendationData) -> FoodItemRecommendation:
+    if fi_data.percentageOfAllMeals == 0:
+        return FoodItemRecommendation(foodItemId=fi_data.foodItemId, recommendationValue=None)
+
     fi_recommendation = ctrl.ControlSystemSimulation(fi_recommendation_ctrl)
 
     fi_recommendation.input["all_meals_percentage"] = fi_data.percentageOfAllMeals

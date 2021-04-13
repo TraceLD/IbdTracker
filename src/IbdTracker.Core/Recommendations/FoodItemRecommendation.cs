@@ -2,5 +2,5 @@
 
 namespace IbdTracker.Core.Recommendations
 {
-    public record FoodItemRecommendation(Guid FoodItemId, double RecommendationValue);
+    public record FoodItemRecommendation(Guid FoodItemId, double? RecommendationValue);
 }
