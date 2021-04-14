@@ -1,13 +1,10 @@
 <script lang="ts">
     import DoctorIcon from "../../../../components/icons/DoctorIcon.svelte";
-import Loading from "../../../../components/Loading.svelte";
+    import Loading from "../../../../components/Loading.svelte";
     import Error from "../../../../components/notifications/Error.svelte";
     import type { Doctor } from "../../../../models/models";
     import { get } from "../../../../services/requests";
     import { user, patient } from "../../../../stores/authStore";
-
-    console.log($user);
-    console.log($patient);
 
     async function getDoctor(): Promise<Doctor> {
         return await get<Doctor>(`doctors/${$patient.doctorId}`);

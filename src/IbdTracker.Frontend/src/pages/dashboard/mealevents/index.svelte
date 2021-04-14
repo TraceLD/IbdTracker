@@ -13,7 +13,6 @@
         let res: Array<MealEventDto> = await get<Array<MealEventDto>>(
             "patients/@me/meals/events"
         );
-        console.log(res);
         return res.map(dto => new MealEvent(dto));
     }
 </script>
