@@ -20,8 +20,8 @@
     let errorMsg: string;
     let searchTerm: string = "";
     let mealName: string = "";
-    let availableFoodItems: Array<FoodItemWithRecommendation>;
-    let chosenItems: Array<FoodItemWithRecommendation>;
+    let availableFoodItems: Array<any> = [];
+    let chosenItems: Array<any> = [];
 
     $: filteredList = availableFoodItems?.filter((fi) =>
         fi.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -32,7 +32,10 @@
         let recommendations = await get<Array<FoodItemRecommendation>>(
             "patients/@me/fooditems/recommendations"
         );
-        let combined: Array<FoodItemWithRecommendation> = combineFisAndRecommendations(foodItems, recommendations);
+        let combined: Array<FoodItemWithRecommendation> = combineFisAndRecommendations(
+            foodItems,
+            recommendations
+        );
 
         availableFoodItems = combined;
     }
