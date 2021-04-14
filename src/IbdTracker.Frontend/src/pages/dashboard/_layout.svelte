@@ -10,8 +10,11 @@
 
     const menuCategories: Array<MenuCategory> = [
         {
-            name: "Lifestyle",
-            items: [{ name: "Exercise", href: "/dashboard/exercise" }],
+            name: "Treatment",
+            items: [
+                { name: "Prescriptions", href: "/dashboard/prescriptions" },
+                { name: "Appointments", href: "/dashboard/appointments" },
+            ],
         },
         {
             name: "Food",
@@ -25,13 +28,6 @@
             items: [
                 { name: "Pain", href: "/dashboard/pain" },
                 { name: "Bowel movements", href: "/dashboard/bms" },
-            ],
-        },
-        {
-            name: "Treatment",
-            items: [
-                { name: "Prescriptions", href: "/dashboard/prescriptions" },
-                { name: "Appointments", href: "/dashboard/appointments" },
             ],
         },
         {
