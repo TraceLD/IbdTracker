@@ -44,7 +44,9 @@
     };
 
     async function loadRecentBms(): Promise<Array<BowelMovementEvent>> {
-        let response: Array<BowelMovementEventDto> = await get<Array<BowelMovementEventDto>>("patients/@me/bms/recent");
+        let response: Array<BowelMovementEventDto> = await get<
+            Array<BowelMovementEventDto>
+        >("patients/@me/bms/recent");
         return response.map((dto) => new BowelMovementEvent(dto));
     }
 
@@ -121,20 +123,30 @@
     <Add on:click={$goto("/dashboard/bms/add")} />
 </div>
 
-{#await loadRecentBmsChart()}
+{#await loadRecentBms()}
     <Loading />
-{:then res}
-    <h3>Last 7 days</h3>
-    <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">
-        <PlotlyPlot data={res} layout={plotLayout} />
-    </div>
-    {#await loadRecentBms()}
-        <Loading />
-    {:then res} 
-        {#each res as bm}
-            <BmCard bm={bm} />
+{:then bms}
+    {#if bms.length !== 0}
+        {#await loadRecentBmsChart()}
+            <Loading />
+        {:then chartData}
+            <h3>Last 7 days</h3>
+            <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">
+                <PlotlyPlot data={chartData} layout={plotLayout} />
+            </div>
+        {:catch chartErr}
+            <Error errorMsg={chartErr} />
+        {/await}
+
+        {#each bms as bm}
+            <BmCard {bm} />
         {/each}
-    {/await}
+    {:else}
+        <p>
+            You have not reported any BMs in the last 7 days. You can report BMs
+            by pressing the add button.
+        </p>
+    {/if}
 {:catch err}
     <Error errorMsg={err} />
 {/await}
