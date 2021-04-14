@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Accounts
 {
-    public class IsRegistered
+    public class GetAccountType
     {
-        public class Query : IRequest<Result>
+        public class Query : IRequest<int>
         {
             public string? AuthId { get; set; }
         }
@@ -25,17 +25,7 @@ namespace IbdTracker.Features.Accounts
             }
         }
 
-        public class Result
-        {
-            public bool IsRegistered { get; set; }
-            
-            public Result(bool isRegistered)
-            {
-                IsRegistered = isRegistered;
-            }
-        }
-        
-        public class Handler : IRequestHandler<Query, Result>
+        public class Handler : IRequestHandler<Query, int>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -44,21 +34,24 @@ namespace IbdTracker.Features.Accounts
                 _context = context;
             }
 
-            public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
                 // check if exists as a patient;
                 var patientRes = await _context.Patients
                     .AsNoTracking()
                     .Where(p => p.PatientId.Equals(request.AuthId))
                     .FirstOrDefaultAsync(cancellationToken);
-                if (patientRes is not null) return new Result(true);
+                if (patientRes is not null)
+                {
+                    return 1;
+                }
                 
                 // if not, check if exists as a doctor;
                 var doctorRes = await _context.Doctors
                     .AsNoTracking()
                     .Where(d => d.DoctorId.Equals(request.AuthId))
                     .FirstOrDefaultAsync(cancellationToken);
-                return doctorRes is not null ? new Result(true) : new Result(false);
+                return doctorRes is not null ? 2 : -1;
             }
         }
     }

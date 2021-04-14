@@ -1,4 +1,4 @@
-import type { AppointmentDto, BowelMovementEventDto, MealEventDto, PainEventDto, PrescriptionDto } from "./dtos";
+import type { AppointmentDto, BowelMovementEventDto, InformationRequestDto, MealEventDto, PainEventDto, PrescriptionDto } from "./dtos";
 
 export interface MenuCategory {
     name: string;
@@ -144,4 +144,26 @@ export interface Doctor {
     doctorId: string,
     name: string,
     location: string,
+}
+
+export class InformationRequest {
+    informationRequestId: string;
+    patientId: string;
+    doctorId: string;
+    isActive: boolean;
+    requestedDataFrom: Date;
+    requestedDataTo: Date;
+    requestedPain: boolean;
+    requestedBms: boolean;
+
+    constructor(dto: InformationRequestDto) {
+        this.informationRequestId = dto.informationRequestId;
+        this.patientId = dto.patientId;
+        this.doctorId = dto.doctorId;
+        this.isActive = dto.isActive;
+        this.requestedDataFrom = new Date(dto.requestedDataFrom + "Z");
+        this.requestedDataTo = new Date(dto.requestedDataTo + "Z");
+        this.requestedPain = dto.requestedPain;
+        this.requestedBms = dto.requestedBms;
+    }
 }

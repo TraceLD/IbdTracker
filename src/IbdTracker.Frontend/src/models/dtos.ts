@@ -62,3 +62,14 @@ export interface MealEventDto {
     mealId: string,
     dateTime: string,
 }
+
+export interface InformationRequestDto {
+    informationRequestId: string,
+    patientId: string,
+    doctorId: string,
+    isActive: boolean,
+    requestedDataFrom: string,
+    requestedDataTo: string,
+    requestedPain: boolean,
+    requestedBms: boolean,
+}

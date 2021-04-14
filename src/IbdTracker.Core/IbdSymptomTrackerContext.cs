@@ -17,6 +17,7 @@ namespace IbdTracker.Core
         public DbSet<FoodItem> FoodItems { get; set; } = null!;
         public DbSet<Meal> Meals { get; set; } = null!;
         public DbSet<MealEvent> MealEvents { get; set; } = null!;
+        public DbSet<InformationRequest> InformationRequests { get; set; } = null!;
 
         public IbdSymptomTrackerContext(DbContextOptions<IbdSymptomTrackerContext> options)
             : base(options)

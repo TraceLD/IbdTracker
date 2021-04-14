@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using IbdTracker.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    partial class IbdSymptomTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20210414060151_AddInformationRequestsSet")]
+    partial class AddInformationRequestsSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,20 +175,17 @@ namespace IbdTracker.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("PatientId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("RequestDataTo")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("RequestedBms")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("RequestedDataFrom")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("RequestedDataTo")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("RequestedPain")

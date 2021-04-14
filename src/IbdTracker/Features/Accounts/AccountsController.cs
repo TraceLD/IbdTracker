@@ -22,9 +22,9 @@ namespace IbdTracker.Features.Accounts
 
         [Authorize]
         [HttpGet("isregistered")]
-        public async Task<ActionResult<IsRegistered.Result>> IsRegistered()
+        public async Task<ActionResult<int>> IsRegistered()
         {
-            var res = await _mediator.Send(new IsRegistered.Query {AuthId = User.Identity?.Name});
+            var res = await _mediator.Send(new GetAccountType.Query {AuthId = User.Identity?.Name});
             return Ok(res);
         }
     }

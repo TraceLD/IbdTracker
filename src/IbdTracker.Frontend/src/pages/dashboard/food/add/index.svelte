@@ -145,7 +145,7 @@
                     </button>
                 {:else}
                     <button
-                        on:click={onSubmit}
+                        on:click={() => showConfirmationModal = true}
                         class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50"
                     >
                         Add the meal

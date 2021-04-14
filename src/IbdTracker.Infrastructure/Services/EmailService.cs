@@ -25,7 +25,7 @@ namespace IbdTracker.Infrastructure.Services
         /// <returns><see cref="Task"/> representing the asynchronous operation.</returns>
         Task SendMessage(string to, string subject, string htmlBody);
 
-        /// <summary>
+            /// <summary>
         /// Sends an email confirming an appointment has been booked.
         /// </summary>
         /// <param name="appointment">Appointment details.</param>
@@ -71,7 +71,7 @@ namespace IbdTracker.Infrastructure.Services
             emailMsg.To.Add(MailboxAddress.Parse(to));
             emailMsg.Subject = subject;
             emailMsg.Body = new TextPart(TextFormat.Html) {Text = htmlBody};
-
+            
             using var smtpClient = new SmtpClient();
             await smtpClient.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, SecureSocketOptions.StartTls);
             await smtpClient.AuthenticateAsync(_emailConfig.Username, _emailConfig.Password);
