@@ -15,19 +15,9 @@
 <div class="p-4">
     {#await loadMeals()}
         <Loading />
-    {:then res}
-        <div class="flex items-center">            
+    {:then res}       
+        <div class="flex items-center">
             <h1 class="text-black">Saved meals - QR codes</h1>
-        </div>
-        <div class="container">            
-            {#each res as meal}
-                <div class="flex gap-2">
-                    <div>
-                        <h2 class="text-black">{meal.name}</h2>
-                        <QrCode value={JSON.stringify(meal)} />
-                    </div>
-                </div>
-            {/each}
         </div>
 
         <button
@@ -50,6 +40,17 @@
             </svg>
             Print
         </button>
+
+        <div class="container flex">
+            {#each res as meal}
+                <div class="flex gap-">
+                    <div>
+                        <h2 class="text-black">{meal.name}</h2>
+                        <QrCode value={JSON.stringify(meal)} />
+                    </div>
+                </div>
+            {/each}
+        </div>
     {:catch err}
         <Error errorMsg={err} />
     {/await}

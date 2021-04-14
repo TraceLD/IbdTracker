@@ -69,6 +69,18 @@ export interface FoodItem {
     pictureUrl?: string
 }
 
+export interface FoodItemRecommendation {
+    foodItemId: string,
+    recommendationValue?: number
+}
+
+export interface FoodItemWithRecommendation {
+    foodItemId: string,
+    name: string,
+    pictureUrl?: string,
+    recommendationValue?: number,
+}
+
 export interface Meal {
     mealId: string,
     patientId: string,

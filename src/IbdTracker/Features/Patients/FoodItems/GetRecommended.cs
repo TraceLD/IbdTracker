@@ -46,43 +46,41 @@ namespace IbdTracker.Features.Patients.FoodItems
 
                     if (!meals.Any())
                     {
-                        foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, 0, null));
+                        continue;
                     }
-                    else
-                    {
-                        List<PainEvent> matchedPainEvents = new();
-                        var countOfTimesPainHappenedAfterEating = 0;
-                        foreach (var meal in meals)
-                        {
-                            var matchedPainEventsForThisMeal = await _context.PainEvents
-                                .AsNoTracking()
-                                .Where(pe => pe.PatientId.Equals(request.PatientId)
-                                             && pe.DateTime >= meal
-                                             && pe.DateTime <= meal.AddHours(6))
-                                .ToListAsync(cancellationToken);
-
-                            // ReSharper disable once InvertIf
-                            if (matchedPainEventsForThisMeal.Any())
-                            {
-                                countOfTimesPainHappenedAfterEating += 1;
-                                matchedPainEvents.AddRange(matchedPainEventsForThisMeal);
-                            }
-                        }
                     
-                        var timesEaten = meals.Count;
-                        var percentageEaten = (double)timesEaten / mECount * 100;
-                        
-                        if (!matchedPainEvents.Any())
+                    List<PainEvent> matchedPainEvents = new();
+                    var countOfTimesPainHappenedAfterEating = 0;
+                    foreach (var meal in meals)
+                    {
+                        var matchedPainEventsForThisMeal = await _context.PainEvents
+                            .AsNoTracking()
+                            .Where(pe => pe.PatientId.Equals(request.PatientId)
+                                         && pe.DateTime >= meal
+                                         && pe.DateTime <= meal.AddHours(6))
+                            .ToListAsync(cancellationToken);
+
+                        // ReSharper disable once InvertIf
+                        if (matchedPainEventsForThisMeal.Any())
                         {
-                            foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, percentageEaten,
-                                null));
+                            countOfTimesPainHappenedAfterEating += 1;
+                            matchedPainEvents.AddRange(matchedPainEventsForThisMeal);
                         }
-                        var percentageAssociatedWithPain = (double)countOfTimesPainHappenedAfterEating / timesEaten * 100;
-                        var averageIntensity = matchedPainEvents.Average(x => x.PainScore);
-                        var averageDuration = matchedPainEvents.Average(x => x.MinutesDuration);
-                        foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, percentageEaten,
-                            new FoodItemPainInfo(percentageAssociatedWithPain, averageIntensity, averageDuration)));
                     }
+                    
+                    var timesEaten = meals.Count;
+                    var percentageEaten = (double)timesEaten / mECount * 100;
+                        
+                    if (!matchedPainEvents.Any())
+                    {
+                        foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, percentageEaten,
+                            null));
+                    }
+                    var percentageAssociatedWithPain = (double)countOfTimesPainHappenedAfterEating / timesEaten * 100;
+                    var averageIntensity = matchedPainEvents.Average(x => x.PainScore);
+                    var averageDuration = matchedPainEvents.Average(x => x.MinutesDuration);
+                    foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, percentageEaten,
+                        new FoodItemPainInfo(percentageAssociatedWithPain, averageIntensity, averageDuration)));
                 }
 
                 return await _recommendationsService.GetFoodItemRecommendations(foodItemDetails);
