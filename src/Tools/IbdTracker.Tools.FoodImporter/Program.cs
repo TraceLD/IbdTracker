@@ -37,12 +37,14 @@ while((line = reader.ReadLine()) is not null)
 {
     var deserializedObj = JsonSerializer.Deserialize<FooDbFoodItem>(line);
     
-    // convert into our type;
     if (deserializedObj is null) continue;
 
     try
     {
+        // convert into our type;
         var foodItem = new FoodItem(deserializedObj.Name, deserializedObj.Description, null);
+        
+        // add to db;
         await context.FoodItems.AddAsync(foodItem);
         Console.WriteLine($"Imported item with ID: {deserializedObj.Id}.");
     }
@@ -52,6 +54,7 @@ while((line = reader.ReadLine()) is not null)
     }
 }
 
+// commit changes to DB;
 await context.SaveChangesAsync();
 
 Console.WriteLine("Import finished.");
