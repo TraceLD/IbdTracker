@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using MediatR;
@@ -12,6 +13,15 @@ namespace IbdTracker.Features.Doctors.Patients
     public class GetAssignedPatients
     {
         public record Query(string DoctorId) : IRequest<IList<PatientDto>>;
+
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(q => q.DoctorId)
+                    .NotNull();
+            }
+        }
         
         public class Handler : IRequestHandler<Query, IList<PatientDto>>
         {

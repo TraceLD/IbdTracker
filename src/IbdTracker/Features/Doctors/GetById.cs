@@ -11,10 +11,7 @@ namespace IbdTracker.Features.Doctors
 {
     public class GetById
     {
-        public class Query : IRequest<DoctorDto?>
-        {
-            public string? DoctorId { get; set; }
-        }
+        public record Query(string? DoctorId) : IRequest<DoctorDto?>;
 
         public class QueryValidator : AbstractValidator<Query>
         {

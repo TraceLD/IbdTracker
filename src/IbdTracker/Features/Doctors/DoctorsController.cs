@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
-using IbdTracker.Features.Doctors.OfficeHours;
 using IbdTracker.Features.Doctors.Patients;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,25 +22,20 @@ namespace IbdTracker.Features.Doctors
             _mediator = mediator;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DoctorDto>> GetById(string id)
-        {
-            var res = await _mediator.Send(new GetById.Query{DoctorId = id});
-            
-            if (res is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(res);
-        }
-
-        [Authorize]
+        [Authorize("read:doctor")]
         [HttpGet("@me")]
         public async Task<ActionResult<DoctorDto>> GetMe()
         {
-            var res = await _mediator.Send(new GetById.Query {DoctorId = User.Identity!.Name!});
+            var res = await _mediator.Send(User.Identity!.Name!);
             return res is null ? Unauthorized() : Ok(res);
+        }
+        
+        [Authorize("read:alldoctors")]
+        [HttpGet("{doctorId}")]
+        public async Task<ActionResult<DoctorDto>> GetById(GetById.Query query)
+        {
+            var res = await _mediator.Send(query);
+            return res is null ? NotFound() : Ok(res);
         }
 
         [Authorize("read:assignedpatients")]
@@ -51,26 +45,5 @@ namespace IbdTracker.Features.Doctors
             var res = await _mediator.Send(new GetAssignedPatients.Query(User.Identity!.Name!));
             return Ok(res);
         }
-
-        [Authorize]
-        [HttpPost("@me/informationRequests")]
-        public async Task<ActionResult<InformationRequestDto>> PostInformationRequest(
-            [FromBody] RequestData.Command command)
-        {
-            var res = await _mediator.Send(command);
-            return Ok(res);
-        }
-
-        [Authorize("write:officehours")]
-        [HttpPut]
-        public async Task<ActionResult> UpdateMyOfficeHours(
-            [FromBody] ChangeOfficeHours.HttpRequestBody httpRequestBody) =>
-            await _mediator.Send(new ChangeOfficeHours.Command(User.Identity!.Name!, httpRequestBody));
-
-        //[Authorize("write:alldoctors")]
-        [HttpPut("{doctorId}/officehours")]
-        public async Task<ActionResult> UpdateOfficeHours([FromRoute] string doctorId,
-            [FromBody] ChangeOfficeHours.HttpRequestBody httpRequestBody) =>
-            await _mediator.Send(new ChangeOfficeHours.Command(doctorId, httpRequestBody));
     }
 }
