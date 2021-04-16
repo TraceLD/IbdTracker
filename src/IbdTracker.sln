@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbdTracker.Core", "IbdTrack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbdTracker.Infrastructure", "IbdTracker.Infrastructure\IbdTracker.Infrastructure.csproj", "{834E23DB-061C-4456-B58C-0BBA08F4F434}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{DA2CA6EC-8442-4B70-ABAC-E9D0421036A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbdTracker.Tools.FoodImporter", "Tools\IbdTracker.Tools.FoodImporter\IbdTracker.Tools.FoodImporter.csproj", "{A5000B20-0981-4A9D-BDE8-5CE9818E5E91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,11 +31,18 @@ Global
 		{834E23DB-061C-4456-B58C-0BBA08F4F434}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{834E23DB-061C-4456-B58C-0BBA08F4F434}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{834E23DB-061C-4456-B58C-0BBA08F4F434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5000B20-0981-4A9D-BDE8-5CE9818E5E91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5000B20-0981-4A9D-BDE8-5CE9818E5E91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5000B20-0981-4A9D-BDE8-5CE9818E5E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5000B20-0981-4A9D-BDE8-5CE9818E5E91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7D841766-31B7-40A3-A896-AC2F7A5C2BFF}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A5000B20-0981-4A9D-BDE8-5CE9818E5E91} = {DA2CA6EC-8442-4B70-ABAC-E9D0421036A7}
 	EndGlobalSection
 EndGlobal
