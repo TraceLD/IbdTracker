@@ -24,7 +24,7 @@ namespace IbdTracker.Features.Accounts
         [HttpGet("@me/accountType")]
         public async Task<ActionResult<int>> GetAccountType()
         {
-            var res = await _mediator.Send(new GetAccountType.Query {AuthId = User.Identity?.Name});
+            var res = await _mediator.Send(new GetAccountType.Query(User.Identity?.Name));
             return Ok(res);
         }
     }

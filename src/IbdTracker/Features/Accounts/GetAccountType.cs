@@ -10,10 +10,7 @@ namespace IbdTracker.Features.Accounts
 {
     public class GetAccountType
     {
-        public class Query : IRequest<int>
-        {
-            public string? AuthId { get; set; }
-        }
+        public record Query(string? AuthId) : IRequest<int>;
 
         public class QueryValidator : AbstractValidator<Query>
         {
