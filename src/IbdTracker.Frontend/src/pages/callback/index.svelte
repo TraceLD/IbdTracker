@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { isAuthenticated } from "../../stores/authStore";
+    import { isAuthenticated, patient, doctor } from "../../stores/authStore";
     import { callback } from "../../services/auth";
     import { ready, redirect } from "@roxi/routify";
 
@@ -8,10 +8,18 @@
 
     async function handle(): Promise<void> {
         if ($isAuthenticated) {
-            $redirect("/dashboard");
+            if ($patient) {
+                $redirect("/dashboard");
+            } else if ($doctor) {
+                $redirect("/doctors/dashboard");
+            }
         } else {
             await callback();
-            $redirect("/dashboard");
+            if ($patient) {
+                $redirect("/dashboard");
+            } else if ($doctor) {
+                $redirect("/doctors/dashboard");
+            }
         }
     }
 </script>

@@ -21,8 +21,8 @@ namespace IbdTracker.Features.Accounts
         }
 
         [Authorize]
-        [HttpGet("isregistered")]
-        public async Task<ActionResult<int>> IsRegistered()
+        [HttpGet("@me/accountType")]
+        public async Task<ActionResult<int>> GetAccountType()
         {
             var res = await _mediator.Send(new GetAccountType.Query {AuthId = User.Identity?.Name});
             return Ok(res);

@@ -1,10 +1,10 @@
 <script>
-    import { redirect } from '@roxi/routify'
+    import { redirect, url } from '@roxi/routify'
     import { isAuthenticated } from "../stores/authStore";
 
     if ($isAuthenticated) {
-        $redirect("/dashboard");
+        $redirect($url("/dashboard"));
     } else {
-        $redirect("/login");
+        $redirect($url("/login"));
     }
 </script>

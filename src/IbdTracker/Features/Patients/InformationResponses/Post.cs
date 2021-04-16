@@ -94,7 +94,7 @@ namespace IbdTracker.Features.Patients.InformationResponses
                     html.AppendLine("<br>");
                 }
 
-                await _emailService.SendMessage("lukaszdabrowski881@gmail.com",
+                await _emailService.SendMessage("ibdtrackerdoctor@gmail.com",
                     $"Patient {patientName} has shared data.", html.ToString());
 
                 return new NoContentResult();

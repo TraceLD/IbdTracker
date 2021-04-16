@@ -167,3 +167,21 @@ export class InformationRequest {
         this.requestedBms = dto.requestedBms;
     }
 }
+
+export interface Doctor {
+    doctorId: string,
+    name: string,
+    location: string,
+    officeHours: Array<OfficeHours>,
+}
+
+export interface OfficeHours {
+    dayOfWeek: number,
+    startTimeUtc: TimeOfDay,
+    endTimeUtc: TimeOfDay,
+}
+
+export interface TimeOfDay {
+    hour: number,
+    minute: number,
+}

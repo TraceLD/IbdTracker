@@ -12,7 +12,7 @@ pain_intensity = ctrl.Antecedent(np.arange(0, 11, 1), "pain_intensity")
 all_meals_percentage = ctrl.Antecedent(np.arange(0, 101, 1), "all_meals_percentage")
 
 # OUTPUT
-recommendation_percentage = ctrl.Consequent(np.arange(0, 101, 1), "recommendation_percentage")
+recommendation_percentage = ctrl.Consequent(np.arange(0, 101, 1), "recommendation_percentage", defuzzify_method="centroid")
 
 # MEMBERSHIP FUNCTIONS
 all_meals_percentage.automf(3, names=["low", "medium", "high"])

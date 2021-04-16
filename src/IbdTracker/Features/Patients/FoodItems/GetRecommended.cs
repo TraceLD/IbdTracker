@@ -21,6 +21,8 @@ namespace IbdTracker.Features.Patients.FoodItems
             private readonly IbdSymptomTrackerContext _context;
             private readonly IRecommendationsService _recommendationsService;
 
+            private const int PainCutoff = 6;
+
             public Handler(IbdSymptomTrackerContext context, IRecommendationsService recommendationsService)
             {
                 _context = context;
@@ -57,7 +59,7 @@ namespace IbdTracker.Features.Patients.FoodItems
                             .AsNoTracking()
                             .Where(pe => pe.PatientId.Equals(request.PatientId)
                                          && pe.DateTime >= meal
-                                         && pe.DateTime <= meal.AddHours(6))
+                                         && pe.DateTime <= meal.AddHours(PainCutoff))
                             .ToListAsync(cancellationToken);
 
                         // ReSharper disable once InvertIf
@@ -75,6 +77,7 @@ namespace IbdTracker.Features.Patients.FoodItems
                     {
                         foodItemDetails.Add(new FoodItemRecommendationData(foodItem.FoodItemId, percentageEaten,
                             null));
+                        continue;
                     }
                     var percentageAssociatedWithPain = (double)countOfTimesPainHappenedAfterEating / timesEaten * 100;
                     var averageIntensity = matchedPainEvents.Average(x => x.PainScore);

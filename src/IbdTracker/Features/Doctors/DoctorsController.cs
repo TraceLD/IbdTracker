@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Features.Doctors.OfficeHours;
+using IbdTracker.Features.Doctors.Patients;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +33,31 @@ namespace IbdTracker.Features.Doctors
                 return NotFound();
             }
 
+            return Ok(res);
+        }
+
+        [Authorize]
+        [HttpGet("@me")]
+        public async Task<ActionResult<DoctorDto>> GetMe()
+        {
+            var res = await _mediator.Send(new GetById.Query {DoctorId = User.Identity!.Name!});
+            return res is null ? Unauthorized() : Ok(res);
+        }
+
+        [Authorize("read:assignedpatients")]
+        [HttpGet("@me/patients")]
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetMyPatients()
+        {
+            var res = await _mediator.Send(new GetAssignedPatients.Query(User.Identity!.Name!));
+            return Ok(res);
+        }
+
+        [Authorize]
+        [HttpPost("@me/informationRequests")]
+        public async Task<ActionResult<InformationRequestDto>> PostInformationRequest(
+            [FromBody] RequestData.Command command)
+        {
+            var res = await _mediator.Send(command);
             return Ok(res);
         }
 

@@ -1,11 +1,17 @@
 <script lang="ts">
     import Login from "../login/index.svelte";
+    import DoctorDashboard from "../doctors/dashboard/index.svelte";
     import Menu from "../../components/navigation/Menu.svelte";
     import Header from "../../components/navigation/Headbar.svelte";
 
     import type { MenuCategory } from "../../models/models";
     import { ready } from "@roxi/routify";
-    import { isLoading, isAuthenticated } from "../../stores/authStore";
+    import {
+        isLoading,
+        isAuthenticated,
+        patient,
+        doctor,
+    } from "../../stores/authStore";
     import { menuOpened } from "../../stores/menuStore";
 
     const menuCategories: Array<MenuCategory> = [
@@ -54,19 +60,23 @@
     {:else if $isLoading}
         <div />
     {:else if $isAuthenticated}
-        <div class="lg:flex w-screen">
-            <Menu menuCategories={menuCategories} />
-            <div
-                class:max-h-screen={$menuOpened}
-                class:overflow-hidden={$menuOpened}
-                class="w-screen"
-            >
-                <Header />
-                <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-1/3">
-                    <slot />
+        {#if $patient}
+            <div class="lg:flex w-screen">
+                <Menu {menuCategories} />
+                <div
+                    class:max-h-screen={$menuOpened}
+                    class:overflow-hidden={$menuOpened}
+                    class="w-screen"
+                >
+                    <Header />
+                    <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-1/3">
+                        <slot />
+                    </div>
                 </div>
             </div>
-        </div>
+        {:else if $doctor}
+            <DoctorDashboard />
+        {/if}
     {:else}
         <Login />
     {/if}

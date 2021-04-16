@@ -1,8 +1,9 @@
 import type { Auth0ClientOptions, Auth0Client, User } from "@auth0/auth0-spa-js";
 import type { PatientDto } from "../models/dtos";
 import createAuth0Client from "@auth0/auth0-spa-js";
-import { isLoading, isAuthenticated, user, patient } from "../stores/authStore";
+import { isLoading, isAuthenticated, user, patient, doctor } from "../stores/authStore";
 import { get } from "./requests";
+import type { Doctor } from "../models/models";
 
 const authConfig: Auth0ClientOptions = {
     domain: "traceld.eu.auth0.com",
@@ -35,8 +36,15 @@ async function handleIsAuthenticated(): Promise<void> {
     const _user: User = await auth0.getUser();
     user.set(_user);
 
-    const _patient: PatientDto = await get<PatientDto>("patients");
-    patient.set(_patient);
+    const userType: number = await get<number>("accounts/@me/accountType");
+
+    if (userType === 1) {
+        const _patient: PatientDto = await get<PatientDto>("patients");
+        patient.set(_patient);
+    } else if (userType === 2) {
+        const _doctor: Doctor = await get<Doctor>("doctors/@me");
+        doctor.set(_doctor);
+    }
 }
 
 async function getToken(): Promise<any> {
@@ -62,6 +70,9 @@ async function callback(): Promise<void> {
 }
 
 function logout(): void {
+    patient.set(null);
+    doctor.set(null);
+    user.set(null);
     auth0.logout({
         returnTo: "http://localhost:8080/"
     });
