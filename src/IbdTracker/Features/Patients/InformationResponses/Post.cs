@@ -57,7 +57,7 @@ namespace IbdTracker.Features.Patients.InformationResponses
                 foreach (var prescription in activePrescriptions)
                 {
                     html.AppendLine(
-                        $"{prescription.Medication.BrandName} | {prescription.Medication.ActiveIngredient} | {prescription.Dosage}");
+                        $"{prescription.Medication.BnfPresentation} | {prescription.Medication.BnfChemicalSubstance} | {prescription.DoctorInstructions}");
                     html.AppendLine("<br>");
                 }
 

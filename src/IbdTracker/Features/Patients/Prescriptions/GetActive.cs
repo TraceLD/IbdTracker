@@ -46,11 +46,9 @@ namespace IbdTracker.Features.Patients.Prescriptions
                     {
                         PrescriptionId = p.PrescriptionId,
                         PatientId = p.PatientId,
-                        Dosage = p.Dosage,
+                        DoctorInstructions = p.DoctorInstructions,
                         EndDateTime = p.EndDateTime,
-                        MedicationId = p.MedicationId,
-                        ActiveIngredient = p.Medication.ActiveIngredient,
-                        BrandName = p.Medication.BrandName
+                        MedicationId = p.MedicationId
                     })
                     .ToListAsync(cancellationToken);
             }

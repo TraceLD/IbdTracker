@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using IbdTracker.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    partial class IbdSymptomTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20210420204526_AddBnfDrugInfo")]
+    partial class AddBnfDrugInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,6 +274,7 @@ namespace IbdTracker.Core.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("BnfParagraph")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("BnfParagraphCode")
@@ -286,6 +289,7 @@ namespace IbdTracker.Core.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("BnfProduct")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("BnfProductCode")
@@ -300,6 +304,7 @@ namespace IbdTracker.Core.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("BnfSubparagraph")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("BnfSubparagraphCode")
