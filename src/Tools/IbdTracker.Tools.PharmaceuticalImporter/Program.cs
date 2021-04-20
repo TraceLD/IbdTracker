@@ -34,7 +34,6 @@ var contextOptions = new DbContextOptionsBuilder<IbdSymptomTrackerContext>();
 contextOptions.UseNpgsql(connectionString);
 
 var context = new IbdSymptomTrackerContext(contextOptions.Options);
-
 using var sr = new StreamReader(csvPath);
 using var csv = new CsvReader(sr, CultureInfo.InvariantCulture);
 var records = csv.GetRecordsAsync<BnfDrug>();
@@ -46,8 +45,10 @@ await foreach (var record in records)
 
 // commit changes to DB;
 await context.SaveChangesAsync();
-
 Console.WriteLine("Import finished.");
+
+
+
 
 // performs one iteration of the loop over drugs;
 static async Task PerformIteration(BnfDrug drug, IbdSymptomTrackerContext context)
