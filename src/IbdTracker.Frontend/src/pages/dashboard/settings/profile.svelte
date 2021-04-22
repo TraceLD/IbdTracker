@@ -1,13 +1,16 @@
 <script lang="ts">
-    import DoctorIcon from "../../../../components/icons/DoctorIcon.svelte";
-    import Loading from "../../../../components/Loading.svelte";
-    import Error from "../../../../components/notifications/Error.svelte";
-    import type { Doctor } from "../../../../models/models";
-    import { get } from "../../../../services/requests";
-    import { user, patient } from "../../../../stores/authStore";
+    import DoctorIcon from "../../../components/icons/DoctorIcon.svelte";
+    import Loading from "../../../components/Loading.svelte";
+    import Error from "../../../components/notifications/Error.svelte";
+    import type { PatientDto } from "../../../models/dtos";
+    import type { Doctor } from "../../../models/models";
+    import { get } from "../../../services/requests";
+    import { ibdTrackerUser } from "../../../stores/authStore";
+
+    $: patient = $ibdTrackerUser.ibdTrackerAccountObject as PatientDto;
 
     async function getDoctor(): Promise<Doctor> {
-        return await get<Doctor>(`doctors/${$patient.doctorId}`);
+        return await get<Doctor>(`doctors/${$ibdTrackerUser.ibdTrackerAccountObject.doctorId}`);
     }
 </script>
 
@@ -19,12 +22,12 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
                 class="w-20 h-20 rounded-full"
-                src={$user.picture}
+                src={$ibdTrackerUser.auth0User.picture}
                 alt="profile picture"
             />
             <div class="ml-4">
-                <p class="text-2xl font-bold">{$patient.name}</p>
-                <p>{$user.email}</p>
+                <p class="text-2xl font-bold">{$ibdTrackerUser.ibdTrackerAccountObject.name}</p>
+                <p>{$ibdTrackerUser.auth0User.email}</p>
             </div>
         </div>
         <div class="ml-5">
@@ -47,7 +50,7 @@
                     <p>Date of birth:&nbsp;</p>
                     <p class="font-extralight">
                         {new Date(
-                            $patient.dateOfBirth + "Z"
+                            patient.dateOfBirth + "Z"
                         ).toLocaleDateString()}
                     </p>
                 </div>
@@ -69,7 +72,7 @@
                     <p>Date diagnosed:&nbsp;</p>
                     <p class="font-extralight">
                         {new Date(
-                            $patient.dateDiagnosed + "Z"
+                            patient.dateDiagnosed + "Z"
                         ).toLocaleDateString()}
                     </p>
                 </div>
