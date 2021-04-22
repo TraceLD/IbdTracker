@@ -4,7 +4,7 @@
     import ConfirmationModal from "../../../components/ConfirmationModal.svelte";
 
     import { goto } from "@roxi/routify";
-    import { patient } from "../../../stores/authStore";
+    import { ibdTrackerUser } from "../../../stores/authStore";
     import { get, post } from "../../../services/requests";
     import { fade } from "svelte/transition";
 
@@ -35,7 +35,7 @@
         // make sure is still available;
         const selectedDateTimeIsoString: string = selectedDateTime.toISOString();
         const avRes: IIsAppointmentAvailableResult = await get<IIsAppointmentAvailableResult>(
-            `doctors/${$patient.doctorId}/appointments/isAvailable?dateTime=${selectedDateTimeIsoString}`
+            `doctors/${$ibdTrackerUser.ibdTrackerAccountObject.doctorId}/appointments/isAvailable?dateTime=${selectedDateTimeIsoString}`
         );
 
         if (!avRes.isAvailable) {
@@ -46,7 +46,7 @@
         }
 
         const reqBody = {
-            doctorId: $patient.doctorId,
+            doctorId: $ibdTrackerUser.ibdTrackerAccountObject.doctorId,
             startDateTime: selectedDateTimeIsoString,
             durationMinutes: 30,
             doctorNotes: null,
@@ -82,7 +82,7 @@
 
         availableTimes = (
             await get<IAvailableAppointmentTime>(
-                `doctors/${$patient.doctorId}/appointments/available?day=${dateInput}`
+                `doctors/${$ibdTrackerUser.ibdTrackerAccountObject.doctorId}/appointments/available?day=${dateInput}`
             )
         ).availableAppointmentTimesOnDayUtc.map((el: string) => new Date(el));
         showTime = true;

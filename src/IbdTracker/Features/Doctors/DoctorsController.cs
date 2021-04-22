@@ -26,16 +26,8 @@ namespace IbdTracker.Features.Doctors
         [HttpGet("@me")]
         public async Task<ActionResult<DoctorDto>> GetMe()
         {
-            var res = await _mediator.Send(User.Identity!.Name!);
+            var res = await _mediator.Send(new GetCurrent.Query());
             return res is null ? Unauthorized() : Ok(res);
-        }
-        
-        [Authorize("read:alldoctors")]
-        [HttpGet("{doctorId}")]
-        public async Task<ActionResult<DoctorDto>> GetById(GetById.Query query)
-        {
-            var res = await _mediator.Send(query);
-            return res is null ? NotFound() : Ok(res);
         }
 
         [Authorize("read:assignedpatients")]

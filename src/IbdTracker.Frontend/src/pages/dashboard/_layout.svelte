@@ -1,16 +1,15 @@
 <script lang="ts">
-    import Login from "../login/index.svelte";
-    import DoctorDashboard from "../doctors/dashboard/index.svelte";
+    import Redirect from "../redirect.svelte";
     import Menu from "../../components/navigation/Menu.svelte";
     import Header from "../../components/navigation/Headbar.svelte";
+    import Loading from "../../components/Loading.svelte";
 
-    import type { MenuCategory } from "../../models/models";
+    import { AccountType, MenuCategory } from "../../models/models";
     import { ready } from "@roxi/routify";
     import {
         isLoading,
         isAuthenticated,
-        patient,
-        doctor,
+        ibdTrackerUser,
     } from "../../stores/authStore";
     import { menuOpened } from "../../stores/menuStore";
 
@@ -58,9 +57,9 @@
     {#if !window.routify.inBrowser}
         NO ROBOTS
     {:else if $isLoading}
-        <div />
+        <Loading />
     {:else if $isAuthenticated}
-        {#if $patient}
+        {#if $ibdTrackerUser.ibdTrackerAccountObject && $ibdTrackerUser.ibdTrackerAccountType === AccountType.Patient}
             <div class="lg:flex w-screen">
                 <Menu {menuCategories} />
                 <div
@@ -74,10 +73,10 @@
                     </div>
                 </div>
             </div>
-        {:else if $doctor}
-            <DoctorDashboard />
+        {:else}
+            <Redirect />
         {/if}
     {:else}
-        <Login />
+        <Redirect />
     {/if}
 </div>

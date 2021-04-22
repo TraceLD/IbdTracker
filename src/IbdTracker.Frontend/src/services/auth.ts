@@ -1,8 +1,9 @@
 import type { Auth0ClientOptions, Auth0Client, User } from "@auth0/auth0-spa-js";
 import type { PatientDto } from "../models/dtos";
-import type { Doctor } from "../models/models";
+import type { Doctor, IbdTrackerUser } from "../models/models";
+import { AccountType } from "../models/models";
 import createAuth0Client from "@auth0/auth0-spa-js";
-import { isLoading, isAuthenticated, user, patient, doctor } from "../stores/authStore";
+import { isLoading, isAuthenticated, ibdTrackerUser } from "../stores/authStore";
 import { get } from "./requests";
 
 const authConfig: Auth0ClientOptions = {
@@ -16,34 +17,41 @@ let auth0: Auth0Client = null;
 async function initAuth(): Promise<void> {
     isLoading.set(true);
 
-    try {
-        auth0 = await createAuth0Client(authConfig);
-        const _isAuthenticated: boolean = await auth0.isAuthenticated();
+    auth0 = await createAuth0Client(authConfig);
+    const _isAuthenticated: boolean = await auth0.isAuthenticated();
 
-        isAuthenticated.set(_isAuthenticated);
+    isAuthenticated.set(_isAuthenticated);
 
-        if (_isAuthenticated) {
-            await handleIsAuthenticated();
-        }
-
-        isLoading.set(false);
-    } catch {
-        alert("Error while accessing the Authentication API. Try refreshing the page. If the error persists please try again later.");
+    if (_isAuthenticated) {
+        await handleIsAuthenticated();
     }
+
+    isLoading.set(false);
 }
 
 async function handleIsAuthenticated(): Promise<void> {
-    const _user: User = await auth0.getUser();
-    user.set(_user);
+    try {
+        const _user: User = await auth0.getUser();
+        const _ibdTrackerAccountType: AccountType = await get<AccountType>("accounts/@me/accountType");
+        const _ibdTrackerUser: IbdTrackerUser = {
+            auth0User: _user,
+            ibdTrackerAccountType: _ibdTrackerAccountType,
+        }
 
-    const userType: number = await get<number>("accounts/@me/accountType");
+        if (_ibdTrackerAccountType === AccountType.Patient) {
+            const patient: PatientDto = await get<PatientDto>("patients/@me");
 
-    if (userType === 1) {
-        const _patient: PatientDto = await get<PatientDto>("patients/@me");
-        patient.set(_patient);
-    } else if (userType === 2) {
-        const _doctor: Doctor = await get<Doctor>("doctors/@me");
-        doctor.set(_doctor);
+            _ibdTrackerUser.ibdTrackerAccountObject = patient;        
+        } else if (_ibdTrackerAccountType === AccountType.Doctor) {
+            const doctor: Doctor = await get<Doctor>("doctors/@me");
+
+            _ibdTrackerUser.ibdTrackerAccountObject = doctor;
+        }
+
+        ibdTrackerUser.set(_ibdTrackerUser);
+    }
+    catch {
+        alert("Error while communicating with authentication API. Please try again later.");
     }
 }
 
@@ -70,9 +78,9 @@ async function callback(): Promise<void> {
 }
 
 function logout(): void {
-    patient.set(null);
-    doctor.set(null);
-    user.set(null);
+    ibdTrackerUser.set(null);
+    isAuthenticated.set(false);
+
     auth0.logout({
         returnTo: "http://localhost:8080/"
     });

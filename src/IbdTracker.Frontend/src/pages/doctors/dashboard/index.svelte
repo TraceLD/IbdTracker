@@ -2,7 +2,7 @@
     import Loading from "../../../components/Loading.svelte";
     import GenericNotificationCard from "../../../components/notifications/GenericNotificationCard.svelte";
 
-    import { doctor } from "../../../stores/authStore";
+    import { ibdTrackerUser } from "../../../stores/authStore";
     import { get } from "../../../services/requests";
     import type { GlobalNotification  } from "../../../models/models";
 
@@ -11,7 +11,7 @@
     const getNotifications: Promise<Array<GlobalNotification>> = get<Array<GlobalNotification>>("notifications");
 </script>
 
-<h1>Hello, {$doctor.name}</h1>
+<h1>Hello, {$ibdTrackerUser.ibdTrackerAccountObject.name}</h1>
 <h2>Notifications</h2>
 
 {#await getNotifications}

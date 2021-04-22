@@ -1,6 +1,6 @@
 <script lang="ts">
     import SuggestedCard from "../../components/cards/suggested/SuggestedCard.svelte";
-    import { patient } from "../../stores/authStore";
+    import { ibdTrackerUser } from "../../stores/authStore";
     import { get } from "../../services/requests";
     import Loading from "../../components/Loading.svelte";
     import GenericNotificationCard from "../../components/notifications/GenericNotificationCard.svelte";
@@ -27,11 +27,11 @@
     }
 </script>
 
-<h1>Hello, {$patient.name.split(" ")[0]}</h1>
+<h1>Hello, {$ibdTrackerUser.ibdTrackerAccountObject.name.split(" ")[0]}</h1>
 <h2>Notifications</h2>
 
 {#await getNotifications()}
-    <Loading />    
+    <Loading />
 {:then res}
     {#each res as notification}
         <div class="mb-4">

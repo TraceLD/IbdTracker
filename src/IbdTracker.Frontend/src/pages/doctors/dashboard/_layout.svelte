@@ -1,16 +1,16 @@
 <script lang="ts">
-    import Login from "../../login/index.svelte";
-    import PatientDashboard from "../../dashboard/index.svelte";
     import Menu from "../../../components/navigation/Menu.svelte";
     import Header from "../../../components/navigation/Headbar.svelte";
+    import Loading from "../../../components/Loading.svelte";
+    import Redirect from "../../redirect.svelte";
 
     import type { MenuCategory } from "../../../models/models";
+    import { AccountType } from "../../../models/models";
     import { ready, url } from "@roxi/routify";
     import {
         isLoading,
         isAuthenticated,
-        patient,
-        doctor,
+        ibdTrackerUser,
     } from "../../../stores/authStore";
     import { menuOpened } from "../../../stores/menuStore";
 
@@ -38,9 +38,9 @@
     {#if !window.routify.inBrowser}
         NO ROBOTS
     {:else if $isLoading}
-        <div />
+        <Loading />
     {:else if $isAuthenticated}
-        {#if $doctor}
+        {#if $ibdTrackerUser.ibdTrackerAccountObject && $ibdTrackerUser.ibdTrackerAccountType === AccountType.Doctor}
             <div class="lg:flex w-screen">
                 <Menu {menuCategories} />
                 <div
@@ -54,10 +54,12 @@
                     </div>
                 </div>
             </div>
-        {:else if $patient}
-            <PatientDashboard />
+        {:else if $ibdTrackerUser.ibdTrackerAccountObject && $ibdTrackerUser.ibdTrackerAccountType === AccountType.UnverifiedDoctor}
+            <p>Your account is awaiting verification from an Administrator. They should be in touch with you to verify your credentials.</p>
+        {:else}
+            <Redirect />
         {/if}
     {:else}
-        <Login />
+        <Redirect />
     {/if}
 </div>

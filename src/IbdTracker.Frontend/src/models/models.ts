@@ -1,4 +1,19 @@
-import type { AppointmentDto, BowelMovementEventDto, InformationRequestDto, MealEventDto, PainEventDto, PrescriptionDto } from "./dtos";
+import type { User } from "@auth0/auth0-spa-js";
+import type { AppointmentDto, BowelMovementEventDto, InformationRequestDto, MealEventDto, PainEventDto, PatientDto, PrescriptionDto } from "./dtos";
+
+export interface IbdTrackerUser {
+    auth0User: User,
+    ibdTrackerAccountType: AccountType,
+    ibdTrackerAccountObject?: PatientDto | Doctor
+}
+
+export enum AccountType {
+    Unregistered = -1,
+    Unknown = 0,
+    Patient = 1,
+    Doctor = 2,
+    UnverifiedDoctor = 3,
+}
 
 export interface MenuCategory {
     name: string;
