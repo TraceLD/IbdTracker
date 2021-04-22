@@ -5,27 +5,19 @@ using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 
 namespace IbdTracker.Features.Patients.PainEvents
 {
     public class Post
     {
-        public class Command : IRequest<PainEventDto>
-        {
-            public string PatientId { get; set; } = null!;
-            public DateTime? DateTime { get; set; }
-            public int MinutesDuration { get; set; }
-            public int PainScore { get; set; }
-        }
+        public record Command(DateTime? DateTime, int MinutesDuration, int PainScore) : IRequest<PainEventDto>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(c => c.PatientId)
-                    .NotEmpty();
-
                 RuleFor(c => c.DateTime)
                     .LessThanOrEqualTo(DateTime.UtcNow)
                     .When(c => c.DateTime is not null);
@@ -44,18 +36,22 @@ namespace IbdTracker.Features.Patients.PainEvents
         public class Handler : IRequestHandler<Command, PainEventDto>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<PainEventDto> Handle(Command request, CancellationToken cancellationToken)
             {
+                var patientId = _userService.GetUserAuthId();
+                
                 // convert to EFCore entity;
                 var pe = new PainEvent
                 {
-                    PatientId = request.PatientId,
+                    PatientId = patientId,
                     DateTime = request.DateTime ?? DateTime.UtcNow,
                     MinutesDuration = request.MinutesDuration,
                     PainScore = request.PainScore

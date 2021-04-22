@@ -3,7 +3,7 @@
     import Error from "../../../components/notifications/Error.svelte";
 
     import { MealEvent } from "../../../models/models";
-    import { goto, url } from "@roxi/routify";
+    import { goto } from "@roxi/routify";
     import { get } from "../../../services/requests";
     import QrCode from "../../../components/buttons/QrCode.svelte";
     import MealEventCard from "../../../components/cards/MealEventCard.svelte";

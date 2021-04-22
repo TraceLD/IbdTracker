@@ -7,6 +7,7 @@ using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,20 +15,12 @@ namespace IbdTracker.Features.Patients.Meals
 {
     public class Post
     {
-        public class Command : IRequest<MealDto>
-        {
-            public string PatientId { get; set; } = null!;
-            public string Name { get; set; } = null!;
-            public List<Guid> FoodItemIds { get; set; } = null!;
-        }
+        public record Command(string Name, IList<Guid> FoodItemIds) : IRequest<MealDto>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(c => c.PatientId)
-                    .NotEmpty();
-
                 RuleFor(c => c.FoodItemIds)
                     .NotNull()
                     .Must(c => c.Any());
@@ -37,18 +30,21 @@ namespace IbdTracker.Features.Patients.Meals
         public class Handler : IRequestHandler<Command, MealDto>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<MealDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 // convert to EFCore Meal entity;
+                var patientId = _userService.GetUserAuthId();
                 var meal = new Meal
                 {
-                    PatientId = request.PatientId,
+                    PatientId = patientId,
                     Name = request.Name,
                 };
 

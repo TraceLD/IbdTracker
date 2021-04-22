@@ -20,6 +20,7 @@ export interface GlobalNotification {
 
 export class Appointment {
     appointmentId: string;
+    doctorId: string;
     doctorName: string;
     startDateTime: Date;
     durationMinutes: number;
@@ -29,6 +30,7 @@ export class Appointment {
 
     constructor(dto: AppointmentDto) {
         this.appointmentId = dto.appointmentId;
+        this.doctorId = dto.doctorId;
         this.doctorName = dto.doctorName;
         this.startDateTime = new Date(dto.startDateTime + "Z");
         this.durationMinutes = dto.durationMinutes;

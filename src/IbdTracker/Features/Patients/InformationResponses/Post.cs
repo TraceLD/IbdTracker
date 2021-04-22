@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Infrastructure.Services;
 using MediatR;
@@ -13,24 +14,42 @@ namespace IbdTracker.Features.Patients.InformationResponses
 {
     public class Post
     {
-        public record HttpRequestBody(DateTime DateFrom, DateTime DateTo, bool SendPain, bool SendBms);
-        
-        public record Command(string PatientId, HttpRequestBody Body) : IRequest<ActionResult>;
-        
+        public record Command(DateTime DateFrom, DateTime DateTo, bool SendPain, bool SendBms) : IRequest<ActionResult>;
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(c => c.DateFrom)
+                    .LessThan(DateTime.UtcNow);
+
+                RuleFor(c => c.DateTo)
+                    .LessThanOrEqualTo(DateTime.UtcNow);
+
+                RuleFor(c => c.SendPain)
+                    .NotNull();
+
+                RuleFor(c => c.SendBms)
+                    .NotNull();
+;            }
+        }
+
         public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IEmailService _emailService;
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IEmailService emailService, IbdSymptomTrackerContext context)
+            public Handler(IEmailService emailService, IbdSymptomTrackerContext context, IUserService userService)
             {
                 _emailService = emailService;
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                var (patientId, body) = request;
+                var patientId = _userService.GetUserAuthId();
                 var patientName = await _context.Patients
                     .Where(p => p.PatientId.Equals(patientId))
                     .Select(p => p.Name)
@@ -49,7 +68,7 @@ namespace IbdTracker.Features.Patients.InformationResponses
 <h3>Active prescriptions.</h3>");
 
                 var activePrescriptions = await _context.Prescriptions
-                    .Where(p => p.PatientId.Equals(request.PatientId)
+                    .Where(p => p.PatientId.Equals(patientId)
                                 && p.EndDateTime > DateTime.UtcNow)
                     .Include(p => p.Medication)
                     .ToListAsync(cancellationToken);
@@ -63,12 +82,13 @@ namespace IbdTracker.Features.Patients.InformationResponses
 
                 html.AppendLine("<br>");
 
-                if (body.SendBms)
+                // TODO: add pain events;
+                if (request.SendBms)
                 {
                     var bms = await _context.BowelMovementEvents
-                        .Where(bm => bm.PatientId.Equals(request.PatientId)
-                                     && bm.DateTime >= body.DateFrom
-                                     && bm.DateTime <= body.DateTo)
+                        .Where(bm => bm.PatientId.Equals(patientId)
+                                     && bm.DateTime >= request.DateFrom
+                                     && bm.DateTime <= request.DateTo)
                         .ToListAsync(cancellationToken);
 
                     html.AppendLine("<h3>Bowel movements.</h3>");

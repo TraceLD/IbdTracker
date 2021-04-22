@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,6 @@ namespace IbdTracker.Features.Patients.InformationRequests
     {
         public record Command(
             Guid InformationRequestId,
-            string PatientId,
             string DoctorId,
             bool IsActive,
             DateTime RequestedDataFrom,
@@ -28,11 +28,7 @@ namespace IbdTracker.Features.Patients.InformationRequests
             {
                 RuleFor(c => c.InformationRequestId)
                     .NotEmpty();
-
-                RuleFor(c => c.PatientId)
-                    .NotEmpty()
-                    .MinimumLength(6);
-
+                
                 RuleFor(c => c.DoctorId)
                     .NotEmpty()
                     .MinimumLength(6);
@@ -59,24 +55,27 @@ namespace IbdTracker.Features.Patients.InformationRequests
         public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
+                var patientId = _userService.GetUserAuthId();
                 var informationRequest = await _context.InformationRequests
                     .FirstOrDefaultAsync(i => i.InformationRequestId == request.InformationRequestId
-                                              && i.PatientId.Equals(request.PatientId), cancellationToken);
+                                              && i.PatientId.Equals(patientId), cancellationToken);
 
                 if (informationRequest is null)
                 {
                     return new NotFoundResult();
                 }
                 
-                if (informationRequest.PatientId != request.PatientId
+                if (informationRequest.PatientId != patientId
                     || informationRequest.DoctorId != request.DoctorId
                     || informationRequest.RequestedDataFrom != request.RequestedDataFrom
                     || informationRequest.RequestedDataTo != request.RequestedDataTo
@@ -89,7 +88,6 @@ namespace IbdTracker.Features.Patients.InformationRequests
                 informationRequest.IsActive = request.IsActive;
 
                 await _context.SaveChangesAsync(cancellationToken);
-
                 return new NoContentResult();
             }
         }

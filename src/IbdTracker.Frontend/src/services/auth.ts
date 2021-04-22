@@ -1,9 +1,9 @@
 import type { Auth0ClientOptions, Auth0Client, User } from "@auth0/auth0-spa-js";
 import type { PatientDto } from "../models/dtos";
+import type { Doctor } from "../models/models";
 import createAuth0Client from "@auth0/auth0-spa-js";
 import { isLoading, isAuthenticated, user, patient, doctor } from "../stores/authStore";
 import { get } from "./requests";
-import type { Doctor } from "../models/models";
 
 const authConfig: Auth0ClientOptions = {
     domain: "traceld.eu.auth0.com",
@@ -39,7 +39,7 @@ async function handleIsAuthenticated(): Promise<void> {
     const userType: number = await get<number>("accounts/@me/accountType");
 
     if (userType === 1) {
-        const _patient: PatientDto = await get<PatientDto>("patients");
+        const _patient: PatientDto = await get<PatientDto>("patients/@me");
         patient.set(_patient);
     } else if (userType === 2) {
         const _doctor: Doctor = await get<Doctor>("doctors/@me");

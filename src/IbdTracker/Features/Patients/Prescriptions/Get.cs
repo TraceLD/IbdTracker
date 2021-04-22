@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,34 +12,24 @@ namespace IbdTracker.Features.Patients.Prescriptions
 {
     public class Get
     {
-        public class Query : IRequest<IList<PrescriptionDto>>
-        {
-            public string? PatientId { get; set; }
-        }
-
-        public class QueryValidator : AbstractValidator<Query>
-        {
-            public QueryValidator()
-            {
-                RuleFor(q => q.PatientId)
-                    .NotEmpty();
-            }
-        }
+        public record Query : IRequest<IList<PrescriptionDto>>;
 
         public class Handler : IRequestHandler<Query, IList<PrescriptionDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<IList<PrescriptionDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.Prescriptions
                     .AsNoTracking()
-                    .Where(p => p.PatientId.Equals(request.PatientId))
+                    .Where(p => p.PatientId.Equals(_userService.GetUserAuthId()))
                     .Include(p => p.Medication)
                     .Select(p => new PrescriptionDto
                     {

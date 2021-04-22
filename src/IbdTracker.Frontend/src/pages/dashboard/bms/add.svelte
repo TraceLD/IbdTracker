@@ -1,12 +1,11 @@
 <script lang="ts">
-    import SubpageHeader from "../../../../components/navigation/SubpageHeader.svelte";
-    import Error from "../../../../components/notifications/Error.svelte";
-    import ConfirmationModal from "../../../../components/ConfirmationModal.svelte";
+    import SubpageHeader from "../../../components/navigation/SubpageHeader.svelte";
+    import Error from "../../../components/notifications/Error.svelte";
+    import ConfirmationModal from "../../../components/ConfirmationModal.svelte";
 
     import { goto } from "@roxi/routify";
-    import { patient } from "../../../../stores/authStore";
-    import { combineInputs, isInThePast } from "../../../../services/datetime";
-    import { post } from "../../../../services/requests";
+    import { combineInputs, isInThePast } from "../../../services/datetime";
+    import { post } from "../../../services/requests";
     import { fade } from "svelte/transition";
 
     let showConfirmationModal: boolean = false;
@@ -42,7 +41,6 @@
         errorMsg = undefined;
 
         let reqBody = {
-            patientId: $patient.patientId,
             dateTime: date.toISOString(),
             containedBlood: bloodInput,
             containedMucus: mucusInput,
@@ -134,7 +132,7 @@
     <div class="flex mt-2 bg-gray-100 py-4 px-6 rounded-b-lg">
         <button
             on:click={() => showConfirmationModal = true}
-            class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50">
+            class="ml-auto bg-indigo-600 py-1 px-4 rounded-lg text-gray-100 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
             Report
         </button>
     </div>

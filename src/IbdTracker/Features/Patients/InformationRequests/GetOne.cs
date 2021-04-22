@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,20 +12,24 @@ namespace IbdTracker.Features.Patients.InformationRequests
 {
     public class GetOne
     {
-        public record Query(string PatientId, Guid InformationRequestId) : IRequest<InformationRequestDto?>;
+        public record Query(Guid InformationRequestId) : IRequest<InformationRequestDto?>;
         
         public class Handler : IRequestHandler<Query, InformationRequestDto?>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context) => 
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
+            {
                 _context = context;
+                _userService = userService;
+            }
 
             public async Task<InformationRequestDto?> Handle(Query request, CancellationToken cancellationToken) =>
                 await _context.InformationRequests
                     .AsNoTracking()
                     .Where(i => i.InformationRequestId == request.InformationRequestId &&
-                                i.PatientId.Equals(request.PatientId))
+                                i.PatientId.Equals(_userService.GetUserAuthId()))
                     .Select(i => new InformationRequestDto
                     {
                         InformationRequestId = i.InformationRequestId,

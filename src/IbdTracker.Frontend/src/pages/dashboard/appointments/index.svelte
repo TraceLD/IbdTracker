@@ -10,19 +10,21 @@
     import { get } from "../../../services/requests";
 
     interface AppointmentsCollection {
-        upcoming: Array<Appointment>,
-        past: Array<Appointment>
+        upcoming: Array<Appointment>;
+        past: Array<Appointment>;
     }
 
     const loadAppointmentsPromise: Promise<AppointmentsCollection> = loadAppointments();
 
     async function loadAppointments(): Promise<AppointmentsCollection> {
-        const appointmentDtos: Array<AppointmentDto> = await get<Array<AppointmentDto>>("patients/@me/appointments");
+        const appointmentDtos: Array<AppointmentDto> = await get<
+            Array<AppointmentDto>
+        >("patients/@me/appointments");
         const upcoming: Array<Appointment> = [];
         const past: Array<Appointment> = [];
         const dateNow: Date = new Date();
-        
-        appointmentDtos.forEach(el => {
+
+        appointmentDtos.forEach((el) => {
             const appointment: Appointment = new Appointment(el);
             if (appointment.startDateTime < dateNow) {
                 past.push(appointment);
@@ -33,7 +35,7 @@
 
         return {
             upcoming: upcoming,
-            past: past
+            past: past,
         };
     }
 </script>
@@ -45,18 +47,35 @@
         <Add on:click={$goto("/dashboard/appointments/add")} />
     </div>
     <div>
-        <h2>Upcoming appointments</h2>        
-        {#each res.upcoming as _appointment}
-            <div class="mb-6">
-                <AppointmentCard appointment={_appointment} />
+        <div>
+            <h2>Upcoming appointments</h2>
+            <div class="mb-12">
+                {#if res.upcoming.length !== 0}
+                    {#each res.upcoming as _appointment}
+                        <div class="mb-6">
+                            <AppointmentCard appointment={_appointment} />
+                        </div>
+                    {/each}
+                {:else}
+                    <p>You do not have any upcoming appointments.</p>
+                {/if}
             </div>
-        {/each}
-        <h2>Past appointments</h2>
-        {#each res.past as _appointment}
-            <div class="mb-6">
-                <AppointmentCard appointment={_appointment} />
+        </div>
+
+        <div>
+            <h2>Past appointments</h2>
+            <div>
+                {#if res.past.length !== 0}
+                    {#each res.past as _appointment}
+                        <div class="mb-6">
+                            <AppointmentCard appointment={_appointment} />
+                        </div>
+                    {/each}
+                {:else}
+                    <p>You do not have any past appointments.</p>
+                {/if}
             </div>
-        {/each}
+        </div>
     </div>
 {:catch}
     <Error errorMsg={"API error."} />

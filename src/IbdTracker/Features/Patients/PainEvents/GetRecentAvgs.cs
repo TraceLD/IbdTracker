@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using IbdTracker.Core;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,54 +12,36 @@ namespace IbdTracker.Features.Patients.PainEvents
 {
     public class GetRecentAvgs
     {
-        public class Query : IRequest<IList<Result>>
-        {
-            public string? PatientId { get; set; }
-        }
+        public record Query : IRequest<IList<Result>>;
 
-        public class QueryValidator : AbstractValidator<Query>
-        {
-            public QueryValidator()
-            {
-                RuleFor(q => q.PatientId)
-                    .NotEmpty();
-            }
-        }
-
-        public class Result
-        {
-            public DateTime DateTime { get; set; }
-            public double AverageIntensity { get; set; }
-            public double AverageDuration { get; set; }
-            public int Count { get; set; }
-        }
+        public record Result(DateTime DateTime, double AverageIntensity, double AverageDuration, int Count);
 
         public class Handler : IRequestHandler<Query, IList<Result>>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
+                var patientId = _userService.GetUserAuthId();
                 var sevenDaysAgo = DateTime.UtcNow.AddDays(-7);
                 var res = await _context.PainEvents
                     .AsNoTracking()
-                    .Where(pe => pe.PatientId.Equals(request.PatientId) && pe.DateTime >= sevenDaysAgo)
+                    .Where(pe => pe.PatientId.Equals(patientId) && pe.DateTime >= sevenDaysAgo)
                     .ToListAsync(cancellationToken);
 
                 return res
                     .GroupBy(pe => pe.DateTime.DayOfYear)
-                    .Select(g => new Result
-                    {
-                        DateTime = g.First().DateTime.Subtract(g.First().DateTime.TimeOfDay),
-                        AverageIntensity = g.Average(pe => pe.PainScore),
-                        AverageDuration = g.Average(pe => pe.MinutesDuration),
-                        Count = g.Count()
-                    })
+                    .Select(g => new Result(
+                        g.First().DateTime.Subtract(g.First().DateTime.TimeOfDay),
+                        g.Average(pe => pe.PainScore),
+                        g.Average(pe => pe.MinutesDuration), g.Count()))
                     .ToList();
             }
         }

@@ -8,7 +8,6 @@
     import type { AppointmentDto } from "../../../models/dtos";
     import { Appointment, GlobalNotification } from "../../../models/models";
     import { get, put } from "../../../services/requests";
-    import { patient } from "../../../stores/authStore";
 
     export let appointment: string;
 
@@ -34,8 +33,7 @@
 
         let dto = {
             appointmentId: a.appointmentId,
-            patientId: $patient.patientId,
-            doctorId: $patient.doctorId,
+            doctorId: a.doctorId,
             startDateTime: a.startDateTime.toISOString(),
             durationMinutes: a.durationMinutes,
             doctorNotes: a.doctorNotes,

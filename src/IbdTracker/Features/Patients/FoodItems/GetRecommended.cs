@@ -14,25 +14,28 @@ namespace IbdTracker.Features.Patients.FoodItems
 {
     public class GetRecommended
     {
-        public record Query(string PatientId) : IRequest<IEnumerable<FoodItemRecommendation>>;
+        public record Query : IRequest<IEnumerable<FoodItemRecommendation>>;
 
         public class Handler : IRequestHandler<Query, IEnumerable<FoodItemRecommendation>>
         {
             private readonly IbdSymptomTrackerContext _context;
             private readonly IRecommendationsService _recommendationsService;
+            private readonly IUserService _userService;
 
             private const int PainCutoff = 6;
 
-            public Handler(IbdSymptomTrackerContext context, IRecommendationsService recommendationsService)
+            public Handler(IbdSymptomTrackerContext context, IRecommendationsService recommendationsService, IUserService userService)
             {
                 _context = context;
                 _recommendationsService = recommendationsService;
+                _userService = userService;
             }
 
             public async Task<IEnumerable<FoodItemRecommendation>> Handle(Query request, CancellationToken cancellationToken)
             {
+                var patientId = _userService.GetUserAuthId();
                 var foodItems = await _context.FoodItems.ToListAsync(cancellationToken);
-                var mECount = _context.MealEvents.Count(me => me.PatientId.Equals(request.PatientId));
+                var mECount = _context.MealEvents.Count(me => me.PatientId.Equals(patientId));
 
                 List<FoodItemRecommendationData> foodItemDetails = new();
                 foreach (var foodItem in foodItems)
@@ -40,7 +43,7 @@ namespace IbdTracker.Features.Patients.FoodItems
                     var meals = await (from mealEvent in _context.MealEvents
                             join meal in _context.Meals.Include(m => m.FoodItems)
                                 on mealEvent.MealId equals meal.MealId
-                            where mealEvent.PatientId.Equals(request.PatientId)
+                            where mealEvent.PatientId.Equals(patientId)
                                   && mealEvent.DateTime >= DateTime.UtcNow.AddDays(-31)
                                   && meal.FoodItems.Contains(foodItem)
                             select mealEvent.DateTime)
@@ -57,7 +60,7 @@ namespace IbdTracker.Features.Patients.FoodItems
                     {
                         var matchedPainEventsForThisMeal = await _context.PainEvents
                             .AsNoTracking()
-                            .Where(pe => pe.PatientId.Equals(request.PatientId)
+                            .Where(pe => pe.PatientId.Equals(patientId)
                                          && pe.DateTime >= meal
                                          && pe.DateTime <= meal.AddHours(PainCutoff))
                             .ToListAsync(cancellationToken);

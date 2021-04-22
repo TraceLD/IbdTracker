@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,34 +12,24 @@ namespace IbdTracker.Features.Patients.PainEvents
 {
     public class Get
     {
-        public class Query : IRequest<IList<PainEventDto>>
-        {
-            public string? PatientId { get; set; }
-        }
-
-        public class QueryValidator : AbstractValidator<Query>
-        {
-            public QueryValidator()
-            {
-                RuleFor(q => q.PatientId)
-                    .NotEmpty();
-            }
-        }
+        public record Query : IRequest<IList<PainEventDto>>;
 
         public class Handler : IRequestHandler<Query, IList<PainEventDto>>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<IList<PainEventDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.PainEvents
                     .AsNoTracking()
-                    .Where(pe => pe.PatientId.Equals(request.PatientId))
+                    .Where(pe => pe.PatientId.Equals(_userService.GetUserAuthId()))
                     .Select(pe => new PainEventDto
                     {
                         PainEventId = pe.PainEventId,

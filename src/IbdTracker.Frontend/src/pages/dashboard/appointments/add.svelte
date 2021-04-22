@@ -1,11 +1,11 @@
 <script lang="ts">
-    import SubpageHeader from "../../../../components/navigation/SubpageHeader.svelte";
-    import Error from "../../../../components/notifications/Error.svelte";
-    import ConfirmationModal from "../../../../components/ConfirmationModal.svelte";
+    import SubpageHeader from "../../../components/navigation/SubpageHeader.svelte";
+    import Error from "../../../components/notifications/Error.svelte";
+    import ConfirmationModal from "../../../components/ConfirmationModal.svelte";
 
     import { goto } from "@roxi/routify";
-    import { patient } from "../../../../stores/authStore";
-    import { get, post } from "../../../../services/requests";
+    import { patient } from "../../../stores/authStore";
+    import { get, post } from "../../../services/requests";
     import { fade } from "svelte/transition";
 
     interface IAvailableAppointmentTime {
@@ -46,7 +46,6 @@
         }
 
         const reqBody = {
-            patientId: $patient.patientId,
             doctorId: $patient.doctorId,
             startDateTime: selectedDateTimeIsoString,
             durationMinutes: 30,

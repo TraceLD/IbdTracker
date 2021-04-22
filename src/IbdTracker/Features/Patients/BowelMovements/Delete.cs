@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using IbdTracker.Core;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,22 +11,25 @@ namespace IbdTracker.Features.Patients.BowelMovements
 {
     public class Delete
     {
-        public record Command(string PatientId, Guid BmeId) : IRequest<ActionResult>;
+        public record Command(Guid BowelMovementEventId) : IRequest<ActionResult>;
         
         public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
+                var patientId = _userService.GetUserAuthId();
                 // get the appointment that has been requested to be deleted;
                 var bme = await _context.BowelMovementEvents.FirstOrDefaultAsync(
-                    b => b.BowelMovementEventId == request.BmeId && b.PatientId.Equals(request.PatientId),
+                    b => b.BowelMovementEventId == request.BowelMovementEventId && b.PatientId.Equals(patientId),
                     cancellationToken);
 
                 if (bme is null)

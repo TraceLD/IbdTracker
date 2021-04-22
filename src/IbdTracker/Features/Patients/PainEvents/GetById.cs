@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
-using IbdTracker.Core.Results;
-using IbdTracker.Infrastructure.Authorization;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +13,7 @@ namespace IbdTracker.Features.Patients.PainEvents
 {
     public class GetById
     {
-        public class Query : IRequest<GuardedCommandResult<PainEventDto>>
-        {
-            public Guid PainEventId { get; set; }
-            public string PatientId { get; set; } = null!;
-        }
+        public record Query(Guid PainEventId) : IRequest<PainEventDto?>;
 
         public class QueryValidator : AbstractValidator<Query>
         {
@@ -26,26 +21,25 @@ namespace IbdTracker.Features.Patients.PainEvents
             {
                 RuleFor(q => q.PainEventId)
                     .NotEmpty();
-                
-                RuleFor(q => q.PatientId)
-                    .NotEmpty();
             }
         }
         
-        public class Handler : IRequestHandler<Query, GuardedCommandResult<PainEventDto>>
+        public class Handler : IRequestHandler<Query, PainEventDto?>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
-            public async Task<GuardedCommandResult<PainEventDto>> Handle(Query request, CancellationToken cancellationToken)
-            {
-                var res = await _context.PainEvents
+            public async Task<PainEventDto?> Handle(Query request, CancellationToken cancellationToken) =>
+                await _context.PainEvents
                     .AsNoTracking()
-                    .Where(pe => pe.PainEventId == request.PainEventId)
+                    .Where(pe =>
+                        pe.PainEventId == request.PainEventId && pe.PatientId.Equals(_userService.GetUserAuthId()))
                     .Select(pe => new PainEventDto
                     {
                         PainEventId = pe.PainEventId,
@@ -55,11 +49,6 @@ namespace IbdTracker.Features.Patients.PainEvents
                         PainScore = pe.PainScore
                     })
                     .FirstOrDefaultAsync(cancellationToken);
-
-                return res.PatientId.Equals(request.PatientId)
-                    ? new GuardedCommandResult<PainEventDto>(res)
-                    : new GuardedCommandResult<PainEventDto>();
-            }
         }
     }
 }

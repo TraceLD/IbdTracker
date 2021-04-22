@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using IbdTracker.Core.Recommendations;
-using IbdTracker.Features.Patients.FoodItems;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace IbdTracker.Features.Patients
+namespace IbdTracker.Features.Patients.FoodItems
 {
     [ApiController]
-    [Route("api/patients")]
+    [Route("api/patients/@me/fooditems")]
     public class PatientsFoodItemsController : ControllerBase
     {
         private readonly ILogger<PatientsFoodItemsController> _logger;
@@ -24,10 +22,10 @@ namespace IbdTracker.Features.Patients
         }
 
         [Authorize("read:recommendations")]
-        [HttpGet("@me/fooditems/recommendations")]
+        [HttpGet("recommendations")]
         public async Task<ActionResult<IEnumerable<FoodItemRecommendationData>>> GetFoodItemsRecommendationsForMe()
         {
-            var res = await _mediator.Send(new GetRecommended.Query(User.Identity!.Name!));
+            var res = await _mediator.Send(new GetRecommended.Query());
             return Ok(res);
         }
     }

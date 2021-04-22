@@ -12,22 +12,25 @@ namespace IbdTracker.Features.Patients.Appointments
 {
     public class Cancel
     {
-        public record Command(string PatientId, string? PatientEmailAddress, Guid AppointmentId) : IRequest<ActionResult>;
+        public record Command(Guid AppointmentId) : IRequest<ActionResult>;
 
         public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                // get the appointment that has been requested to be deleted;
+                // get the appointment that has been requested to be cancelled;
+                var patientId = _userService.GetUserAuthId();
                 var appointment = await _context.Appointments.FirstOrDefaultAsync(
-                    a => a.AppointmentId == request.AppointmentId && a.PatientId == request.PatientId,
+                    a => a.AppointmentId == request.AppointmentId && a.PatientId.Equals(patientId),
                     cancellationToken);
 
                 if (appointment is null)
@@ -41,11 +44,12 @@ namespace IbdTracker.Features.Patients.Appointments
                 
                 // send confirmation email to the patient in the background;
                 // in the background so that the HTTP POST response does not have to wait for email to be sent;
-                if (request.PatientEmailAddress is not null)
+                var patientEmail = _userService.GetEmailOrDefault();
+                
+                if (patientEmail is not null)
                 {
                     BackgroundJob.Enqueue<IEmailService>(s =>
-                        s.SendAppointmentCancellationConfirmationEmail(request.AppointmentId,
-                            request.PatientEmailAddress));
+                        s.SendAppointmentCancellationConfirmationEmail(request.AppointmentId, patientEmail));
                 }
 
                 return new NoContentResult();

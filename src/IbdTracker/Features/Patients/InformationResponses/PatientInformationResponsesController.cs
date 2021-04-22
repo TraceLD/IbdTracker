@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
-using IbdTracker.Features.Patients.InformationResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace IbdTracker.Features.Patients
+namespace IbdTracker.Features.Patients.InformationResponses
 {
     [ApiController]
-    [Route("api/patients")]
+    [Route("api/patients/@me")]
     public class PatientInformationResponsesController : ControllerBase
     {
         private readonly ILogger<PatientInformationResponsesController> _logger;
@@ -19,8 +18,8 @@ namespace IbdTracker.Features.Patients
             _logger = logger;
         }
 
-        [HttpPost("@me/informationResponses")]
-        public async Task<ActionResult> Post([FromBody] Post.HttpRequestBody httpRequestBody) =>
-            await _mediator.Send(new Post.Command(User.Identity!.Name!, httpRequestBody));
+        [HttpPost("informationResponses")]
+        public async Task<ActionResult> Post([FromBody] Post.Command command) =>
+            await _mediator.Send(command);
     }
 }

@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
-using IbdTracker.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace IbdTracker.Features.Patients
 {
     [ApiController]
-    [Route("api/patients")]
+    [Route("api/patients/@me")]
     public class PatientsController : ControllerBase
     {
         private readonly ILogger<PatientsController> _logger;
@@ -21,33 +19,13 @@ namespace IbdTracker.Features.Patients
             _logger = logger;
             _mediator = mediator;
         }
-        
-        // gets all patients
-        [Authorize("read:allpatients")]
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll()
-        {
-            var res = await _mediator.Send(new Get.Query());
-            return Ok(res);
-        }
-        
-        // gets patient object corresponding to currently logged in user;
+
         [Authorize("read:patient")]
         [HttpGet]
         public async Task<ActionResult<PatientDto>> Get()
         {
-            var res = await _mediator.Send(new GetCurrent.Query {PatientId = User.Identity?.Name});
-            if (res is null) return NotFound();
-            return Ok(res);
-        }
-        
-        // gets patients assigned to currently logged in doctor;
-        [Authorize("read:assignedpatients")]
-        [HttpGet("assigned")]
-        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAssigned()
-        {
-            var res = await _mediator.Send(new GetAssigned.Query{DoctorId = User.Identity?.Name});
-            return Ok(res);
+            var res = await _mediator.Send(new GetCurrent.Query());
+            return res is null ? NotFound() : Ok(res);
         }
     }
 }

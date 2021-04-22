@@ -12,7 +12,6 @@
         FoodItemRecommendation,
         FoodItemWithRecommendation,
     } from "../../../../models/models";
-    import { patient } from "../../../../stores/authStore";
     import { fade } from "svelte/transition";
     import { combineFisAndRecommendations } from "../../../../services/recommendations";
 
@@ -50,7 +49,6 @@
             (cfi) => cfi.foodItemId
         );
         const reqBody = {
-            patientId: $patient.patientId,
             name: mealName,
             foodItemIds: selectedIds,
         };
@@ -157,7 +155,7 @@
 
     <div>
         <h3>Available food items</h3>
-        <div class="bg-gray-50 p-4 pb-2 rounded-lg shadow-md">
+        <div class="bg-gray-50 p-4 pb-2 rounded-lg shadow-md max-h-64 overflow-y-scroll">
             <div class="mb-4 flex flex-col">
                 <input
                     name="search"
@@ -165,6 +163,7 @@
                     class="py-2 px-4 w-auto rounded bg-gray-200 text-gray-900 placeholder-gray-700 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     type="text"
                     placeholder="Search for food items"
+                    autocomplete="off"
                     bind:value={searchTerm}
                 />
             </div>

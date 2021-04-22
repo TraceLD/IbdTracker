@@ -9,6 +9,7 @@
     <PackageReference Include="Auth0Net.DependencyInjection" Version="1.4.0" />
     <PackageReference Include="MailKit" Version="2.11.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

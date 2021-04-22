@@ -5,21 +5,22 @@ using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 
 namespace IbdTracker.Features.Patients.BowelMovements
 {
     public class Post
     {
-        public record HttpRequestBody(
+        public record Command(
             DateTime DateTime,
             bool ContainedBlood,
             bool ContainedMucus
-        );
+        ) : IRequest<BowelMovementEventDto>;
 
-        public class HttpRequestBodyValidator : AbstractValidator<HttpRequestBody>
+        public class CommandValidator : AbstractValidator<Command>
         {
-            public HttpRequestBodyValidator()
+            public CommandValidator()
             {
                 RuleFor(x => x.DateTime)
                     .NotEmpty()
@@ -33,27 +34,27 @@ namespace IbdTracker.Features.Patients.BowelMovements
             }
         }
 
-        public record Command(string PatientId, HttpRequestBody HttpRequestBody) : IRequest<BowelMovementEventDto>;
-        
         public class Handler : IRequestHandler<Command, BowelMovementEventDto>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<BowelMovementEventDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 // convert to EFCore entity;
-                var (patientId, requestBody) = request;
+                var patientId = _userService.GetUserAuthId();
                 var bme = new BowelMovementEvent
                 {
                     PatientId = patientId,
-                    DateTime = requestBody.DateTime,
-                    ContainedBlood = requestBody.ContainedBlood,
-                    ContainedMucus = requestBody.ContainedMucus
+                    DateTime = request.DateTime,
+                    ContainedBlood = request.ContainedBlood,
+                    ContainedMucus = request.ContainedMucus
                 };
 
                 await _context.BowelMovementEvents.AddAsync(bme, cancellationToken);

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
-using IbdTracker.Core.Results;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,38 +13,32 @@ namespace IbdTracker.Features.Patients.Meals
 {
     public class GetById
     {
-        public class Query : IRequest<GuardedCommandResult<MealDto?>>
-        {
-            public Guid MealId { get; set; }
-            public string? PatientId { get; set; }
-        }
-        
+        public record Query(Guid MealId) : IRequest<MealDto?>;
+
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
             {
                 RuleFor(q => q.MealId)
                     .NotEmpty();
-                
-                RuleFor(q => q.PatientId)
-                    .NotEmpty();
             }
         }
 
-        public class Handler : IRequestHandler<Query, GuardedCommandResult<MealDto?>>
+        public class Handler : IRequestHandler<Query, MealDto?>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
-            public async Task<GuardedCommandResult<MealDto?>> Handle(Query request, CancellationToken cancellationToken)
-            {
-                var res = await _context.Meals
+            public async Task<MealDto?> Handle(Query request, CancellationToken cancellationToken) =>
+                await _context.Meals
                     .AsNoTracking()
-                    .Where(m => m.MealId == request.MealId)
+                    .Where(m => m.MealId == request.MealId && m.PatientId.Equals(_userService.GetUserAuthId()))
                     .Include(m => m.FoodItems)
                     .Select(m => new MealDto
                     {
@@ -54,18 +48,11 @@ namespace IbdTracker.Features.Patients.Meals
                         FoodItems = m.FoodItems.Select(fi => new FoodItemDto
                         {
                             FoodItemId = fi.FoodItemId,
-                            Name = fi.Name, 
+                            Name = fi.Name,
                             PictureUrl = fi.PictureUrl
                         }).ToList()
                     })
                     .FirstOrDefaultAsync(cancellationToken);
-
-                if (res is null) return new GuardedCommandResult<MealDto?>(null);
-
-                return res.PatientId.Equals(request.PatientId)
-                    ? new GuardedCommandResult<MealDto?>(res)
-                    : new GuardedCommandResult<MealDto?>();
-            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using IbdTracker.Core;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,6 @@ namespace IbdTracker.Features.Patients.BowelMovements
     {
         public record Command(
             Guid BowelMovementEventId,
-            string PatientId,
             DateTime DateTime,
             bool ContainedBlood,
             bool ContainedMucus
@@ -25,10 +25,6 @@ namespace IbdTracker.Features.Patients.BowelMovements
             {
                 RuleFor(c => c.BowelMovementEventId)
                     .NotEmpty();
-
-                RuleFor(c => c.PatientId)
-                    .NotEmpty()
-                    .MinimumLength(6);
 
                 RuleFor(c => c.DateTime)
                     .NotEmpty()
@@ -45,16 +41,19 @@ namespace IbdTracker.Features.Patients.BowelMovements
         public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
+                var patientId = _userService.GetUserAuthId();
                 var bme = await _context.BowelMovementEvents.FirstOrDefaultAsync(b =>
-                        b.BowelMovementEventId == request.BowelMovementEventId && b.PatientId.Equals(request.PatientId),
+                        b.BowelMovementEventId == request.BowelMovementEventId,
                     cancellationToken);
 
                 if (bme is null)
@@ -63,7 +62,7 @@ namespace IbdTracker.Features.Patients.BowelMovements
                 }
 
                 // the patient should not be able to assign an BME to another patient;
-                if (!request.PatientId.Equals(bme.PatientId))
+                if (!patientId.Equals(bme.PatientId))
                 {
                     return new UnauthorizedResult();
                 }

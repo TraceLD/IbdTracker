@@ -91,8 +91,12 @@ namespace IbdTracker
             });
             services.AddAuth0ManagementClient().AddManagementAccessToken();
             services.AddScoped<IAuth0Service, Auth0Service>();
+            
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IEmailService, EmailService>();
+            
             
             // add Hangfire;
             services.AddHangfire((provider, config) =>

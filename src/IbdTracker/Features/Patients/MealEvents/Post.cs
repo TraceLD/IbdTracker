@@ -5,26 +5,19 @@ using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 
 namespace IbdTracker.Features.Patients.MealEvents
 {
     public class Post
     {
-        public class Command : IRequest<MealEventDto>
-        {
-            public string? PatientId { get; set; }
-            public Guid MealId { get; set; }
-            public DateTime? DateTime { get; set; }
-        }
+        public record Command(Guid MealId, DateTime? DateTime) : IRequest<MealEventDto>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(c => c.PatientId)
-                    .NotEmpty();
-
                 RuleFor(c => c.MealId)
                     .NotEmpty();
 
@@ -37,17 +30,20 @@ namespace IbdTracker.Features.Patients.MealEvents
         public class Handler : IRequestHandler<Command, MealEventDto>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<MealEventDto> Handle(Command request, CancellationToken cancellationToken)
             {
+                var patientId = _userService.GetUserAuthId();
                 var mealEvent = new MealEvent
                 {
-                    PatientId = request.PatientId!,
+                    PatientId = patientId,
                     MealId = request.MealId,
                     DateTime = request.DateTime ?? DateTime.UtcNow
                 };
