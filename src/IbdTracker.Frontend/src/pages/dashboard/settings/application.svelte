@@ -1,5 +1,5 @@
 <script lang="ts">
-    let shareData: string;
+    let shareData: boolean;
 </script>
 
 <h2>
@@ -12,7 +12,7 @@
         <div class="flex">
             <div class="flex items-center">
                 <input
-                    bind:value={shareData}
+                    bind:checked={shareData}
                     class="h-4 w-4 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
                     type="checkbox"
                     id="share"

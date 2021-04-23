@@ -6,6 +6,7 @@ namespace IbdTracker.Infrastructure.Authorization
     {
         public static IEnumerable<string> PermissionsList => new List<string>
         {
+            "write:patient",
             "read:patient",
             "read:allpatients",
             "read:assignedpatients",
