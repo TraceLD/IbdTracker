@@ -9,8 +9,9 @@ namespace IbdTracker.Core.Entities
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateDiagnosed { get; set; }
-        public bool ShareData { get; set; }
-        
+
+        public PatientApplicationSettings? PatientApplicationSettings { get; set; }
+
         public string? DoctorId { get; set; }
         public Doctor? Doctor { get; set; }
 
@@ -22,12 +23,16 @@ namespace IbdTracker.Core.Entities
         public List<MealEvent> MealEvents { get; } = new();
         public List<InformationRequest> InformationRequests { get; } = new();
 
-        public Patient(string name, DateTime dateOfBirth, DateTime dateDiagnosed, bool shareData, string? doctorId = null)
+        public Patient(
+            string name,
+            DateTime dateOfBirth,
+            DateTime dateDiagnosed,
+            string? doctorId = null
+        )
         {
             Name = name;
             DateOfBirth = dateOfBirth;
             DateDiagnosed = dateDiagnosed;
-            ShareData = shareData;
             DoctorId = doctorId;
         }
     }

@@ -30,7 +30,7 @@ export interface GlobalNotification {
     title: string,
     message: string,
     tailwindColour: string,
-    url: string
+    url?: string
 }
 
 export class Appointment {

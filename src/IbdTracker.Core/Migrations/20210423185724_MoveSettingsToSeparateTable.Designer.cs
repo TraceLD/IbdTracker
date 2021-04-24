@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using IbdTracker.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    partial class IbdSymptomTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20210423185724_MoveSettingsToSeparateTable")]
+    partial class MoveSettingsToSeparateTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

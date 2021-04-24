@@ -8,6 +8,7 @@ namespace IbdTracker.Core
         public DbSet<GlobalNotification> GlobalNotifications { get; set; } = null!;
         public DbSet<Doctor> Doctors { get; set; } = null!;
         public DbSet<Patient> Patients { get; set; } = null!;
+        public DbSet<PatientApplicationSettings> PatientApplicationSettings { get; set; } = null!;
         public DbSet<Medication> Medications { get; set; } = null!;
         public DbSet<Prescription> Prescriptions { get; set; } = null!;
         public DbSet<SideEffectEvent> SideEffectEvents { get; set; } = null!;
@@ -36,6 +37,9 @@ namespace IbdTracker.Core
             modelBuilder.Entity<Appointment>()
                 .HasIndex(a => new {a.DoctorId, a.StartDateTime})
                 .IsUnique();
+
+            modelBuilder.Entity<PatientApplicationSettings>()
+                .HasKey(s => s.PatientId);
         }
     }
 }

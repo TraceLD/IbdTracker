@@ -7,19 +7,19 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Patients
+namespace IbdTracker.Features.Patients.AppSettings
 {
-    public class PatchCurrent
+    public class Put
     {
-        public record Command(bool ShareData) : IRequest<ActionResult>;
+        public record Command(bool ShareDataForResearch) : IRequest<ActionResult>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(c => c.ShareData)
+                RuleFor(c => c.ShareDataForResearch)
                     .NotNull();
-            }
+            } 
         }
         
         public class Handler : IRequestHandler<Command, ActionResult>
@@ -35,17 +35,18 @@ namespace IbdTracker.Features.Patients
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                // get the patient;
                 var patientId = _userService.GetUserAuthId();
-                var patient = await _context.Patients
-                    .FirstOrDefaultAsync(p => p.PatientId.Equals(patientId), cancellationToken);
+                
+                // get the settings that need to be modified;
+                var settings = await _context.PatientApplicationSettings
+                    .FirstOrDefaultAsync(s => s.PatientId.Equals(patientId), cancellationToken);
 
-                if (patient is null)
+                if (settings is null)
                 {
                     return new NotFoundResult();
                 }
-
-                patient.ShareData = request.ShareData;
+                
+                settings.ShareDataForResearch = request.ShareDataForResearch;
 
                 await _context.SaveChangesAsync(cancellationToken);
                 return new NoContentResult();
