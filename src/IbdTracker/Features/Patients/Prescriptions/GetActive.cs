@@ -37,6 +37,7 @@ namespace IbdTracker.Features.Patients.Prescriptions
                         PrescriptionId = p.PrescriptionId,
                         PatientId = p.PatientId,
                         DoctorInstructions = p.DoctorInstructions,
+                        StartDateTime = p.StartDateTime,
                         EndDateTime = p.EndDateTime,
                         MedicationId = p.MedicationId
                     })

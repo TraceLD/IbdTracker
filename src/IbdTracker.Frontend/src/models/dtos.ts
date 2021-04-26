@@ -21,10 +21,10 @@ export interface AppointmentDto {
 export interface PrescriptionDto {
     prescriptionId: string,
     patientId: string,
-    dosage: string,
+    doctorInstructions: string,
+    startDateTime: string,
     endDateTime: string,
     medicationId: string,
-    activeIngredient: string,
     brandName?: string
 }
 

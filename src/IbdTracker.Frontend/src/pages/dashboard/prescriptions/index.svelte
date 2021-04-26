@@ -4,17 +4,13 @@
     import PrescriptionCard from "../../../components/cards/PrescriptionCard.svelte";
 
     import type { PrescriptionDto } from "../../../models/dtos";
-    import { Prescription } from "../../../models/models";
+    import type { PrescribedMedication } from "../../../models/models";
     import { get } from "../../../services/requests";
+    import { combineWithMedicationInfo } from "../../../services/prescriptions";   
 
-    async function loadPrescriptions(): Promise<Array<Prescription>> {
+    async function loadPrescriptions(): Promise<Array<PrescribedMedication>> {
         const prescriptionDtos: Array<PrescriptionDto> = await get<Array<PrescriptionDto>>("patients/prescriptions");
-        const prescriptions: Array<Prescription> = prescriptionDtos.map((el: PrescriptionDto) => {
-                return new Prescription(el);
-            }
-        );
-
-        return prescriptions;
+        return await combineWithMedicationInfo(prescriptionDtos);
     }
 </script>
 
@@ -27,7 +23,7 @@
     {#if res.length !== 0}
         {#each res as prescription}
             <div class="mb-6">
-                <PrescriptionCard {prescription} />
+                <PrescriptionCard pm={prescription} />
             </div>
         {/each}
     {:else}

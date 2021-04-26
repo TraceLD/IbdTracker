@@ -58,21 +58,44 @@ export class Appointment {
 export class Prescription {
     prescriptionId: string;
     patientId: string;
-    dosage: string;
+    doctorInstructions: string;
+    startDateTime: Date;
     endDateTime: Date;
     medicationId: string;
-    activeIngredient: string;
     brandName?: string;
 
     constructor(dto: PrescriptionDto) {
         this.prescriptionId = dto.prescriptionId;
         this.patientId = dto.patientId;
-        this.dosage = dto.dosage;
+        this.doctorInstructions = dto.doctorInstructions;
+        this.startDateTime = new Date(dto.startDateTime + "Z");
         this.endDateTime = new Date(dto.endDateTime + "Z");
         this.medicationId = dto.medicationId;
-        this.activeIngredient = dto.activeIngredient;
         this.brandName = dto.brandName;
     }
+}
+
+export interface Medication {
+    medicationId: string;
+    bnfChapter: string;
+    bnfChapterCode: string;
+    bnfSection: string;
+    bnfSectionCode: string;
+    bnfParagraph?: string;
+    bnfParagraphCode: string;
+    bnfSubparagraph?: string;
+    bnfSubparagraphCode: string;
+    bnfChemicalSubstance: string;
+    bnfChemicalSubstanceCode: string;
+    bnfProduct?: string;
+    bnfProductCode: string;
+    bnfPresentation: string;
+    bnfPresentationCode: string;
+}
+
+export interface PrescribedMedication {
+    prescription: Prescription;
+    medication: Medication;
 }
 
 export interface PopularItem {
