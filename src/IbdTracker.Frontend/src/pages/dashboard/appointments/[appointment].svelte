@@ -84,22 +84,22 @@
                 <p class="text-2xl font-bold py-3">Notes</p>
                 <label
                     for="your-notes"
-                    class="text-sm font-medium text-gray-500 ml-1"
-                    >Your notes</label
-                >
-                <input
-                    type="text"
-                    name="your-notes"
-                    id="your-notes"
-                    class="bg-white shadow rounded-lg w-full text-gray-800 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                    bind:value={input}
-                />
+                    class="text-sm font-medium text-gray-500"
+                    >Your notes
+                    <input
+                        type="text"
+                        name="your-notes"
+                        id="your-notes"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                        bind:value={input}
+                    />
+                </label>
             </div>
             <div id="doctor-notes" class="mt-4">
-                <p class="text-sm font-medium text-gray-500 ml-1">
+                <p class="text-sm border-gray-300 font-medium text-gray-500">
                     Doctor's notes
                 </p>
-                <p class="bg-white shadow rounded-lg w-full text-gray-800 p-3">
+                <p class="mt-1 bg-white border border-gray-300 shadow-sm rounded-lg w-full text-gray-800 p-3">
                     {res.doctorNotes ?? "None"}
                 </p>
             </div>

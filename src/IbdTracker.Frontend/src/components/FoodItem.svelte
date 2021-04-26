@@ -4,7 +4,7 @@
 </script>
 
 <button
-    class="flex items-center w-full gap-2 mb-2 py-2 px-3 rounded border-gray-600 border focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+    class="flex items-center w-full gap-2 mb-2 py-2 px-3 rounded bg-white border-gray-300 shadow-sm border focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
     on:click
 >
     {#if chosen}

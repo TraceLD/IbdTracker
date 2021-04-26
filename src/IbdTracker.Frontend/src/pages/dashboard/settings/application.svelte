@@ -76,19 +76,16 @@
     <div class="rounded-lg bg-gray-50 shadow-md mt-5">
         <div class="py-4 px-6">
             <p class="text-2xl font-bold mb-2">Privacy settings</p>
-            <div class="flex">
-                <div class="flex items-center">
+            <div>
+                <label class="inline-flex items-center" for="blood">
                     <input
                         bind:checked={shareData}
-                        class="h-4 w-4 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+                        class="rounded bg-white border-gray-300 text-blue-500 shadow-sm focus:border-blue-500 focus:ring focus:ring-offset-0 focus:ring-blue-500 focus:ring-opacity-50"
                         type="checkbox"
-                        id="share"
-                        name="share"
-                    />
-                    <label class="ml-4" for="share">
-                        Share anonymous data for research purposes</label
-                    >
-                </div>
+                        id="blood"
+                        name="blood" /> 
+                    <span class="ml-2">Share anonymous data for research purposes</span>
+                </label>
             </div>
         </div>
 

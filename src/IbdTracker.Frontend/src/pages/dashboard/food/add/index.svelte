@@ -99,18 +99,16 @@
         <h3>Chosen food items</h3>
         <div class="bg-gray-50 rounded-lg shadow-md">
             <div class="p-4 pb-2 max-h-64 overflow-y-auto">
-                <label for="mealName" class="text-sm font-medium text-gray-500"
-                    >Meal name</label
-                >
-                <div class="mb-4 flex flex-col">
+                <label for="mealName" class="block mb-4 text-sm font-medium text-gray-500"
+                    >Meal name
                     <input
                         name="mealName"
                         id="mealName"
-                        class="mb-3 mt-0.5 h-10 px-4 outline-none focus:ring-4 border border-transparent focus:border-blue-500 w-full shadow-sm text-gray-800 font-light text-sm rounded-md"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                         type="text"
                         bind:value={mealName}
                     />
-                </div>
+                </label>
                 {#if chosenItems.length === 0}
                     <p class="mb-1 text-gray-500">
                         Your selected items will appear here.
@@ -160,7 +158,7 @@
                 <input
                     name="search"
                     id="search"
-                    class="py-2 px-4 w-auto rounded bg-gray-200 text-gray-900 placeholder-gray-700 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    class="py-2 px-4 w-auto rounded border-0 bg-gray-200 text-gray-600 placeholder-gray-500 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     type="text"
                     placeholder="Search for food items"
                     autocomplete="off"
