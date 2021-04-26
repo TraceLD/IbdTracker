@@ -33,6 +33,7 @@ namespace IbdTracker.Features.Patients
                     {
                         PatientId = p.PatientId,
                         Name = p.Name,
+                        IbdType = p.IbdType,
                         DateOfBirth = p.DateOfBirth,
                         DateDiagnosed = p.DateDiagnosed,
                         DoctorId = p.DoctorId

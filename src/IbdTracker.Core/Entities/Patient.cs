@@ -7,6 +7,7 @@ namespace IbdTracker.Core.Entities
     {
         public string PatientId { get; set; } = null!;
         public string Name { get; set; }
+        public IbdType IbdType { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateDiagnosed { get; set; }
 
@@ -25,12 +26,14 @@ namespace IbdTracker.Core.Entities
 
         public Patient(
             string name,
+            IbdType ibdType,
             DateTime dateOfBirth,
             DateTime dateDiagnosed,
             string? doctorId = null
         )
         {
             Name = name;
+            IbdType = ibdType;
             DateOfBirth = dateOfBirth;
             DateDiagnosed = dateDiagnosed;
             DoctorId = doctorId;

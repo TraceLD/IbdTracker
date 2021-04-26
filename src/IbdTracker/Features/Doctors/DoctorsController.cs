@@ -30,6 +30,13 @@ namespace IbdTracker.Features.Doctors
             return res is null ? Unauthorized() : Ok(res);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IList<DoctorDto>>> Get()
+        {
+            var res = await _mediator.Send(new Get.Query());
+            return Ok(res);
+        }
+
         [HttpGet("{doctorId}")]
         public async Task<ActionResult<DoctorDto>> GetById([FromRoute] GetById.Query query)
         {

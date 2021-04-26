@@ -27,5 +27,10 @@ namespace IbdTracker.Features.Patients
             var res = await _mediator.Send(new GetCurrent.Query());
             return res is null ? NotFound() : Ok(res);
         }
+
+        [Authorize]
+        [HttpPost("register")]
+        public async Task<ActionResult> Register(Register.Command command) =>
+            await _mediator.Send(command);
     }
 }

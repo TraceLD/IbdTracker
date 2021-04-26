@@ -35,7 +35,7 @@ namespace IbdTracker.Features.Doctors
             public async Task<DoctorDto?> Handle(Query request, CancellationToken cancellationToken) =>
                 await _context.Doctors
                     .AsNoTracking()
-                    .Where(d => d.DoctorId.Equals(request.DoctorId))
+                    .Where(d => d.DoctorId.Equals(request.DoctorId) && d.IsApproved)
                     .Select(d => new DoctorDto
                     {
                         DoctorId = d.DoctorId,
