@@ -140,9 +140,6 @@ class FoodItemRecommendationsSystem:
         self._rules = [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21,
                        r22, r23, r24, r25, r26]
 
-    def process_all_fis(self, fis_data: list[FoodItemRecommendationData]) -> list[FoodItemRecommendation]:
-        return list(map(self.process_one_fi, fis_data))
-
     def process_one_fi(self, fi_data: FoodItemRecommendationData) -> FoodItemRecommendation:
         if fi_data.percentageOfAllMeals == 0:
             return FoodItemRecommendation(foodItemId=fi_data.foodItemId, recommendationValue=None)
@@ -168,3 +165,6 @@ class FoodItemRecommendationsSystem:
         fuzzy_system_output = fi_recommendation.output["recommendation_percentage"]
 
         return FoodItemRecommendation(foodItemId=fi_data.foodItemId, recommendationValue=fuzzy_system_output)
+
+    def process_all_fis(self, fis_data: list[FoodItemRecommendationData]) -> list[FoodItemRecommendation]:
+        return list(map(self.process_one_fi, fis_data))
