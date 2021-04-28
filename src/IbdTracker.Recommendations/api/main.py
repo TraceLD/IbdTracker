@@ -8,6 +8,7 @@ from api.models import FoodItemRecommendationData
 from api.fuzzy_recommendations import food_items_recommendations as fir
 
 app = FastAPI()
+firs = fir.FoodItemRecommendationsSystem()
 
 # Only ASP.NET Core should be able to call this microservice over localhost.
 # Users should not be able to call it directly as it does not have auth.
@@ -35,5 +36,5 @@ async def root():
 async def recommendations(data: list[FoodItemRecommendationData]):
     with concurrent.futures.ProcessPoolExecutor() as pool:
         pil_args = [data]
-        res = await asyncio.get_event_loop().run_in_executor(pool, fir.process_all_fis, *pil_args)
+        res = await asyncio.get_event_loop().run_in_executor(pool, firs.process_all_fis, *pil_args)
         return res
