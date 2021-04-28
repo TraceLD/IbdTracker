@@ -26,10 +26,26 @@ class FoodItemRecommendationsSystem:
                                                           defuzzify_method="centroid")
 
     def _prepare_membership_functions(self) -> None:
-        self._all_meals_percentage.automf(3, names=["low", "medium", "high"])
-        self._pain_percentage.automf(3, names=["low", "medium", "high"])
-        self._recommendation_percentage.automf(3, names=["not_recommended", "moderately_recommended",
-                                                         "highly_recommended"])
+        self._all_meals_percentage["low"] = fuzz.trapmf(
+            self._all_meals_percentage.universe, [0, 0, 20, 40])
+        self._all_meals_percentage["medium"] = fuzz.trapmf(
+            self._all_meals_percentage.universe, [30, 40, 60, 70])
+        self._all_meals_percentage["high"] = fuzz.trapmf(
+            self._all_meals_percentage.universe, [60, 80, 100, 100])
+
+        self._pain_percentage["low"] = fuzz.trapmf(
+            self._pain_percentage.universe, [0, 0, 20, 40])
+        self._pain_percentage["medium"] = fuzz.trapmf(
+            self._pain_percentage.universe, [30, 40, 60, 70])
+        self._pain_percentage["high"] = fuzz.trapmf(
+            self._pain_percentage.universe, [60, 80, 100, 100])
+
+        self._recommendation_percentage["not_recommended"] = fuzz.trapmf(
+            self._recommendation_percentage.universe, [0, 0, 20, 40])
+        self._recommendation_percentage["moderately_recommended"] = fuzz.trapmf(
+            self._recommendation_percentage.universe, [30, 40, 60, 70])
+        self._recommendation_percentage["highly_recommended"] = fuzz.trapmf(
+            self._recommendation_percentage.universe, [60, 80, 100, 100])
 
         self._pain_intensity["mild"] = fuzz.trapmf(self._pain_intensity.universe, [0, 0, 3, 5])
         self._pain_intensity["moderate"] = fuzz.trimf(self._pain_intensity.universe, [4, 5, 7])
