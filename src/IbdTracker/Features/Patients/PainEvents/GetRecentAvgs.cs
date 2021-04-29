@@ -30,16 +30,15 @@ namespace IbdTracker.Features.Patients.PainEvents
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var sevenDaysAgo = DateTime.UtcNow.AddDays(-7);
+                var sevenDaysAgo = DateTime.UtcNow.AddDays(-62);
                 var res = await _context.PainEvents
                     .AsNoTracking()
                     .Where(pe => pe.PatientId.Equals(patientId) && pe.DateTime >= sevenDaysAgo)
+                    .OrderBy(pe => pe.DateTime)
                     .ToListAsync(cancellationToken);
-
                 return res
-                    .GroupBy(pe => pe.DateTime.DayOfYear)
-                    .Select(g => new Result(
-                        g.First().DateTime.Subtract(g.First().DateTime.TimeOfDay),
+                    .GroupBy(pe => pe.DateTime.Date)
+                    .Select(g => new Result(g.Key,
                         g.Average(pe => pe.PainScore),
                         g.Average(pe => pe.MinutesDuration), g.Count()))
                     .ToList();

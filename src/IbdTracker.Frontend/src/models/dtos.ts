@@ -37,7 +37,7 @@ export interface BowelMovementEventDto {
 }
 
 export interface BowelMovementEventsGroupedDto {
-    day: number,
+    date: string,
     bowelMovementEventsOnDay: Array<BowelMovementEventDto>
 }
 

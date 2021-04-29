@@ -8,14 +8,16 @@
     import { get } from "../../../services/requests";
     
     import type { PainEventAvgsDto } from "../../../models/dtos";
-    
-    let loadRecentPainEventsPromise: Promise<any> = loadRecentPainEvents();
 
-    async function loadRecentPainEvents(): Promise<any> {
+    interface IPainPlots {
+        countPainPlot: any,
+        durationPlot: any,
+    };
+
+    async function loadPlots(): Promise<IPainPlots> {
         const res: Array<PainEventAvgsDto> = await get<Array<PainEventAvgsDto>>("patients/@me/pain/recent/avgs");
-        const x: Array<string> = res.map((v) => v.dateTime);
-
-        let traces = [
+        const x: Array<Date> = res.map((v) => new Date(v.dateTime + "Z"));      
+        const durationPlot = [
             {
                 x: x,
                 y: res.map((v) => v.averageDuration),
@@ -25,6 +27,8 @@
                     color: "#FACC15",
                 },
             },
+        ]
+        const countPainPlot = [
             {
                 x: x,
                 y: res.map((v) => v.count),
@@ -38,14 +42,17 @@
                 x: x,
                 y: res.map((v) => v.averageIntensity),
                 name: "Average pain intensity (0-10)",
-                type: "scatter",
+                type: "bar",
                 marker: {
                     color: "#EF4444",
                 },
             },
         ]
-
-        return traces;
+        
+        return {
+            countPainPlot: countPainPlot,
+            durationPlot: durationPlot
+        };
     }
 </script>
 
@@ -55,12 +62,12 @@
     <Add on:click={$goto("/dashboard/pain/add")} />
 </div>
 
-{#await loadRecentPainEventsPromise}
+{#await loadPlots()}
     <Loading />
-{:then res}
-    <h3>Last 7 days</h3>
+{:then plots}
     <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">
-        <PlotlyPlot data={res} />
+        <PlotlyPlot data={plots.countPainPlot} />
+        <PlotlyPlot data={plots.durationPlot} />
     </div>
 {:catch err}
     <Error errorMsg={err} />

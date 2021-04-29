@@ -14,6 +14,7 @@
         legend: {
             orientation: "h",
             y: -0.4,
+            x: 0.25,
         },
         margin: {
             l: 30,
