@@ -13,6 +13,7 @@
     } from "../../../models/dtos";
     import BmCard from "../../../components/cards/BmCard.svelte";
     import { BowelMovementEvent } from "../../../models/models";
+    import { getBmsPlotTraces } from "../../../services/plots";
 
     let plotLayout = {
         // hex for TailwindCSS' bg-gray-50;
@@ -50,10 +51,13 @@
     const endDate: Date = new Date();
     let startDateInput: string = toHtmlInputFormat(startDate);
     let endDateInput: string = toHtmlInputFormat(endDate);
-    
-    loadRecentBmsChart()
-        .catch(err => errorMsg = err);
 
+    loadRecentBmsPlot()
+        .catch((err) => (errorMsg = err));
+
+    /**
+     * Gets the data for BM cards.
+     */
     async function loadRecentBms(): Promise<Array<BowelMovementEvent>> {
         let response: Array<BowelMovementEventDto> = await get<
             Array<BowelMovementEventDto>
@@ -61,76 +65,21 @@
         return response.map((dto) => new BowelMovementEvent(dto));
     }
 
-    async function loadRecentBmsChart(): Promise<void> {
+    /**
+     * Loads the BMs plot.
+     */
+    async function loadRecentBmsPlot(): Promise<void> {
         isLoadingPlot = true;
 
         let response: Array<BowelMovementEventsGroupedDto> = await get<
             Array<BowelMovementEventsGroupedDto>
-        >(`patients/@me/bms/recent/grouped?startDate=${startDateInput}&endDate=${endDateInput}`);
-        console.log(response);
-        const x: Array<string> = response.map((v) =>
-            toHtmlInputFormat(new Date(v.date + "Z"))
+        >(
+            `patients/@me/bms/recent/grouped?startDate=${startDateInput}&endDate=${endDateInput}`
         );
-        let traces = [
-            {
-                x: x,
-                y: response.map(() => 0),
-                name: "Normal",
-                type: "bar",
-                marker: {
-                    color: "#22C55E",
-                },
-            },
-            {
-                x: x,
-                y: response.map(() => 0),
-                name: "Blood & Mucus",
-                type: "bar",
-                marker: {
-                    color: "#F97316",
-                },
-            },
-            {
-                x: x,
-                y: response.map(() => 0),
-                name: "Blood",
-                type: "bar",
-                marker: {
-                    color: "#EF4444",
-                },
-            },
-            {
-                x: x,
-                y: response.map(() => 0),
-                name: "Mucus",
-                type: "bar",
-                marker: {
-                    color: "#6366F1",
-                },
-            },
-        ];
 
-        for (let i: number = 0; i < response.length; i++) {
-            let bmsOnDay: Array<BowelMovementEventDto> =
-                response[i].bowelMovementEventsOnDay;
-
-            bmsOnDay.forEach((bm) => {
-                if (!bm.containedBlood && !bm.containedMucus) {
-                    traces[0].y[i] += 1;
-                } else if (bm.containedBlood && bm.containedMucus) {
-                    traces[1].y[i] += 1;
-                } else if (bm.containedBlood) {
-                    traces[2].y[i] += 1;
-                } else if (bm.containedMucus) {
-                    traces[3].y[i] += 1;
-                }
-            });
-        }
-
-        plotTraces = traces;
-
+        plotTraces = getBmsPlotTraces(response);
         isLoadingPlot = false;
-    }    
+    }
 </script>
 
 <h2>Bowel movements</h2>
@@ -140,7 +89,7 @@
 </div>
 
 {#if errorMsg}
-    <Error errorMsg={errorMsg} />
+    <Error {errorMsg} />
 {/if}
 
 {#await loadRecentBms()}
@@ -148,21 +97,18 @@
 {:then bms}
     {#if bms.length !== 0}
         {#if !isLoadingPlot}
-            <h3>Last 7 days</h3>
-            <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">                
+            <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">
                 <PlotlyPlot data={plotTraces} layout={plotLayout} />
-
-                <div>
-                    
-                </div>
             </div>
         {:else}
             <Loading />
         {/if}
 
-        {#each bms as bm}
-            <BmCard {bm} />
-        {/each}
+        <div class="mt-12">
+            {#each bms as bm}
+                <BmCard {bm} />
+            {/each}
+        </div>
     {:else}
         <p>
             You have not reported any BMs in the last 7 days. You can report BMs

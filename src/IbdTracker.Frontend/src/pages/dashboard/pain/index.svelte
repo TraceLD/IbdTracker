@@ -6,53 +6,12 @@
 
     import { goto } from "@roxi/routify";
     import { get } from "../../../services/requests";
-    
-    import type { PainEventAvgsDto } from "../../../models/dtos";
+    import { getPainEventsPlotsTraces, PainEventsPlotsTraces } from "../../../services/plots";    
+    import type { PainEventAvgsDto } from "../../../models/dtos";    
 
-    interface IPainPlots {
-        countPainPlot: any,
-        durationPlot: any,
-    };
-
-    async function loadPlots(): Promise<IPainPlots> {
+    async function loadPlots(): Promise<PainEventsPlotsTraces> {
         const res: Array<PainEventAvgsDto> = await get<Array<PainEventAvgsDto>>("patients/@me/pain/recent/avgs");
-        const x: Array<Date> = res.map((v) => new Date(v.dateTime + "Z"));      
-        const durationPlot = [
-            {
-                x: x,
-                y: res.map((v) => v.averageDuration),
-                name: "Average duration (minutes)",
-                type: "scatter",
-                marker: {
-                    color: "#FACC15",
-                },
-            },
-        ]
-        const countPainPlot = [
-            {
-                x: x,
-                y: res.map((v) => v.count),
-                name: "Count",
-                type: "bar",
-                marker: {
-                    color: "#6366F1",
-                },
-            },
-            {
-                x: x,
-                y: res.map((v) => v.averageIntensity),
-                name: "Average pain intensity (0-10)",
-                type: "bar",
-                marker: {
-                    color: "#EF4444",
-                },
-            },
-        ]
-        
-        return {
-            countPainPlot: countPainPlot,
-            durationPlot: durationPlot
-        };
+        return getPainEventsPlotsTraces(res);
     }
 </script>
 
@@ -66,8 +25,8 @@
     <Loading />
 {:then plots}
     <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">
-        <PlotlyPlot data={plots.countPainPlot} />
-        <PlotlyPlot data={plots.durationPlot} />
+        <PlotlyPlot data={plots.countPainPlotTraces} />
+        <PlotlyPlot data={plots.durationPlotTraces} />
     </div>
 {:catch err}
     <Error errorMsg={err} />

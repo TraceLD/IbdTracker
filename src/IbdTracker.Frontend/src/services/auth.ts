@@ -14,6 +14,9 @@ const authConfig: Auth0ClientOptions = {
 };
 let auth0: Auth0Client = null;
 
+/**
+ * Initialises authentication. This function is called at app startup.
+ */
 async function initAuth(): Promise<void> {
     isLoading.set(true);
 
@@ -29,6 +32,9 @@ async function initAuth(): Promise<void> {
     isLoading.set(false);
 }
 
+/**
+ * Handles the user once they are authenticated.
+ */
 async function handleIsAuthenticated(): Promise<void> {
     try {
         const _user: User = await auth0.getUser();
@@ -55,16 +61,26 @@ async function handleIsAuthenticated(): Promise<void> {
     }
 }
 
+/**
+ * Obtains the user JWT token from Auth0 silently. 
+ * Silently meaning without user interaction.
+ */
 async function getToken(): Promise<any> {
     return await auth0.getTokenSilently();
 }
 
+/**
+ * Sends the user to Auth0 login page.
+ */
 async function login(): Promise<void> {
     await auth0.loginWithRedirect({
         redirect_uri: "http://localhost:8080/callback",
     });
 }
 
+/**
+ * Handles the callback from Auth0.
+ */
 async function callback(): Promise<void> {
     await auth0.handleRedirectCallback();
 
@@ -77,6 +93,9 @@ async function callback(): Promise<void> {
     }
 }
 
+/**
+ * Logs a user out.
+ */
 function logout(): void {
     ibdTrackerUser.set(null);
     isAuthenticated.set(false);

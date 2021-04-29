@@ -13,9 +13,9 @@ namespace IbdTracker.Features.Patients.BowelMovements
 {
     public class GetRecentGrouped
     {
-        public record Query : IRequest<IList<Result>>;
+        public record Query(DateTime? StartDate, DateTime? EndDate) : IRequest<IList<Result>>;
 
-        public record Result(int Day, IEnumerable<BowelMovementEventDto> BowelMovementEventsOnDay);
+        public record Result(DateTime Date, IEnumerable<BowelMovementEventDto> BowelMovementEventsOnDay);
 
         public class Handler : IRequestHandler<Query, IList<Result>>
         {
@@ -31,23 +31,26 @@ namespace IbdTracker.Features.Patients.BowelMovements
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var sevenDaysAgo = DateTime.UtcNow.AddDays(-7);
+                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-7);
+                var endDate = request.EndDate ?? DateTime.UtcNow;
                 var res = await _context.BowelMovementEvents
                     .AsNoTracking()
-                    .Where(bm => bm.PatientId.Equals(patientId) && bm.DateTime >= sevenDaysAgo)
+                    .Where(bm => bm.PatientId.Equals(patientId) 
+                                 && bm.DateTime >= startDate
+                                 && bm.DateTime <= endDate)
                     .ToListAsync(cancellationToken);
-
                 return res
-                    .GroupBy(bm => bm.DateTime.DayOfYear)
-                    .Select(g => new Result(g.Key, g.Select(bm => new BowelMovementEventDto
-                    {
-                        BowelMovementEventId = bm.BowelMovementEventId,
-                        PatientId = bm.PatientId,
-                        DateTime = bm.DateTime,
-                        ContainedBlood = bm.ContainedBlood,
-                        ContainedMucus = bm.ContainedMucus
-                    })))
-                    .OrderBy(g => g.Day)
+                    .GroupBy(bm => bm.DateTime.Date)
+                    .Select(g => new Result(g.Key,
+                        g.Select(bm => new BowelMovementEventDto
+                        {
+                            BowelMovementEventId = bm.BowelMovementEventId,
+                            PatientId = bm.PatientId,
+                            DateTime = bm.DateTime,
+                            ContainedBlood = bm.ContainedBlood,
+                            ContainedMucus = bm.ContainedMucus
+                        })))
+                    .OrderBy(g => g.Date)
                     .ToList();
             }
         }

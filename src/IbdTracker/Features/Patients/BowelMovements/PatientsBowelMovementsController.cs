@@ -32,9 +32,9 @@ namespace IbdTracker.Features.Patients.BowelMovements
 
         [Authorize("read:bms")]
         [HttpGet("recent/grouped")]
-        public async Task<ActionResult<IEnumerable<GetRecentGrouped.Result>>> GetRecentGroupedForMe()
+        public async Task<ActionResult<IEnumerable<GetRecentGrouped.Result>>> GetRecentGroupedForMe([FromQuery] GetRecentGrouped.Query query)
         {
-            var res = await _mediator.Send(new GetRecentGrouped.Query());
+            var res = await _mediator.Send(query);
             return Ok(res);
         }
 

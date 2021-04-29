@@ -43,7 +43,7 @@
     <Error {errorMsg} />
 {/if}
 
-<div class="rounded-lg bg-gray-50 mt-12 py-4 px-6 shadow-md">
+<div class="rounded-lg bg-gray-50 mt-5 py-4 px-6 shadow-md">
     <div class="flex items-center">
         <p class="text-2xl font-bold">{bmTimeString}</p>
         {#if showOptions}
