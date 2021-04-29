@@ -43,6 +43,17 @@
         },
     };
 
+    let isLoadingPlot: boolean = true;
+    let plotTraces: any[];
+    let errorMsg: string;
+    const startDate: Date = new Date(Date.now() - 62 * 24 * 60 * 60 * 1000);
+    const endDate: Date = new Date();
+    let startDateInput: string = toHtmlInputFormat(startDate);
+    let endDateInput: string = toHtmlInputFormat(endDate);
+    
+    loadRecentBmsChart()
+        .catch(err => errorMsg = err);
+
     async function loadRecentBms(): Promise<Array<BowelMovementEvent>> {
         let response: Array<BowelMovementEventDto> = await get<
             Array<BowelMovementEventDto>
@@ -50,12 +61,15 @@
         return response.map((dto) => new BowelMovementEvent(dto));
     }
 
-    async function loadRecentBmsChart(): Promise<any> {
+    async function loadRecentBmsChart(): Promise<void> {
+        isLoadingPlot = true;
+
         let response: Array<BowelMovementEventsGroupedDto> = await get<
             Array<BowelMovementEventsGroupedDto>
-        >("patients/@me/bms/recent/grouped");
+        >(`patients/@me/bms/recent/grouped?startDate=${startDateInput}&endDate=${endDateInput}`);
+        console.log(response);
         const x: Array<string> = response.map((v) =>
-            toHtmlInputFormat(new Date(v.bowelMovementEventsOnDay[0].dateTime))
+            toHtmlInputFormat(new Date(v.date + "Z"))
         );
         let traces = [
             {
@@ -113,8 +127,10 @@
             });
         }
 
-        return traces;
-    }
+        plotTraces = traces;
+
+        isLoadingPlot = false;
+    }    
 </script>
 
 <h2>Bowel movements</h2>
@@ -123,20 +139,26 @@
     <Add on:click={$goto("/dashboard/bms/add")} />
 </div>
 
+{#if errorMsg}
+    <Error errorMsg={errorMsg} />
+{/if}
+
 {#await loadRecentBms()}
     <Loading />
 {:then bms}
     {#if bms.length !== 0}
-        {#await loadRecentBmsChart()}
-            <Loading />
-        {:then chartData}
+        {#if !isLoadingPlot}
             <h3>Last 7 days</h3>
-            <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">
-                <PlotlyPlot data={chartData} layout={plotLayout} />
+            <div class="rounded-lg bg-gray-50 pb-4 px-6 shadow-md">                
+                <PlotlyPlot data={plotTraces} layout={plotLayout} />
+
+                <div>
+                    
+                </div>
             </div>
-        {:catch chartErr}
-            <Error errorMsg={chartErr} />
-        {/await}
+        {:else}
+            <Loading />
+        {/if}
 
         {#each bms as bm}
             <BmCard {bm} />

@@ -1,7 +1,8 @@
 import type { FoodItem, FoodItemRecommendation, FoodItemWithRecommendation } from "../models/models";
 
 export function combineFisAndRecommendations(fis: Array<FoodItem>, recommendations: Array<FoodItemRecommendation>): Array<FoodItemWithRecommendation> {
-    let output = [];
+    let outputWithData = [];
+    let outputUndef = [];
 
     fis.forEach((fi: FoodItem) => {
         let matchedRecommendation: FoodItemRecommendation = null;
@@ -20,8 +21,14 @@ export function combineFisAndRecommendations(fis: Array<FoodItem>, recommendatio
             recommendationValue: matchedRecommendation?.recommendationValue
         }
 
-        output = [...output, iOutput];
+        if (!iOutput.recommendationValue) {
+            outputUndef = [...outputUndef, iOutput];
+        } else {
+            outputWithData = [...outputWithData, iOutput];
+        }
     });
 
-    return output;
+    outputWithData.sort((a, b) => (a.recommendationValue < b.recommendationValue) ? 1 : -1);
+
+    return [...outputWithData, ...outputUndef];
 }

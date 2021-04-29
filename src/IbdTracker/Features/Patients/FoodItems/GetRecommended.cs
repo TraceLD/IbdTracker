@@ -44,7 +44,7 @@ namespace IbdTracker.Features.Patients.FoodItems
                             join meal in _context.Meals.Include(m => m.FoodItems)
                                 on mealEvent.MealId equals meal.MealId
                             where mealEvent.PatientId.Equals(patientId)
-                                  && mealEvent.DateTime >= DateTime.UtcNow.AddDays(-31)
+                                  && mealEvent.DateTime >= DateTime.UtcNow.AddDays(-120)
                                   && meal.FoodItems.Contains(foodItem)
                             select mealEvent.DateTime)
                         .ToListAsync(cancellationToken);

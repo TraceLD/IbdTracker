@@ -68,7 +68,7 @@
                     class="w-screen"
                 >
                     <Header />
-                    <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-1/3">
+                    <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-1/3 xl:w-1/2">
                         <slot />
                     </div>
                 </div>

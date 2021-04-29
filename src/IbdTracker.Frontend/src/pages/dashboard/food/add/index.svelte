@@ -153,7 +153,7 @@
 
     <div>
         <h3>Available food items</h3>
-        <div class="bg-gray-50 p-4 pb-2 rounded-lg shadow-md max-h-64 overflow-y-scroll">
+        <div class="bg-gray-50 p-4 pb-2 rounded-lg shadow-md max-h-64 xl:max-h-96 overflow-y-scroll">
             <div class="mb-4 flex flex-col">
                 <input
                     name="search"
