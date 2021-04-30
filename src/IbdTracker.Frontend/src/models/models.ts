@@ -225,3 +225,16 @@ export interface TimeOfDay {
     hour: number,
     minute: number,
 }
+
+export interface AnalysisThresholdWithValue {
+    threshold: number,
+    actualValue: number,
+}
+
+export interface FlareUpAnalysis {
+    patientId: string,
+    isInFlareUp: boolean,
+    painEventsPerDay: AnalysisThresholdWithValue,
+    bmsPerDay: AnalysisThresholdWithValue,
+    bloodyBmsPercentage: AnalysisThresholdWithValue
+}

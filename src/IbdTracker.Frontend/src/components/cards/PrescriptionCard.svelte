@@ -9,9 +9,7 @@
         getPainEventsPlotsTraces,
     } from "../../services/plots";
     import { get } from "../../services/requests";
-    import type {
-        PrescribedMedication,
-    } from "../../models/models";
+    import type { PrescribedMedication } from "../../models/models";
     import type {
         BowelMovementEventsGroupedDto,
         PainEventAvgsDto,

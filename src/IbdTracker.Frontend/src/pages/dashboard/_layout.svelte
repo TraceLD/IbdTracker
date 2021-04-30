@@ -31,6 +31,7 @@
         {
             name: "Symptoms",
             items: [
+                { name: "Flare up detector", href:"/dashboard/flareups" },
                 { name: "Pain", href: "/dashboard/pain" },
                 { name: "Bowel movements", href: "/dashboard/bms" },
             ],
