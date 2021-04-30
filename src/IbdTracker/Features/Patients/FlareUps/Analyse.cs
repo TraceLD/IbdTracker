@@ -74,11 +74,15 @@ namespace IbdTracker.Features.Patients.FlareUps
                     return new(patientId,
                         true,
                         new(PainEventsPerDayThreshold, pesAverageAmountPerDay),
-                        new(BmsPerDayThreshold, BmsPerDayThreshold),
+                        new(BmsPerDayThreshold, bmsAverageAmountPerDay),
                         new(BloodyBmsPercentageThreshold, bloodyBmsPercentage));
                 }
 
-                return new(patientId, false, null, null, null);
+                return new(patientId,
+                    false,
+                    new(PainEventsPerDayThreshold, pesAverageAmountPerDay),
+                    new(BmsPerDayThreshold, bmsAverageAmountPerDay),
+                    new(BloodyBmsPercentageThreshold, bloodyBmsPercentage));
             }
         }
     }
