@@ -68,7 +68,7 @@
         let body: any;
 
         showConfirmationModal = false;
-        if (selectedIbdType && selectedIbdType.id === 1) {
+        if (selectedAccountType && selectedAccountType.id === 1) {
             let isValid: string | null = isPatientInfoValid();
 
             if (isValid) {
@@ -84,11 +84,11 @@
                 doctorId: selectedDoctor.doctorId,
                 selectedIbdType: selectedIbdType.id,
             };
-        } else if (selectedIbdType && selectedIbdType.id === 3) {
+        } else if (selectedAccountType && selectedAccountType.id === 3) {
             alert("WIP");
             return;
         } else {
-            alert(`Illegal argument: ${selectedIbdType}`);
+            alert(`Illegal argument: ${selectedAccountType}`);
             return;
         }
 
