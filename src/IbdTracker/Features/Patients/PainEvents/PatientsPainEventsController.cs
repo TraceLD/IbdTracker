@@ -44,9 +44,9 @@ namespace IbdTracker.Features.Patients.PainEvents
 
         [Authorize("read:pain")]
         [HttpGet("@me/pain/recent/avgs")]
-        public async Task<ActionResult<GetRecentAvgs.Result>> GetRecentAvgsForMe()
+        public async Task<ActionResult<GetRecentAvgs.Result>> GetRecentAvgsForMe([FromQuery] GetRecentAvgs.Query query)
         {
-            var res = await _mediator.Send(new GetRecentAvgs.Query());
+            var res = await _mediator.Send(query);
             return Ok(res);
         }
 

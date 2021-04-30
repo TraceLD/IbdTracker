@@ -12,7 +12,7 @@ namespace IbdTracker.Features.Patients.PainEvents
 {
     public class GetRecentAvgs
     {
-        public record Query : IRequest<IList<Result>>;
+        public record Query(DateTime? StartDate, DateTime? EndDate) : IRequest<IList<Result>>;
 
         public record Result(DateTime DateTime, double AverageIntensity, double AverageDuration, int Count);
 
@@ -30,10 +30,13 @@ namespace IbdTracker.Features.Patients.PainEvents
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var sevenDaysAgo = DateTime.UtcNow.AddDays(-62);
+                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-62);
+                var endDate = request.EndDate ?? DateTime.UtcNow;
                 var res = await _context.PainEvents
                     .AsNoTracking()
-                    .Where(pe => pe.PatientId.Equals(patientId) && pe.DateTime >= sevenDaysAgo)
+                    .Where(pe => pe.PatientId.Equals(patientId) 
+                                 && pe.DateTime >= startDate
+                                 && pe.DateTime <= endDate)
                     .OrderBy(pe => pe.DateTime)
                     .ToListAsync(cancellationToken);
                 return res

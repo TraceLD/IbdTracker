@@ -31,13 +31,14 @@ namespace IbdTracker.Features.Patients.BowelMovements
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-7);
+                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-62);
                 var endDate = request.EndDate ?? DateTime.UtcNow;
                 var res = await _context.BowelMovementEvents
                     .AsNoTracking()
                     .Where(bm => bm.PatientId.Equals(patientId) 
                                  && bm.DateTime >= startDate
                                  && bm.DateTime <= endDate)
+                    .OrderBy(bm => bm.DateTime)
                     .ToListAsync(cancellationToken);
                 return res
                     .GroupBy(bm => bm.DateTime.Date)
