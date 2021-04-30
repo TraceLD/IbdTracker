@@ -16,9 +16,9 @@ namespace IbdTracker.Features.Patients.FlareUps
         public record Result(
             string PatientId,
             bool IsInFlareUp, 
-            ThresholdWithValue? PainEventsPerDay,
-            ThresholdWithValue? BmsPerDay,
-            ThresholdWithValue? BloodyBmsPercentage
+            ThresholdWithValue PainEventsPerDay,
+            ThresholdWithValue BmsPerDay,
+            ThresholdWithValue BloodyBmsPercentage
         );
 
         public record ThresholdWithValue(double Threshold, double ActualValue);
