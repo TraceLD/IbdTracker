@@ -76,6 +76,7 @@ export function getBmsPlotTraces(data: Array<BowelMovementEventsGroupedDto>): Ar
 
     return traces;
 }
+
 /**
  * Transforms pain events data into the form plotly plots library expects.
  * 
