@@ -182,10 +182,12 @@
                     {#await loadPlots()}
                         <Loading />
                     {:then res}
+                        <p class="text-center">Pain</p>
                         <PlotlyPlot
                             data={res.plots.pain.traces}
                             layout={res.plots.pain.layout}
                         />
+                        <p class="text-center mt-2">Bowel movements</p>
                         <PlotlyPlot
                             data={res.plots.bms.traces}
                             layout={res.plots.bms.layout}
