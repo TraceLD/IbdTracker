@@ -47,12 +47,28 @@ namespace IbdTracker.Tests
             await function(scope.ServiceProvider);
         }
 
-        protected async Task<TResponse> SendMediatRCqrsInScope<TResponse>(IRequest<TResponse> request)
+        protected async Task<TResponse> SendMediatorRequestInScope<TResponse>(IRequest<TResponse> request)
         {
             var response = default(TResponse);
             
             await ExecuteInScope(async sp =>
             {
+                var mediator = sp.GetRequiredService<IMediator>();
+                response = await mediator.Send(request);
+            });
+            
+            return response;
+        }
+
+        protected async Task<TResponse> SendMediatorRequestInScopeOnBehalfOfTheTestPatient<TResponse>(
+            IRequest<TResponse> request, bool includeEmailInUserClaims = false)
+        {
+            var response = default(TResponse);
+            
+            await ExecuteInScope(async sp =>
+            {
+                SetCurrentUser(TestUserHelper.TestPatientId);
+                
                 var mediator = sp.GetRequiredService<IMediator>();
                 response = await mediator.Send(request);
             });
