@@ -3,7 +3,14 @@
     import { AccountType } from "../models/models";
     import { isAuthenticated, ibdTrackerUser } from "../stores/authStore";
 
-    handle();
+    /*
+    * This component redirects the user to the correct page, if they don't
+    * meet the conditions in the guards specified in the _layout.svelte
+    * of the page they're requesting to view.
+    */
+
+    handle()
+        .catch(err => alert(err));
     $ready();
 
     async function handle() {
