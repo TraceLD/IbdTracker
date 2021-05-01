@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbdTracker.Tools.Pharmaceut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbdTracker.Tools.PrescriptionVisualisationDataGenerator", "Tools\IbdTracker.Tools.PrescriptionVisualisationDataGenerator\IbdTracker.Tools.PrescriptionVisualisationDataGenerator.csproj", "{6EDE24F6-E32D-442D-AE62-F739B0FEF74E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbdTracker.Tests", "IbdTracker.Tests\IbdTracker.Tests.csproj", "{38AAE403-698C-4C24-9361-F09080039247}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{6EDE24F6-E32D-442D-AE62-F739B0FEF74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EDE24F6-E32D-442D-AE62-F739B0FEF74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EDE24F6-E32D-442D-AE62-F739B0FEF74E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38AAE403-698C-4C24-9361-F09080039247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38AAE403-698C-4C24-9361-F09080039247}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38AAE403-698C-4C24-9361-F09080039247}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38AAE403-698C-4C24-9361-F09080039247}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
