@@ -1,5 +1,12 @@
 import type { FoodItem, FoodItemRecommendation, FoodItemWithRecommendation } from "../models/models";
 
+/**
+ * Joins food item recommendations with the food item information.
+ * 
+ * @param fis Food items.
+ * @param recommendations Recommendations.
+ * @returns Food items with the recommendations information.
+ */
 export function combineFisAndRecommendations(fis: Array<FoodItem>, recommendations: Array<FoodItemRecommendation>): Array<FoodItemWithRecommendation> {
     let outputWithData = [];
     let outputUndef = [];

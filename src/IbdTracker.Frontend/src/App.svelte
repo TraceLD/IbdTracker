@@ -3,7 +3,7 @@
   import { routes } from "../.routify/routes";
   import { initAuth } from "./services/auth";
 
-  // we need to queue our init till after Routify has been initialized
+  // we need to queue our init till after Routify and Auth0 have been initialized
 	setTimeout(() => window.routify.inBrowser && initAuth())
 </script>
 
