@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using IbdTracker.Core.CommonDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace IbdTracker.Features.Patients.FlareUps
         }
 
         [HttpGet("analyse")]
-        public async Task<ActionResult<Analyse.Result>> Analyse()
+        public async Task<ActionResult<FlareUpDetectionResult>> Analyse()
         {
             var res = await _mediator.Send(new Analyse.Query());
             return Ok(res);

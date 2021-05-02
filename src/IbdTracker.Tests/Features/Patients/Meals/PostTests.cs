@@ -60,9 +60,25 @@ namespace IbdTracker.Tests.Features.Patients.Meals
                 .Excluding(o => o.FoodItems));
             
             // clean up;
-            var mealToRemove = await Context.Meals.FirstOrDefaultAsync(m => m.MealId.Equals(res.MealId));
+            var mealToRemove = await Context.Meals.FirstOrDefaultAsync(m => m.MealId.Equals(res!.MealId));
             Context.Meals.Remove(mealToRemove);
             await Context.SaveChangesAsync();
+        }
+
+        [Fact]
+        public void ShouldFailWithNonExistentFoodItem()
+        {
+            // arrange;
+            var command = new Post.Command("TestNonExistent", new List<Guid> {new()});
+            
+            // act;
+            Func<Task<MealDto?>> act = async () => await SendMediatorRequestInScopeOnBehalfOfTheTestPatient(command);
+            
+            // assert;
+            act
+                .Should()
+                .Throw<KeyNotFoundException>()
+                .WithMessage("FoodItem with ID 00000000-0000-0000-0000-000000000000 does not exist");
         }
     }
 }

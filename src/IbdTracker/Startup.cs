@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using IbdTracker.Core;
+using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Config;
 using IbdTracker.Infrastructure.Authorization;
 using IbdTracker.Infrastructure.Services;
@@ -93,8 +94,8 @@ namespace IbdTracker
             services.AddScoped<IAuth0Service, Auth0Service>();
             
             services.AddHttpContextAccessor();
+            services.AddSingleton<IFlareUpDetectionService, FlareUpDetectionService>();
             services.AddScoped<IUserService, UserService>();
-
             services.AddScoped<IEmailService, EmailService>();
             
             

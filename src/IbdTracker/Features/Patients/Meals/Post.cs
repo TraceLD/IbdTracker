@@ -55,7 +55,7 @@ namespace IbdTracker.Features.Patients.Meals
                     
                     if (fi is null)
                     {
-                        throw new NullReferenceException($"FoodItem with ID {foodItemId.ToString()} does not exist");
+                        throw new KeyNotFoundException($"FoodItem with ID {foodItemId.ToString()} does not exist");
                     }
                     
                     meal.FoodItems.Add(fi);

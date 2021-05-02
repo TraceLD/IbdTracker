@@ -8,8 +8,6 @@ using IbdTracker.Features.Patients.Meals;
 
 namespace IbdTracker.Tests.Features.Patients.Meals
 {
-    [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
-    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
     public class GetTests : TestBase
     {
         public GetTests(SharedFixture sharedFixture) : base(sharedFixture)
