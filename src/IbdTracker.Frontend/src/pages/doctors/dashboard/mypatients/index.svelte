@@ -13,13 +13,19 @@
 
 {#await loadPatients}
     <Loading />
-{:then res}
+{:then patients}
     <div>
         <h2>My patients</h2>
-        {#each res as patient}
-            <div class="mb-6">
-                <PatientCard patient={patient} />
-            </div>
-        {/each}
+        {#if patients.length !== 0}
+            {#each patients as patient}
+                <div class="mb-6">
+                    <PatientCard {patient} />
+                </div>
+            {/each}
+        {:else}
+            <p>You do not have any patients yet.</p>
+        {/if}
     </div>
+{:catch err}
+    <Error errorMsg={err} />
 {/await}

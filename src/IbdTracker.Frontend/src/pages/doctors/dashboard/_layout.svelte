@@ -17,17 +17,17 @@
 
     const menuCategories: Array<MenuCategory> = [
         {
-            name: "My settings",
+            name: "Office",
             items: [
                 { name: "Office hours", href: $url("./officehours") },
-                { name: "Profile information", href: $url("./officehours") },
+                { name: "Appointments", href: $url("./appointments") },
+                { name: "Patients", href: $url("./mypatients") },
             ],
         },
         {
-            name: "Patients",
+            name: "Profile",
             items: [
-                { name: "My patients", href: $url("./mypatients") },
-                { name: "My appointments", href: $url("./myappointments") },
+                { name: "Profile information", href: $url("./officehours") },
             ],
         },
     ];
