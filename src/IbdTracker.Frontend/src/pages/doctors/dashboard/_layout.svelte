@@ -13,6 +13,7 @@
         ibdTrackerUser,
     } from "../../../stores/authStore";
     import { menuOpened } from "../../../stores/menuStore";
+    import LogOut from "../../../components/buttons/LogOut.svelte";
 
     const menuCategories: Array<MenuCategory> = [
         {
@@ -26,7 +27,7 @@
             name: "Patients",
             items: [
                 { name: "My patients", href: $url("./mypatients") },
-                { name: "My appointments", href: $url("./myappointments") }
+                { name: "My appointments", href: $url("./myappointments") },
             ],
         },
     ];
@@ -55,7 +56,19 @@
                 </div>
             </div>
         {:else if $ibdTrackerUser.ibdTrackerAccountType === AccountType.UnverifiedDoctor}
-            <p>Your account is awaiting verification from an Administrator. They should be in touch with you via e-mail to verify your credentials.</p>
+            <div class="flex flex-col justify-items-center items-center">
+                <div>
+                    <h2 class="text-center mt-24">Awaiting verification</h2>
+                    <p class="text-center">
+                        Your account is awaiting verification from an
+                        Administrator. They should be in touch with you via
+                        e-mail to verify your credentials.
+                    </p>
+                </div>
+                <div class="mt-4">
+                    <LogOut />
+                </div>
+            </div>
         {:else}
             <Redirect />
         {/if}
