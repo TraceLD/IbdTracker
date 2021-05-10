@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
+using IbdTracker.Core;
 using IbdTracker.Infrastructure.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Infrastructure.Services
 {
@@ -23,20 +26,31 @@ namespace IbdTracker.Infrastructure.Services
         /// </summary>
         /// <returns>Currently logged in user's e-mail. <code>null</code> if not logged-in / e-mail not present in JWT.</returns>
         string? GetEmailOrDefault();
+
+        /// <summary>
+        /// Checks whether the currently logged-in Auth0 user has completed
+        /// the IBD Symptom Tracker registration process completely and has an account registered
+        /// in the database.
+        /// </summary>
+        /// <returns>Whether the currently logged-in Auth0 user has completed the registration for IBD Symptom Tracker.</returns>
+        Task<bool> IsRegistered();
     }
     
     /// <inheritdoc />
     public class UserService : IUserService
     {
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IbdSymptomTrackerContext _context;
 
         /// <summary>
         /// Instantiates a new instance of <see cref="UserService"/>.
         /// </summary>
         /// <param name="contextAccessor">The <see cref="HttpContext"/> accessor.</param>
-        public UserService(IHttpContextAccessor contextAccessor)
+        /// <param name="context">The <see cref="IbdSymptomTrackerContext"/> database context.</param>
+        public UserService(IHttpContextAccessor contextAccessor, IbdSymptomTrackerContext context)
         {
             _contextAccessor = contextAccessor;
+            _context = context;
         }
 
         /// <inheritdoc />
@@ -57,5 +71,29 @@ namespace IbdTracker.Infrastructure.Services
             _contextAccessor.HttpContext.User
                 .FindFirst(AppJwtClaims.EmailClaim)?
                 .Value;
+
+        /// <inheritdoc />
+        public async Task<bool> IsRegistered()
+        {
+            var user = GetUserAuthId();
+
+            if (user is null)
+            {
+                throw new InvalidOperationException();
+            }
+            
+            var existsPatient = await _context.Patients
+                .FirstOrDefaultAsync(p => p.PatientId.Equals(user));
+
+            if (existsPatient is not null)
+            {
+                return true;
+            }
+
+            var existsDoctor = await _context.Doctors
+                .FirstOrDefaultAsync(d => d.DoctorId.Equals(user) && d.IsApproved);
+
+            return existsDoctor is not null;
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace IbdTracker.Features.Accounts
 {
     public class GetAccountType
     {
-        public record Query(string? AuthId) : IRequest<int>;
+        public record Query(string? AuthId) : IRequest<AccountType>;
 
         public class QueryValidator : AbstractValidator<Query>
         {
@@ -22,7 +22,7 @@ namespace IbdTracker.Features.Accounts
             }
         }
 
-        public class Handler : IRequestHandler<Query, int>
+        public class Handler : IRequestHandler<Query, AccountType>
         {
             private readonly IbdSymptomTrackerContext _context;
 
@@ -31,7 +31,7 @@ namespace IbdTracker.Features.Accounts
                 _context = context;
             }
 
-            public async Task<int> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<AccountType> Handle(Query request, CancellationToken cancellationToken)
             {
                 // check if exists as a patient;
                 var patientRes = await _context.Patients
@@ -40,7 +40,7 @@ namespace IbdTracker.Features.Accounts
                     .FirstOrDefaultAsync(cancellationToken);
                 if (patientRes is not null)
                 {
-                    return 1;
+                    return AccountType.Patient;
                 }
                 
                 // if not, check if exists as a doctor;
@@ -48,7 +48,11 @@ namespace IbdTracker.Features.Accounts
                     .AsNoTracking()
                     .Where(d => d.DoctorId.Equals(request.AuthId))
                     .FirstOrDefaultAsync(cancellationToken);
-                return doctorRes is not null ? 2 : -1;
+                return doctorRes is not null
+                    ? doctorRes.IsApproved 
+                        ? AccountType.Doctor
+                        : AccountType.UnverifiedDoctor
+                    : AccountType.Unregistered;
             }
         }
     }

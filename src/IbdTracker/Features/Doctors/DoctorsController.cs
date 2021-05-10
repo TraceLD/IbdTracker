@@ -48,8 +48,13 @@ namespace IbdTracker.Features.Doctors
         [HttpGet("@me/patients")]
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetMyPatients()
         {
-            var res = await _mediator.Send(new GetAssignedPatients.Query(User.Identity!.Name!));
+            var res = await _mediator.Send(new GetAssignedPatients.Query());
             return Ok(res);
         }
+
+        [Authorize]
+        [HttpPost("@me/register")]
+        public async Task<ActionResult> Register(Register.Command command) =>
+            await _mediator.Send(command);
     }
 }

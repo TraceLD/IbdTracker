@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using IbdTracker.Core.CommonDtos;
-using IbdTracker.Features.Patients.FlareUps;
 using IbdTracker.Infrastructure.Services;
 using Xunit;
 

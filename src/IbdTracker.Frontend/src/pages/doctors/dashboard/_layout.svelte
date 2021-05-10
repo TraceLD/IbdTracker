@@ -54,8 +54,8 @@
                     </div>
                 </div>
             </div>
-        {:else if $ibdTrackerUser.ibdTrackerAccountObject && $ibdTrackerUser.ibdTrackerAccountType === AccountType.UnverifiedDoctor}
-            <p>Your account is awaiting verification from an Administrator. They should be in touch with you to verify your credentials.</p>
+        {:else if $ibdTrackerUser.ibdTrackerAccountType === AccountType.UnverifiedDoctor}
+            <p>Your account is awaiting verification from an Administrator. They should be in touch with you via e-mail to verify your credentials.</p>
         {:else}
             <Redirect />
         {/if}

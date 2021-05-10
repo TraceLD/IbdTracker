@@ -4,7 +4,7 @@
     import Error from "../../components/notifications/Error.svelte";
     import Loading from "../../components/Loading.svelte";
 
-    import { fade } from "svelte/transition";    
+    import { fade } from "svelte/transition";
     import { get, post } from "../../services/requests";
     import { isInThePast } from "../../services/datetime";
     import type { Doctor } from "../../models/models";
@@ -48,16 +48,19 @@
     let showConfirmationModal: boolean = false;
     let showSuccess: boolean = false;
 
-    // general;
+    // general inputs;
     let selectedAccountType: IAvailableOption;
     let name: string;
 
-    // patient specific;
+    // patient specific inputs;
     let selectedIbdType: IAvailableOption;
     let dobInput: string;
     let dateDiagnosedInput: string;
     let selectedDoctor: Doctor;
     let shareData: boolean = true;
+
+    // doctor specific inputs;
+    let location: string;
 
     async function loadDoctors(): Promise<Array<Doctor>> {
         return await get<Array<Doctor>>("doctors");
@@ -85,15 +88,26 @@
                 selectedIbdType: selectedIbdType.id,
             };
         } else if (selectedAccountType && selectedAccountType.id === 3) {
-            alert("WIP");
-            return;
+            let isValid: string | null = isDoctorInfoValid();
+
+            if (isValid) {
+                errorMsg = isValid;
+                return;
+            }
+
+            url = "doctors/@me/register";
+            body = {
+                name: name,
+                location: location,
+                officeHours: []
+            };
         } else {
             alert(`Illegal argument: ${selectedAccountType}`);
             return;
         }
 
         const res: Response = await post(url, body);
-        
+
         if (res.ok) {
             showSuccess = true;
         } else {
@@ -117,6 +131,17 @@
 
         if (!isInThePast(dob) || !isInThePast(dateDiagnosed)) {
             return "Both date diagnosed and date of birth must be in the past.";
+        }
+
+        return null;
+    }
+
+    function isDoctorInfoValid(): string | null {
+        if (!name) {
+            return "Name can't be empty.";
+        }
+        if (!location) {
+            return "Location can't be empty."
         }
 
         return null;
@@ -172,7 +197,7 @@
                 </label>
 
                 <label for="name" class="mt-2 text-sm font-medium text-gray-500"
-                    >Name
+                    >Name (first name and surname)
                     <input
                         type="text"
                         name="name"
@@ -266,7 +291,20 @@
                         <Error errorMsg={err} />
                     {/await}
                 {:else if selectedAccountType && selectedAccountType.id === 3}
-                    <p>WIP</p>
+                    <div transition:fade class="mt-5">
+                        <label
+                            for="location"
+                            class="mt-2 text-sm font-medium text-gray-500"
+                            >Location
+                            <input
+                                type="text"
+                                name="location"
+                                id="location"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                bind:value={location}
+                            />
+                        </label>
+                    </div>
                 {/if}
             </div>
             <div class="flex">
