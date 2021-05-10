@@ -31,13 +31,11 @@ namespace IbdTracker.Features.Medications
             public Handler(IbdSymptomTrackerContext context) => 
                 _context = context;
 
-            public async Task<MedicationDto?> Handle(Query request, CancellationToken cancellationToken)
-            {
-                return await _context.Medications
+            public async Task<MedicationDto?> Handle(Query request, CancellationToken cancellationToken) =>
+                await _context.Medications
                     .Where(m => m.MedicationId == request.MedicationId)
                     .Select(m => m.ToDto())
                     .FirstOrDefaultAsync(cancellationToken);
-            }
         }
     }
 }

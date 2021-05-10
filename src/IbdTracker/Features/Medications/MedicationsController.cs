@@ -21,9 +21,9 @@ namespace IbdTracker.Features.Medications
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MedicationDto>>> Get()
+        public async Task<ActionResult<IEnumerable<MedicationDto>>> Get([FromQuery] Get.Query query)
         {
-            var res = await _mediator.Send(new Get.Query());
+            var res = await _mediator.Send(query);
             return Ok(res);
         }
 
