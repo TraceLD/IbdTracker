@@ -33,6 +33,8 @@ namespace IbdTracker.Infrastructure.Services
         /// in the database.
         /// </summary>
         /// <returns>Whether the currently logged-in Auth0 user has completed the registration for IBD Symptom Tracker.</returns>
+        ///
+        /// <exception cref="InvalidOperationException">User is not logged in.</exception>
         Task<bool> IsRegistered();
     }
     

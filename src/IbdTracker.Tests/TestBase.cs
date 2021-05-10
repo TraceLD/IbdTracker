@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IbdTracker.Core;
+using IbdTracker.Infrastructure.Authorization;
 using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -81,6 +82,7 @@ namespace IbdTracker.Tests
         /// Executes functions in a new IoC scope. This mimics very closely HTTP requests in ASP.NET Core.
         /// For each request coming in a new scope is created.
         /// </summary>
+        /// 
         /// <param name="function">Function to execute in a new scope.</param>
         protected async Task ExecuteInScope(Func<IServiceProvider, Task> function)
         {
@@ -90,9 +92,11 @@ namespace IbdTracker.Tests
 
         /// <summary>
         /// Sends (executes) a MediatR (<see cref="IMediator"/>) query/command in a new IoC scope.
+        /// 
         /// This closely mimics our controllers where we a new scope is created for each request that
         /// comes in and then the work is passed off to MediatR.
         /// </summary>
+        /// 
         /// <param name="request">The command/query.</param>
         /// <typeparam name="TResponse">The response type.</typeparam>
         /// <returns>The result of the command/query.</returns>
@@ -109,6 +113,18 @@ namespace IbdTracker.Tests
             return response;
         }
 
+        /// <summary>
+        /// Sends (executes) a MediatR (<see cref="IMediator"/>) query/command in a new IoC scope
+        /// on behalf of the test patient user.
+        /// 
+        /// This closely mimics our controllers where we a new scope is created for each request that
+        /// comes in and then the work is passed off to MediatR.
+        /// </summary>
+        /// 
+        /// <param name="request">The command/query.</param>
+        /// <param name="includeEmailInUserClaims">Whether an email claim should be included in the user's claims.</param>
+        /// <typeparam name="TResponse">The response type.</typeparam>
+        /// <returns>The result of the command/query.</returns>
         protected async Task<TResponse?> SendMediatorRequestInScopeOnBehalfOfTheTestPatient<TResponse>(
             IRequest<TResponse?> request, bool includeEmailInUserClaims = false)
         {
@@ -116,7 +132,7 @@ namespace IbdTracker.Tests
             
             await ExecuteInScope(async sp =>
             {
-                SetCurrentUser(TestUserHelper.TestPatientId);
+                SetCurrentUserToPatientTestUser(includeEmailInUserClaims);
                 
                 var mediator = sp.GetRequiredService<IMediator>();
                 response = await mediator.Send(request);
@@ -128,6 +144,7 @@ namespace IbdTracker.Tests
         /// <summary>
         /// Gets a service from the IoC container, i.e. the service provider (<see cref="IServiceProvider"/>). 
         /// </summary>
+        /// 
         /// <typeparam name="T">The type of the service.</typeparam>
         /// <returns>The service.</returns>
         protected T GetService<T>()
@@ -142,25 +159,57 @@ namespace IbdTracker.Tests
         /// Sets the current user to a given username. This mimics the username we get
         /// from the OAuth 2.0 provider, Auth0, in the JWT (JSON Web Token).
         /// </summary>
+        /// 
         /// <param name="username">The username.</param>
+        /// <param name="email">The email attached to the user. If null does not set the email.</param>
         /// <remarks>This can be set inside <see cref="ExecuteInScope"/>, to set the user for that scope only.</remarks>
-        protected void SetCurrentUser(string username)
+        protected void SetCurrentUser(string username, string? email = null)
         {
-            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
+            var claims = new List<Claim>
             {
                 new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", username)
-            }));
+            };
+
+            if (email is not null)
+            {
+                claims.Add(new(AppJwtClaims.EmailClaim, email));
+            }
+
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims));
         }
 
         /// <summary>
-        /// Sets the current user to a given 
+        /// Sets the current user to the test patient user.
         /// </summary>
-        protected void SetCurrentUserToPatientTestUser()
+        ///
+        /// <param name="includeEmailInUserClaims">Whether an email claim should be included in the user's claims.</param>
+        protected void SetCurrentUserToPatientTestUser(bool includeEmailInUserClaims = false)
         {
-            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
+            if (includeEmailInUserClaims)
             {
-                new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", TestUserHelper.TestPatientId)
-            }));
+                SetCurrentUser(TestUserHelper.TestPatientId, TestUserHelper.TestPatientEmail);
+            }
+            else
+            {
+                SetCurrentUser(TestUserHelper.TestPatientId);
+            }
+        }
+
+        /// <summary>
+        /// Sets the current user to the test doctor user.
+        /// </summary>
+        ///
+        /// <param name="includeEmailInUserClaims">Whether an email claim should be included in the user's claims.</param>
+        protected void SetCurrentUserToDoctorTestUser(bool includeEmailInUserClaims = false)
+        {
+            if (includeEmailInUserClaims)
+            {
+                SetCurrentUser(TestUserHelper.TestDoctorId, TestUserHelper.TestDoctorEmail);
+            }
+            else
+            {
+                SetCurrentUser(TestUserHelper.TestDoctorId);
+            }
         }
 
         /// <summary>
