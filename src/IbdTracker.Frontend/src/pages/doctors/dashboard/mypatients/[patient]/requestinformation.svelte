@@ -3,16 +3,11 @@
     import SubpageHeader from "../../../../../components/navigation/SubpageHeader.svelte";
 
     import { fade } from "svelte/transition";
-    import type { InformationRequestDto } from "../../../../../models/dtos";
-    import { doctor } from "../../../../../stores/authStore";
     import { post } from "../../../../../services/requests";
     import { goto, url } from "@roxi/routify";
     import Error from "../../../../../components/notifications/Error.svelte";
 
     export let patient: string;
-
-    let patientReplaced = patient.replace("%7C", '|');
-    console.log(patientReplaced);
 
     let errorMsg: string;
     let showConfirmationModal: boolean;
@@ -23,8 +18,7 @@
 
     async function request(): Promise<void> {
         const reqBody = {
-            patientId: patientReplaced,
-            doctorId: $doctor.doctorId,
+            patientId: patient,
             isActive: true,
             requestedBms: requestBmsInput,
             requestedPain: requestPainInput,

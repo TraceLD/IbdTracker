@@ -5,6 +5,7 @@ using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Entities;
+using IbdTracker.Infrastructure.Services;
 using MediatR;
 
 namespace IbdTracker.Features.Doctors.Patients
@@ -13,7 +14,6 @@ namespace IbdTracker.Features.Doctors.Patients
     {
         public record Command(
             string PatientId,
-            string DoctorId,
             bool IsActive,
             DateTime RequestedDataFrom,
             DateTime RequestedDataTo,
@@ -26,10 +26,6 @@ namespace IbdTracker.Features.Doctors.Patients
             public CommandValidator()
             {
                 RuleFor(c => c.PatientId)
-                    .NotEmpty()
-                    .MinimumLength(6);
-
-                RuleFor(c => c.DoctorId)
                     .NotEmpty()
                     .MinimumLength(6);
 
@@ -55,17 +51,19 @@ namespace IbdTracker.Features.Doctors.Patients
         public class Handler : IRequestHandler<Command, InformationRequestDto>
         {
             private readonly IbdSymptomTrackerContext _context;
+            private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context)
+            public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
+                _userService = userService;
             }
 
             public async Task<InformationRequestDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 var ir = new InformationRequest
                 {
-                    DoctorId = request.DoctorId,
+                    DoctorId = _userService.GetUserAuthId(),
                     IsActive = request.IsActive,
                     PatientId = request.PatientId,
                     RequestedBms = request.RequestedBms,
