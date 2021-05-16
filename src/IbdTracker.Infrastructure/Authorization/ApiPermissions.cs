@@ -13,6 +13,7 @@ namespace IbdTracker.Infrastructure.Authorization
             "read:appointments",
             "write:appointments",
             "read:prescriptions",
+            "write:prescriptions",
             "read:bms",
             "write:bms",
             "read:meals",

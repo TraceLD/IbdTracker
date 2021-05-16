@@ -223,7 +223,7 @@ export interface OfficeHours {
 
 export interface TimeOfDay {
     hour: number,
-    minute: number,
+    minutes: number,
 }
 
 export interface AnalysisThresholdWithValue {
@@ -237,4 +237,10 @@ export interface FlareUpAnalysis {
     painEventsPerDay: AnalysisThresholdWithValue,
     bmsPerDay: AnalysisThresholdWithValue,
     bloodyBmsPercentage: AnalysisThresholdWithValue
+}
+
+export interface Day {
+    selected: boolean,
+    startValue: TimeOfDay,
+    endValue: TimeOfDay
 }
