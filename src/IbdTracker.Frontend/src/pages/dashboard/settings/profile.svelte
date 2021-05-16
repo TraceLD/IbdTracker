@@ -30,7 +30,7 @@
                 <p>{$ibdTrackerUser.auth0User.email}</p>
             </div>
         </div>
-        <div class="ml-5">
+        <div class="ml-1">
             <div class="mt-8">
                 <div class="flex items-center mb-2">
                     <svg
