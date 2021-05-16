@@ -27,7 +27,7 @@
         {
             name: "Profile",
             items: [
-                { name: "Profile information", href: $url("./officehours") },
+                { name: "Profile information", href: $url("./settings/profile") },
             ],
         },
     ];
@@ -50,7 +50,7 @@
                     class="w-screen"
                 >
                     <Header />
-                    <div class="mt-8 mx-6 lg:mx-20 max-w-2xl lg:w-1/3">
+                    <div class="mt-8 mx-6 lg:mx-20 max-w-2xl xl:w-1/2">
                         <slot />
                     </div>
                 </div>
