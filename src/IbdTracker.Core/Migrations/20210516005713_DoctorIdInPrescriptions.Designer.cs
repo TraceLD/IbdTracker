@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using IbdTracker.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IbdTracker.Core.Migrations
 {
     [DbContext(typeof(IbdSymptomTrackerContext))]
-    partial class IbdSymptomTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20210516005713_DoctorIdInPrescriptions")]
+    partial class DoctorIdInPrescriptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -409,8 +411,6 @@ namespace IbdTracker.Core.Migrations
 
                     b.HasKey("PrescriptionId");
 
-                    b.HasIndex("DoctorId");
-
                     b.HasIndex("MedicationId");
 
                     b.HasIndex("PatientId");
@@ -547,12 +547,6 @@ namespace IbdTracker.Core.Migrations
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Prescription", b =>
                 {
-                    b.HasOne("IbdTracker.Core.Entities.Doctor", null)
-                        .WithMany("Prescriptions")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("IbdTracker.Core.Entities.Medication", "Medication")
                         .WithMany("Prescriptions")
                         .HasForeignKey("MedicationId")
@@ -584,8 +578,6 @@ namespace IbdTracker.Core.Migrations
                     b.Navigation("InformationRequests");
 
                     b.Navigation("Patients");
-
-                    b.Navigation("Prescriptions");
                 });
 
             modelBuilder.Entity("IbdTracker.Core.Entities.Meal", b =>

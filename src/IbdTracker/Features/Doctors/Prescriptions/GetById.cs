@@ -3,19 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using IbdTracker.Core;
 using IbdTracker.Core.CommonDtos;
+using IbdTracker.Core.Entities;
 using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Patients.Prescriptions
+namespace IbdTracker.Features.Doctors.Prescriptions
 {
-    public class GetActive
+    public class GetById
     {
-        public record Query : IRequest<IList<PrescriptionDto>>;
+        public record Query(Guid PrescriptionId) : IRequest<Result?>;
 
-        public class Handler : IRequestHandler<Query, IList<PrescriptionDto>>
+        public record Result(
+            PrescriptionDto Prescription,
+            IList<SideEffectEvent> SideEffectEvents
+        );
+
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(q => q.PrescriptionId)
+                    .NotEmpty();
+            }
+        }
+        
+        public class Handler : IRequestHandler<Query, Result?>
         {
             private readonly IbdSymptomTrackerContext _context;
             private readonly IUserService _userService;
@@ -26,13 +42,13 @@ namespace IbdTracker.Features.Patients.Prescriptions
                 _userService = userService;
             }
 
-            public async Task<IList<PrescriptionDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result?> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.Prescriptions
-                    .AsNoTracking()
-                    .Where(p => p.PatientId.Equals(_userService.GetUserAuthId()) && p.EndDateTime > DateTime.UtcNow)
-                    .Include(p => p.Medication)
-                    .Select(p => new PrescriptionDto
+                    .Where(p => p.PrescriptionId.Equals(request.PrescriptionId) &&
+                                p.DoctorId.Equals(_userService.GetUserAuthId()))
+                    .Include(p => p.SideEffectEvents)
+                    .Select(p => new Result(new()
                     {
                         PrescriptionId = p.PrescriptionId,
                         PatientId = p.PatientId,
@@ -41,8 +57,8 @@ namespace IbdTracker.Features.Patients.Prescriptions
                         StartDateTime = p.StartDateTime,
                         EndDateTime = p.EndDateTime,
                         MedicationId = p.MedicationId
-                    })
-                    .ToListAsync(cancellationToken);
+                    }, p.SideEffectEvents))
+                    .FirstOrDefaultAsync(cancellationToken);
             }
         }
     }

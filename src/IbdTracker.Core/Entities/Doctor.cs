@@ -13,5 +13,6 @@ namespace IbdTracker.Core.Entities
         public List<Patient> Patients { get; } = new();
         public List<Appointment> Appointments { get; } = new();
         public List<InformationRequest> InformationRequests { get; } = new();
+        public List<Prescription> Prescriptions { get; } = new();
     }
 }

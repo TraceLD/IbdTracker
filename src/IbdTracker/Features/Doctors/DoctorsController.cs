@@ -27,7 +27,7 @@ namespace IbdTracker.Features.Doctors
         public async Task<ActionResult<DoctorDto>> GetMe()
         {
             var res = await _mediator.Send(new GetCurrent.Query());
-            return res is null ? Unauthorized() : Ok(res);
+            return res is null ? NotFound() : Ok(res);
         }
 
         [HttpGet]
@@ -41,7 +41,7 @@ namespace IbdTracker.Features.Doctors
         public async Task<ActionResult<DoctorDto>> GetById([FromRoute] GetById.Query query)
         {
             var res = await _mediator.Send(query);
-            return res is null ? Unauthorized() : Ok(res);
+            return res is null ? NotFound() : Ok(res);
         }
 
         [Authorize("read:assignedpatients")]
@@ -50,6 +50,14 @@ namespace IbdTracker.Features.Doctors
         {
             var res = await _mediator.Send(new GetAssignedPatients.Query());
             return Ok(res);
+        }
+
+        [Authorize("read:assignedpatients")]
+        [HttpGet("@me/patients/{patientId}")]
+        public async Task<ActionResult<PatientDto>> GetMyPatientById([FromRoute] GetAssignedPatientById.Query query)
+        {
+            var res = await _mediator.Send(query);
+            return res is null ? NotFound() : Ok(res);
         }
 
         [Authorize]

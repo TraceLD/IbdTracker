@@ -11,6 +11,7 @@ namespace IbdTracker.Core.Entities
         public DateTime EndDateTime { get; set; }
 
         public string PatientId { get; set; } = null!;
+        public string DoctorId { get; set; } = null!;
         
         public Guid MedicationId { get; set; }
         public Medication Medication { get; set; } = null!;

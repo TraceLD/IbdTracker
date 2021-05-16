@@ -30,11 +30,11 @@ namespace IbdTracker.Features.Patients.Prescriptions
                 return await _context.Prescriptions
                     .AsNoTracking()
                     .Where(p => p.PatientId.Equals(_userService.GetUserAuthId()))
-                    .Include(p => p.Medication)
                     .Select(p => new PrescriptionDto
                     {
                         PrescriptionId = p.PrescriptionId,
                         PatientId = p.PatientId,
+                        DoctorId = p.DoctorId,
                         DoctorInstructions = p.DoctorInstructions,
                         StartDateTime = p.StartDateTime,
                         EndDateTime = p.EndDateTime,
