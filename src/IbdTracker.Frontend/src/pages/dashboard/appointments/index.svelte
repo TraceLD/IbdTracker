@@ -6,13 +6,8 @@
 
     import type { AppointmentDto } from "../../../models/dtos";
     import { goto } from "@roxi/routify";
-    import { Appointment } from "../../../models/models";
     import { get } from "../../../services/requests";
-
-    interface AppointmentsCollection {
-        upcoming: Array<Appointment>;
-        past: Array<Appointment>;
-    }
+    import { appointmentDtosToCollection, AppointmentsCollection } from "../../../services/appointments";
 
     const loadAppointmentsPromise: Promise<AppointmentsCollection> = loadAppointments();
 
@@ -20,23 +15,8 @@
         const appointmentDtos: Array<AppointmentDto> = await get<
             Array<AppointmentDto>
         >("patients/@me/appointments");
-        const upcoming: Array<Appointment> = [];
-        const past: Array<Appointment> = [];
-        const dateNow: Date = new Date();
 
-        appointmentDtos.forEach((el) => {
-            const appointment: Appointment = new Appointment(el);
-            if (appointment.startDateTime < dateNow) {
-                past.push(appointment);
-            } else {
-                upcoming.push(appointment);
-            }
-        });
-
-        return {
-            upcoming: upcoming,
-            past: past,
-        };
+        return appointmentDtosToCollection(appointmentDtos);
     }
 </script>
 

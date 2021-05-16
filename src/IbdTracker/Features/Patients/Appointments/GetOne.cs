@@ -28,6 +28,7 @@ namespace IbdTracker.Features.Patients.Appointments
                 (await _context.Appointments
                     .AsNoTracking()
                     .Include(a => a.Doctor)
+                    .Include(a => a.Patient)
                     .FirstOrDefaultAsync(
                         a => a.AppointmentId == request.AppointmentId &&
                              a.PatientId.Equals(_userService.GetUserAuthId()),

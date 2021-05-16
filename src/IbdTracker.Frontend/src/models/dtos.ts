@@ -11,6 +11,7 @@ export interface AppointmentDto {
     patientId: string,
     doctorId: string,
     doctorName: string,
+    patientName: string,
     startDateTime: string,
     durationMinutes: number,
     location: string,

@@ -28,6 +28,7 @@ namespace IbdTracker.Features.Patients.Appointments
             public async Task<IList<AppointmentDto>> Handle(Query request, CancellationToken cancellationToken) =>
                 await _context.Appointments
                     .Include(a => a.Doctor)
+                    .Include(a => a.Patient)
                     .Where(a => a.PatientId.Equals(_userService.GetUserAuthId()))
                     .Select(a => a.ToDto())
                     .ToListAsync(cancellationToken);
