@@ -48,10 +48,11 @@
     ];
 
     async function cancelAppointment(): Promise<void> {
-        const res = await del(
-            `patients/@me/appointments/${appointment.appointmentId}`,
-            {}
-        );
+        const url = isDoctor
+            ? `doctors/@me/appointments/${appointment.appointmentId}`
+            : `patients/@me/appointments/${appointment.appointmentId}`;
+
+        const res = await del(url, {});
 
         if (!res.ok) {
             showConfirmationModal = false;

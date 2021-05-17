@@ -52,7 +52,7 @@ namespace IbdTracker.Features.Patients.Appointments
 
         [Authorize("write:appointments")]
         [HttpDelete("{appointmentId}")]
-        public async Task<ActionResult> DeleteAppointmentForMe(Cancel.Command command) =>
+        public async Task<ActionResult> DeleteAppointmentForMe([FromRoute] Cancel.Command command) =>
             await _mediator.Send(command);
 
         [Authorize("write:appointments")]

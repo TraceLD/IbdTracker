@@ -17,7 +17,6 @@
             "patients/@me/pain/recent/avgs"
         );
         let traces = getPainEventsPlotsTraces(res);
-        console.log(traces);
         return traces;
     }
 </script>

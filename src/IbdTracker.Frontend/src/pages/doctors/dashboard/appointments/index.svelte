@@ -1,18 +1,16 @@
 <script lang="ts">
-    import Error from "../../../components/notifications/Error.svelte";
-    import Loading from "../../../components/Loading.svelte";
-    import AppointmentCard from "../../../components/cards/AppointmentCard.svelte";
-    import Add from "../../../components/buttons/Add.svelte";
-
-    import type { AppointmentDto } from "../../../models/dtos";
-    import { goto } from "@roxi/routify";
-    import { get } from "../../../services/requests";
-    import { appointmentDtosToCollection, AppointmentsCollection } from "../../../services/appointments";
+    import Error from "../../../../components/notifications/Error.svelte";
+    import Loading from "../../../../components/Loading.svelte";
+    import AppointmentCard from "../../../../components/cards/AppointmentCard.svelte";
+    
+    import type { AppointmentDto } from "../../../../models/dtos";
+    import { get } from "../../../../services/requests";
+    import { AppointmentsCollection, appointmentDtosToCollection } from "../../../../services/appointments";
 
     async function loadAppointments(): Promise<AppointmentsCollection> {
         const appointmentDtos: Array<AppointmentDto> = await get<
             Array<AppointmentDto>
-        >("patients/@me/appointments");
+        >("doctors/@me/appointments");
 
         return appointmentDtosToCollection(appointmentDtos);
     }
@@ -21,9 +19,6 @@
 {#await loadAppointments()}
     <Loading />
 {:then res}
-    <div class="fixed bottom-0 right-0 p-4">
-        <Add on:click={$goto("/dashboard/appointments/add")} />
-    </div>
     <div>
         <div>
             <h2>Upcoming appointments</h2>
@@ -31,7 +26,7 @@
                 {#if res.upcoming.length !== 0}
                     {#each res.upcoming as _appointment}
                         <div class="mb-6">
-                            <AppointmentCard appointment={_appointment} />
+                            <AppointmentCard appointment={_appointment} isDoctor={true} />
                         </div>
                     {/each}
                 {:else}
@@ -46,7 +41,7 @@
                 {#if res.past.length !== 0}
                     {#each res.past as _appointment}
                         <div class="mb-6">
-                            <AppointmentCard appointment={_appointment} />
+                            <AppointmentCard appointment={_appointment} isDoctor={true} />
                         </div>
                     {/each}
                 {:else}
