@@ -21,6 +21,11 @@
             onClick: () =>
                 $goto($url(`./${patient.patientId}/prescriptions/add`)),
         },
+        {
+            name: "View appointments",
+            textColour: null,
+            onClick: () => $goto($url(`./${patient.patientId}/appointments`)),
+        },
     ];
 </script>
 
