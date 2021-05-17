@@ -9,15 +9,16 @@
         getPainEventsPlotsTraces,
     } from "../../services/plots";
     import { get } from "../../services/requests";
-    import type { PrescribedMedication } from "../../models/models";
+    import { AccountType, PrescribedMedication } from "../../models/models";
     import type {
         BowelMovementEventsGroupedDto,
         PainEventAvgsDto,
     } from "../../models/dtos";
     import { toHtmlInputFormat } from "../../services/datetime";
     import Loading from "../Loading.svelte";
+    import { ibdTrackerUser } from "../../stores/authStore";
 
-    export let pm: PrescribedMedication;
+    export let pm: PrescribedMedication;    
 
     let showCharts: boolean = false;
 
@@ -140,61 +141,63 @@
             </p>
         </div>
 
-        <div
-            class="flex flex-col w-full mt-4 gap-2 mb-2 py-2 px-3 rounded bg-white border-gray-300 shadow-sm border focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
-        >
-            <button
-                class="flex w-full focus:outline-none"
-                on:click={() => (showCharts = !showCharts)}
+        {#if $ibdTrackerUser.ibdTrackerAccountType === AccountType.Patient}
+            <div
+                class="flex flex-col w-full mt-4 gap-2 mb-2 py-2 px-3 rounded bg-white border-gray-300 shadow-sm border focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
             >
-                <p>Symptom improvement charts</p>
-                {#if !showCharts}
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 ml-auto text-blue-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                {:else}
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 ml-auto text-red-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                {/if}
-            </button>
+                <button
+                    class="flex w-full focus:outline-none"
+                    on:click={() => (showCharts = !showCharts)}
+                >
+                    <p>Symptom improvement charts</p>
+                    {#if !showCharts}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 ml-auto text-blue-500"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    {:else}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 ml-auto text-red-500"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    {/if}
+                </button>
 
-            {#if showCharts}
-                <div class="mt-2" transition:fade>
-                    {#await loadPlots()}
-                        <Loading />
-                    {:then res}
-                        <p class="text-center">Pain</p>
-                        <PlotlyPlot
-                            data={res.plots.pain.traces}
-                            layout={res.plots.pain.layout}
-                        />
-                        <p class="text-center mt-2">Bowel movements</p>
-                        <PlotlyPlot
-                            data={res.plots.bms.traces}
-                            layout={res.plots.bms.layout}
-                        />
-                    {/await}
-                </div>
-            {/if}
-        </div>
+                {#if showCharts}
+                    <div class="mt-2" transition:fade>
+                        {#await loadPlots()}
+                            <Loading />
+                        {:then res}
+                            <p class="text-center">Pain</p>
+                            <PlotlyPlot
+                                data={res.plots.pain.traces}
+                                layout={res.plots.pain.layout}
+                            />
+                            <p class="text-center mt-2">Bowel movements</p>
+                            <PlotlyPlot
+                                data={res.plots.bms.traces}
+                                layout={res.plots.bms.layout}
+                            />
+                        {/await}
+                    </div>
+                {/if}
+            </div>
+        {/if}
     </div>
 </div>

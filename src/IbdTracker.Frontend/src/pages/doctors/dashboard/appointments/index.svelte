@@ -26,7 +26,7 @@
                 {#if res.upcoming.length !== 0}
                     {#each res.upcoming as _appointment}
                         <div class="mb-6">
-                            <AppointmentCard appointment={_appointment} isDoctor={true} />
+                            <AppointmentCard appointment={_appointment} />
                         </div>
                     {/each}
                 {:else}
@@ -41,7 +41,7 @@
                 {#if res.past.length !== 0}
                     {#each res.past as _appointment}
                         <div class="mb-6">
-                            <AppointmentCard appointment={_appointment} isDoctor={true} />
+                            <AppointmentCard appointment={_appointment} />
                         </div>
                     {/each}
                 {:else}

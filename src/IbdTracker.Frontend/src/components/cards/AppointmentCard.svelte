@@ -5,15 +5,16 @@
     import Error from "../notifications/Error.svelte";
     import ConfirmationModal from "../ConfirmationModal.svelte";
 
-    import type {
+    import {
+        AccountType,
         Appointment,
         IContextualMenuItemContent,
     } from "../../models/models";
     import { del } from "../../services/requests";
     import { goto, url } from "@roxi/routify";
+    import { ibdTrackerUser } from "../../stores/authStore";
 
     export let appointment: Appointment;
-    export let isDoctor: boolean = false;
     export let showOptions: boolean = true;
 
     let showConfirmationModal: boolean = false;
@@ -28,13 +29,15 @@
             name: "View notes",
             textColour: null,
             onClick: async () => {
-                const targetUrl = isDoctor
-                    ? $url(
-                          `/doctors/dashboard/appointments/${appointment.appointmentId}`
-                      )
-                    : $url(
-                          `/dashboard/appointments/${appointment.appointmentId}`
-                      );
+                const targetUrl =
+                    $ibdTrackerUser.ibdTrackerAccountType ===
+                    AccountType.Patient
+                        ? $url(
+                              `/dashboard/appointments/${appointment.appointmentId}`
+                          )
+                        : $url(
+                              `/doctors/dashboard/appointments/${appointment.appointmentId}`
+                          );
                 $goto(targetUrl);
             },
         },
@@ -48,9 +51,10 @@
     ];
 
     async function cancelAppointment(): Promise<void> {
-        const url = isDoctor
-            ? `doctors/@me/appointments/${appointment.appointmentId}`
-            : `patients/@me/appointments/${appointment.appointmentId}`;
+        const url =
+            $ibdTrackerUser.ibdTrackerAccountType === AccountType.Patient
+                ? `patients/@me/appointments/${appointment.appointmentId}`
+                : `doctors/@me/appointments/${appointment.appointmentId}`;
 
         const res = await del(url, {});
 
@@ -94,7 +98,7 @@
 
     <div class="mt-3">
         <div class="flex items-center mb-1">
-            {#if !isDoctor}
+            {#if $ibdTrackerUser.ibdTrackerAccountType === AccountType.Patient}
                 <div class="w-4 h-4 mr-2 text-red-500">
                     <DoctorIcon />
                 </div>

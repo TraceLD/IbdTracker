@@ -60,7 +60,6 @@
                         <div class="mb-6">
                             <AppointmentCard
                                 appointment={_appointment}
-                                isDoctor={true}
                             />
                         </div>
                     {/each}
@@ -78,7 +77,6 @@
                         <div class="mb-6">
                             <AppointmentCard
                                 appointment={_appointment}
-                                isDoctor={true}
                             />
                         </div>
                     {/each}
