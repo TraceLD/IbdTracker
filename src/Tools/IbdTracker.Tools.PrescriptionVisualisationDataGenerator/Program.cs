@@ -26,14 +26,14 @@ Console.WriteLine(prescriptionStartTime);
 var prescriptionEffectsStartTime = DateTime.UtcNow.Date.AddDays(-15);
 var random = new Random();
 
-Food nutellaSandwich = new(new Guid("e2eae151-80df-4364-a0a8-a4cda0136168"), 51, (3, 6), (60, 120));
-Food pizza = new(new Guid("23385ca4-6f3f-4f4b-a1bc-ef0b2c574dbd"), 80, (7, 9), (150, 300));
-Food greekSalad = new(new Guid("eea1f833-1769-42d2-80ca-a557c8c2343b"), 3, (1, 2), (0, 10));
-Food turkey = new(new Guid("5831b3b8-7982-43b2-bfa9-eb8cee72931e"), 30, (1, 4), (30, 60));
-Food fishAndChips = new(new Guid("5bc7d062-c2d3-48e4-ad6b-8847b5cc929e"), 15, (1, 3), (15, 20));
-Food bakedChicken = new(new Guid("78481c5f-205c-490b-a93e-b0b04f0f5a05"), 0, (0, 0), (0, 0));
-Food philSandwich = new(new Guid("2dce80f8-1be9-445f-9dcb-569e69481a2b"), 0, (0, 0), (0, 0));
-Food cereal = new(new Guid("56eb4384-4570-446c-af15-b207f8a2eb0d"), 66, (5, 6), (150, 300));
+Food nutellaSandwich = new(new Guid("39c81a61-3dac-4b4f-8fee-963184c4f7d6"), 51, (3, 6), (60, 120));
+Food pizza = new(new Guid("c07221d6-b5d4-431a-8f79-c1dca408ebe8"), 80, (7, 9), (150, 300));
+Food greekSalad = new(new Guid("640d75e1-8370-414e-a6e7-ebfe1f4a301a"), 3, (1, 2), (0, 10));
+Food turkey = new(new Guid("d898f5e7-1c79-4147-b474-9dac9ec36296"), 30, (1, 4), (30, 60));
+Food fishAndChips = new(new Guid("064d4e26-15b2-4887-a4ff-dc2f561a67fe"), 15, (1, 3), (15, 20));
+Food bakedChicken = new(new Guid("fa4af551-a5b1-4262-8b1c-7a857ce9ac64"), 0, (0, 0), (0, 0));
+Food philSandwich = new(new Guid("ebca0eee-8032-4e7f-b2be-d4fa2283dbc3"), 0, (0, 0), (0, 0));
+Food cereal = new(new Guid("bfad3a07-aa67-4b83-a0c3-8790915ec2f3"), 66, (5, 6), (150, 300));
 
 var breakfastOptions = new[] {nutellaSandwich, cereal, philSandwich};
 var lunchOptions = new[] {pizza, greekSalad, fishAndChips};
