@@ -23,7 +23,8 @@ namespace IbdTracker.Infrastructure.Authorization
             "write:notifications",
             "read:recommendations",
             "read:doctor",
-            "write:doctor"
+            "write:doctor",
+            "write:informationrequests"
         };
     }
 }

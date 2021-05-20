@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Hangfire;
 using IbdTracker.Core;
 using IbdTracker.Infrastructure.Services;
@@ -10,10 +11,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Appointments
 {
+    /// <summary>
+    /// Cancels an appointment.
+    /// </summary>
     public class Cancel
     {
+        /// <summary>
+        /// Command to cancel the appointment.
+        /// </summary>
+        /// <param name="AppointmentId">ID of the appointment to cancel.</param>
         public record Command(Guid AppointmentId) : IRequest<ActionResult>;
 
+        /// <summary>
+        /// Validator to validate the command.
+        /// </summary>
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(c => c.AppointmentId)
+                    .NotEmpty();
+            }
+        }
+
+        /// <summary>
+        /// The command handler.
+        /// </summary>
         public class Handler : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;

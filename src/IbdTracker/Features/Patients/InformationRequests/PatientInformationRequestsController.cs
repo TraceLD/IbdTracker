@@ -22,7 +22,7 @@ namespace IbdTracker.Features.Patients.InformationRequests
         }
 
         [HttpGet("{informationRequestId}")]
-        public async Task<ActionResult<InformationRequestDto>> GetOneForMeById(GetOne.Query query)
+        public async Task<ActionResult<InformationRequestDto>> GetOneForMeById([FromRoute] GetOne.Query query)
         {
             var res = await _mediator.Send(query);
             return res is null ? NotFound() : Ok(res);

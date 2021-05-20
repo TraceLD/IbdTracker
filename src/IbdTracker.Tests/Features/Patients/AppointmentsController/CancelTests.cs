@@ -52,7 +52,7 @@ namespace IbdTracker.Tests.Features.Patients.AppointmentsController
         {
             // arrange;
             // empty GUID as we are testing to see what happens
-            // when a matching appointment can't be found;
+            // when a matching appointment can't be found in the database;
             var idOfTheAppointmentToCancel = new Guid();
             var command = new Cancel.Command(idOfTheAppointmentToCancel);
             // result should be of type NotFoundResult;

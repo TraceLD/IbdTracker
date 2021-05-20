@@ -154,50 +154,45 @@
             </p>
 
             <div>
-                <label for="fromDate">From date</label>
-                <input
-                    bind:value={fromDateInput}
-                    type="date"
-                    name="fromDate"
-                    id="fromDate"
-                />
-                <label for="toDate">To date</label>
-                <input
-                    bind:value={toDateInput}
-                    type="date"
-                    name="toDate"
-                    id="toDate"
-                />
+                <label class="block mb-4 text-sm font-medium text-gray-500" for="fromDate">
+                    From date
+                    <input
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                        bind:value={fromDateInput}
+                        type="date"
+                        name="fromDate"
+                        id="fromDate" />
+                </label>
+                <label class="block mb-4 text-sm font-medium text-gray-500" for="toDate">
+                    To date
+                    <input
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                        bind:value={toDateInput}
+                        type="date"
+                        name="fromDate"
+                        id="fromDate" />
+                </label>
             </div>
 
-            <div class="flex">
-                <div class="flex items-center ml-1">
+            <div class="flex flex-col gap-1">
+                <label class="inline-flex items-center" for="sharePain">
                     <input
                         bind:checked={sharePainInput}
-                        class="h-4 w-4 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+                        class="rounded bg-white border-gray-300 text-blue-500 shadow-sm focus:border-blue-500 focus:ring focus:ring-offset-0 focus:ring-blue-500 focus:ring-opacity-50"
                         type="checkbox"
                         id="sharePain"
-                        name="sharePain"
-                    />
-                    <label class="min-w-max ml-3 -mt-3" for="sharePain">
-                        Share pain data</label
-                    >
-                </div>
-            </div>
-
-            <div class="flex">
-                <div class="flex items-center ml-1 -mt-3">
+                        name="sharePain" /> 
+                    <span class="ml-2">Share pain data</span>
+                </label>
+                <label class="inline-flex items-center" for="shareBms">
                     <input
                         bind:checked={shareBmsInput}
-                        class="h-4 w-4 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+                        class="rounded bg-white border-gray-300 text-blue-500 shadow-sm focus:border-blue-500 focus:ring focus:ring-offset-0 focus:ring-blue-500 focus:ring-opacity-50"
                         type="checkbox"
-                        id="sharePain"
-                        name="sharePain"
-                    />
-                    <label class="min-w-max ml-3 -mt-3" for="sharePain">
-                        Share bowel movements data</label
-                    >
-                </div>
+                        id="shareBms"
+                        name="shareBms" /> 
+                    <span class="ml-2">Share bowel movements data</span>
+                </label>
             </div>
         </div>
 
@@ -228,14 +223,3 @@
 {:catch err}
     <Error errorMsg={err} />
 {/await}
-
-<style>
-    label {
-        @apply text-sm font-medium text-gray-500;
-    }
-
-    input,
-    select {
-        @apply mb-3 mt-0.5 h-8 px-2 outline-none focus:ring-4 border border-transparent focus:border-blue-500 w-full shadow-sm text-gray-800 font-light text-sm rounded-md;
-    }
-</style>

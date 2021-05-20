@@ -68,7 +68,7 @@ namespace IbdTracker.Features.Patients.BowelMovements
         }
 
         [Authorize("write:bms")]
-        [HttpPut("{bowelMovementEventId}")]
+        [HttpDelete("{bowelMovementEventId}")]
         public async Task<ActionResult> DeleteForMe([FromRoute] Delete.Command command) =>
             await _mediator.Send(command);
     }

@@ -1,3 +1,10 @@
+/**
+ * Combines an HTML date and time inputs into a @see Date .
+ * 
+ * @param dateInput Date HTML input
+ * @param timeInput Time HTML input
+ * @returns Date and time HTML inputs combined into a @see Date .
+ */
 export function combineInputs(dateInput: string, timeInput: string): Date {
     let date: Date = new Date(dateInput);
     let arr: Array<string> = timeInput.split(":");

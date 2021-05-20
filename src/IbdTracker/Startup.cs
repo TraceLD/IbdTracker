@@ -130,6 +130,11 @@ namespace IbdTracker
                                 .AllowAnyHeader();
                         });
                 });
+                
+                services.ConfigureSwaggerGen(options =>
+                {
+                    options.CustomSchemaIds(x => x.FullName);
+                });
             }
         }
 

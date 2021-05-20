@@ -22,6 +22,7 @@ namespace IbdTracker.Features.Doctors.OfficeHours
         }
 
         [Authorize("read:doctor")]
+        [HttpGet]
         public async Task<ActionResult<IList<Core.OfficeHours>>> GetMyOfficeHours()
         {
             var res = await _mediator.Send(new Get.Query());
