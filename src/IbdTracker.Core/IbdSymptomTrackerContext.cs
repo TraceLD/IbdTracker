@@ -39,6 +39,17 @@ namespace IbdTracker.Core
 
             modelBuilder.Entity<PatientApplicationSettings>()
                 .HasKey(s => s.PatientId);
+            
+            // indexes for enhanced performance of common queries;
+            modelBuilder.Entity<Medication>()
+                .HasIndex(m => m.BnfChemicalSubstance);
+            modelBuilder.Entity<Medication>()
+                .HasIndex(m => m.BnfProduct);
+            modelBuilder.Entity<Prescription>()
+                .HasIndex(p => p.StartDateTime);
+            modelBuilder.Entity<FoodItem>()
+                .HasIndex(fi => fi.Name);
+            
         }
     }
 }
