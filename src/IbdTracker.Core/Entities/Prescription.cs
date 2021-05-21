@@ -15,7 +15,5 @@ namespace IbdTracker.Core.Entities
         
         public Guid MedicationId { get; set; }
         public Medication Medication { get; set; } = null!;
-
-        public List<SideEffectEvent> SideEffectEvents { get; } = new();
     }
 }

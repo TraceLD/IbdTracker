@@ -28,7 +28,7 @@ namespace IbdTracker.Features.Doctors.Prescriptions
 
         [Authorize("view:prescriptions")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PrescriptionDto>>> GetPrescriptions([FromQuery] Prescriptions.Get.Query query)
+        public async Task<ActionResult<IEnumerable<PrescriptionDto>>> GetPrescriptions([FromQuery] Get.Query query)
         {
             var res = await _mediator.Send(query);
             return Ok(res);
@@ -36,8 +36,8 @@ namespace IbdTracker.Features.Doctors.Prescriptions
 
         [Authorize("view:prescriptions")]
         [HttpGet("{prescriptionId}")]
-        public async Task<ActionResult<IEnumerable<Prescriptions.GetById.Result>>> GetPrescriptionById(
-            [FromRoute] Prescriptions.GetById.Query query)
+        public async Task<ActionResult<PrescriptionDto>> GetPrescriptionById(
+            [FromRoute] GetById.Query query)
         {
             var res = await _mediator.Send(query);
             return res is null ? NotFound() : Ok(res);

@@ -44,7 +44,6 @@ namespace IbdTracker.Features.Doctors.Prescriptions
                 {
                     null => await _context.Prescriptions
                             .Where(p => p.DoctorId.Equals(doctorId))
-                            .Include(p => p.MedicationId)
                             .OrderByDescending(p => p.EndDateTime)
                             .Select(p => new PrescriptionDto
                             {
@@ -59,7 +58,6 @@ namespace IbdTracker.Features.Doctors.Prescriptions
                             .ToListAsync(cancellationToken),
                     not null => await _context.Prescriptions
                             .Where(p => p.DoctorId.Equals(doctorId) && p.PatientId.Equals(request.PatientId!))
-                            .Include(p => p.MedicationId)
                             .OrderByDescending(p => p.EndDateTime)
                             .Select(p => new PrescriptionDto
                             {

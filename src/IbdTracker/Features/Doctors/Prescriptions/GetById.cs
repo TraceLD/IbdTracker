@@ -15,12 +15,7 @@ namespace IbdTracker.Features.Doctors.Prescriptions
 {
     public class GetById
     {
-        public record Query(Guid PrescriptionId) : IRequest<Result?>;
-
-        public record Result(
-            PrescriptionDto Prescription,
-            IList<SideEffectEvent> SideEffectEvents
-        );
+        public record Query(Guid PrescriptionId) : IRequest<PrescriptionDto?>;
 
         public class QueryValidator : AbstractValidator<Query>
         {
@@ -31,7 +26,7 @@ namespace IbdTracker.Features.Doctors.Prescriptions
             }
         }
         
-        public class Handler : IRequestHandler<Query, Result?>
+        public class Handler : IRequestHandler<Query, PrescriptionDto?>
         {
             private readonly IbdSymptomTrackerContext _context;
             private readonly IUserService _userService;
@@ -42,13 +37,12 @@ namespace IbdTracker.Features.Doctors.Prescriptions
                 _userService = userService;
             }
 
-            public async Task<Result?> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<PrescriptionDto?> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.Prescriptions
                     .Where(p => p.PrescriptionId.Equals(request.PrescriptionId) &&
                                 p.DoctorId.Equals(_userService.GetUserAuthId()))
-                    .Include(p => p.SideEffectEvents)
-                    .Select(p => new Result(new()
+                    .Select(p => new PrescriptionDto
                     {
                         PrescriptionId = p.PrescriptionId,
                         PatientId = p.PatientId,
@@ -57,7 +51,7 @@ namespace IbdTracker.Features.Doctors.Prescriptions
                         StartDateTime = p.StartDateTime,
                         EndDateTime = p.EndDateTime,
                         MedicationId = p.MedicationId
-                    }, p.SideEffectEvents))
+                    })
                     .FirstOrDefaultAsync(cancellationToken);
             }
         }
