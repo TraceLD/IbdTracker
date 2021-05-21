@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { Medication } from "../models/models";
 
-    export let patientId: string;
     export let medication: Medication;    
 </script>
 
@@ -25,8 +24,4 @@
         <p class="font-semibold">BNF Section:</p>
         <p class="ml-1">{medication.bnfSection}</p>
     </div>
-
-    <button class="mt-2 bg-indigo-600 py-1 px-4 rounded text-gray-100 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
-        Prescribe
-    </button>
 </div>

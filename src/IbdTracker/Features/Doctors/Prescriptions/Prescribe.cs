@@ -20,28 +20,6 @@ namespace IbdTracker.Features.Doctors.Prescriptions
             Guid MedicationId,
             string DoctorInstructions
         ) : IRequest<ActionResult>;
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(c => c.PatientId)
-                    .NotEmpty()
-                    .MinimumLength(6);
-
-                RuleFor(c => c.StartDate)
-                    .NotNull();
-
-                RuleFor(c => c.EndDate)
-                    .NotNull();
-
-                RuleFor(c => c.MedicationId)
-                    .NotEmpty();
-
-                RuleFor(c => c.DoctorInstructions)
-                    .NotEmpty();
-            }
-        }
         
         public class Handler : IRequestHandler<Command, ActionResult>
         {

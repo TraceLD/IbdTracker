@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using IbdTracker.Core.CommonDtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace IbdTracker.Features.Doctors.Prescriptions
 {
     [ApiController]
-    [Route("doctors/@me/prescriptions")]
+    [Route("api/doctors/@me/prescriptions")]
     public class DoctorsPrescriptionsController : ControllerBase
     {
         private readonly ILogger<DoctorsPrescriptionsController> _logger;
@@ -20,20 +21,23 @@ namespace IbdTracker.Features.Doctors.Prescriptions
             _mediator = mediator;
         }
 
+        [Authorize("write:prescriptions")]
         [HttpPost]
         public async Task<ActionResult> Prescribe([FromBody] Prescribe.Command command) =>
             await _mediator.Send(command);
 
+        [Authorize("view:prescriptions")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PrescriptionDto>>> GetPrescriptions([FromQuery] Get.Query query)
+        public async Task<ActionResult<IEnumerable<PrescriptionDto>>> GetPrescriptions([FromQuery] Prescriptions.Get.Query query)
         {
             var res = await _mediator.Send(query);
             return Ok(res);
         }
 
+        [Authorize("view:prescriptions")]
         [HttpGet("{prescriptionId}")]
-        public async Task<ActionResult<IEnumerable<GetById.Result>>> GetPrescriptionById(
-            [FromRoute] GetById.Query query)
+        public async Task<ActionResult<IEnumerable<Prescriptions.GetById.Result>>> GetPrescriptionById(
+            [FromRoute] Prescriptions.GetById.Query query)
         {
             var res = await _mediator.Send(query);
             return res is null ? NotFound() : Ok(res);
