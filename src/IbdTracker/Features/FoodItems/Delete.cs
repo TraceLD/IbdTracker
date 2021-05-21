@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.FoodItems
 {
+    /// <summary>
+    /// Deletes a food item by ID.
+    /// </summary>
     public class Delete
     {
         public record Command(Guid Id) : IRequest<ActionResult>;

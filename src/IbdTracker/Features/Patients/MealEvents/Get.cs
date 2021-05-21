@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.MealEvents
 {
+    /// <summary>
+    /// Gets all the meal events belonging to the currently logged-in patient.
+    /// </summary>
     public class Get
     {
         public record Query : IRequest<IList<MealEventDto>>;

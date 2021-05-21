@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.BowelMovements
 {
+    /// <summary>
+    /// PUTs (edits) a BM.
+    /// </summary>
     public class Put
     {
         public record Command(

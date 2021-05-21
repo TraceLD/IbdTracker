@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients
 {
+    /// <summary>
+    /// Gets information about the currently logged-in patient.
+    /// </summary>
     public class GetCurrent
     {
         public record Query : IRequest<PatientDto?>;

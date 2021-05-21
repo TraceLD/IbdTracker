@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.FlareUps
 {
+    /// <summary>
+    /// Analyses the last two weeks of patient's life to determine if they may have a flare up.
+    /// </summary>
     public class Analyse
     {
         public record Query : IRequest<FlareUpDetectionResult>;

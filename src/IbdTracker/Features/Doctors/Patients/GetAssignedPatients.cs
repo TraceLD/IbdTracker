@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Patients
 {
+    /// <summary>
+    /// Gets patients assigned to the currently logged-in doctor.
+    /// </summary>
     public class GetAssignedPatients
     {
         public record Query : IRequest<IList<PatientDto>>;

@@ -8,6 +8,9 @@ using MediatR;
 
 namespace IbdTracker.Features.FoodItems
 {
+    /// <summary>
+    /// POSTs (creates) a new food item.
+    /// </summary>
     public class Post
     {
         public record Command(

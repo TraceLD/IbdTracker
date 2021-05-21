@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Appointments
 {
+    /// <summary>
+    /// PUTs (edits) an appointment.
+    /// </summary>
     public class Put
     {
         public record Command(

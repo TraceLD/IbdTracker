@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Appointments
 {
+    /// <summary>
+    /// Deletes an appointment.
+    /// </summary>
     public class Delete
     {
         public record Command(Guid Id) : IRequest<ActionResult>;

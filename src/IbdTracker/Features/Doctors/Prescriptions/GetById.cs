@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Prescriptions
 {
+    /// <summary>
+    /// Gets a prescription belonging to the currently logged-in doctor by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid PrescriptionId) : IRequest<PrescriptionDto?>;

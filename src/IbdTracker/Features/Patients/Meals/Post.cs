@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Meals
 {
+    /// <summary>
+    /// Adds a new meal for the currently logged-in patient.
+    /// </summary>
     public class Post
     {
         public record Command(string Name, IList<Guid> FoodItemIds) : IRequest<MealDto>;

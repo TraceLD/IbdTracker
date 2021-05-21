@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Appointments
 {
+    /// <summary>
+    /// Gets all the available appointments on a given day for the currently logged in doctor.
+    /// </summary>
     public class GetAvailableAppointmentsOnDay
     {
         // do not have to validate for null as it comes from ASP.NET Core query and route args which are validated;

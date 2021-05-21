@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.InformationRequests
 {
+    /// <summary>
+    /// Edit an information request.
+    /// </summary>
     public class Put
     {
         public record Command(

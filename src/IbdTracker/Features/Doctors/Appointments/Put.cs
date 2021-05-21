@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Appointments
 {
+    /// <summary>
+    /// Edits currently logged-in doctor.
+    /// </summary>
     public class Put
     {
         public record Command(

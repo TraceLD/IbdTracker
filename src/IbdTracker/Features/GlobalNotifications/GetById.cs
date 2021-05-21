@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.GlobalNotifications
 {
+    /// <summary>
+    /// Gets a notification by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid Id) : IRequest<GlobalNotificationDto?>;

@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.PainEvents
 {
+    /// <summary>
+    /// Gets a pain event belonging to the currently logged-in patient by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid PainEventId) : IRequest<PainEventDto?>;

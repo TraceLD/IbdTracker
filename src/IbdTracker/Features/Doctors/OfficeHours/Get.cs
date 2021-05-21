@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.OfficeHours
 {
+    /// <summary>
+    /// Gets currently logged-in doctor's office hours.
+    /// </summary>
     public class Get
     {
         public record Query : IRequest<IList<Core.OfficeHours>>;

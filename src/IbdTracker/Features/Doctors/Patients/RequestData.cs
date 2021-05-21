@@ -10,6 +10,9 @@ using MediatR;
 
 namespace IbdTracker.Features.Doctors.Patients
 {
+    /// <summary>
+    /// Requests data from a patient assigned to the currently logged-in doctor.
+    /// </summary>
     public class RequestData
     {
         public record Command(

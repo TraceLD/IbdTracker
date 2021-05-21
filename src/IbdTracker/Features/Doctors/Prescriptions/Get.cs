@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Prescriptions
 {
+    /// <summary>
+    /// Gets all prescriptions assigned to the currently logged in doctor. Optionally filters by patient id.
+    /// </summary>
     public class Get
     {
         public record Query(string? PatientId) : IRequest<IList<PrescriptionDto>>;

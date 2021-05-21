@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Medications
 {
+    /// <summary>
+    /// Gets all the available medications. Optionally filters by chemical substance name or product name.
+    /// </summary>
     public class Get
     {
         public record Query(

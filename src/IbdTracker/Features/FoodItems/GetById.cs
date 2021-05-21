@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.FoodItems
 {
+    /// <summary>
+    /// Gets a food item by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid Id) : IRequest<FoodItemDto?>;

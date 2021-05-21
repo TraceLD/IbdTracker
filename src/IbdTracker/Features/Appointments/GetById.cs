@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Appointments
 {
+    /// <summary>
+    /// Gets an appointment by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid Id) : IRequest<AppointmentDto?>;

@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.BowelMovements
 {
+    /// <summary>
+    /// Gets a BM by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid Id) : IRequest<BowelMovementEventDto?>;

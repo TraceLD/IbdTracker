@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.OfficeHours
 {
+    /// <summary>
+    /// Updates currently logged-in doctor's office hours.
+    /// </summary>
     public class ChangeOfficeHours
     {
         public record Command(IList<Core.OfficeHours> OfficeHours) : IRequest<ActionResult>;

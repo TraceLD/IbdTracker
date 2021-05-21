@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Prescriptions
 {
+    /// <summary>
+    /// Prescribes a medication to a patient in the name of the currently logged-in doctor.
+    /// </summary>
     public class Prescribe
     {
         public record Command(

@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.AppSettings
 {
+    /// <summary>
+    /// Edits the app settings belonging to the currently logged-in patient.
+    /// </summary>
     public class Put
     {
         public record Command(bool ShareDataForResearch) : IRequest<ActionResult>;

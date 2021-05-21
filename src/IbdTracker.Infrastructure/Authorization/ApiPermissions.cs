@@ -31,7 +31,8 @@ namespace IbdTracker.Infrastructure.Authorization
             "read:doctor",
             "write:doctor",
             "write:alldoctors",
-            "write:informationrequests"
+            "write:informationrequests",
+            "read:researchdata"
         };
     }
 }

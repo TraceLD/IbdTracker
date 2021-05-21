@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.FoodItems
 {
+    /// <summary>
+    /// Analyses patient's meals to recommend food items.
+    /// </summary>
     public class GetRecommended
     {
         public record Query : IRequest<IEnumerable<FoodItemRecommendation>>;
@@ -35,11 +38,13 @@ namespace IbdTracker.Features.Patients.FoodItems
             {
                 var patientId = _userService.GetUserAuthId();
                 var foodItems = await _context.FoodItems.ToListAsync(cancellationToken);
+                // total amount of meal events, later used to calculate percentage of meal events with pain;
                 var mECount = _context.MealEvents.Count(me => me.PatientId.Equals(patientId));
 
                 List<FoodItemRecommendationData> foodItemDetails = new();
                 foreach (var foodItem in foodItems)
                 {
+                    // get all the meals containing a given food item;
                     var meals = await (from mealEvent in _context.MealEvents
                             join meal in _context.Meals.Include(m => m.FoodItems)
                                 on mealEvent.MealId equals meal.MealId
@@ -49,6 +54,7 @@ namespace IbdTracker.Features.Patients.FoodItems
                             select mealEvent.DateTime)
                         .ToListAsync(cancellationToken);
 
+                    // skip rest of the loop if there aren't any;
                     if (!meals.Any())
                     {
                         continue;
@@ -56,6 +62,7 @@ namespace IbdTracker.Features.Patients.FoodItems
                     
                     List<PainEvent> matchedPainEvents = new();
                     var countOfTimesPainHappenedAfterEating = 0;
+                    // match pain events to each meal;
                     foreach (var meal in meals)
                     {
                         var matchedPainEventsForThisMeal = await _context.PainEvents

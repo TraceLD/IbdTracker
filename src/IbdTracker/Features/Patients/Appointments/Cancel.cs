@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Appointments
 {
+    /// <summary>
+    /// Cancels an appointment belonging to the currently logged-in patient.
+    /// </summary>
     public class Cancel
     {
         public record Command(Guid AppointmentId) : IRequest<ActionResult>;

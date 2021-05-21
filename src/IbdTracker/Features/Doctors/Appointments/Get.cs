@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Appointments
 {
+    /// <summary>
+    /// Gets all appointments for the currently logged-in doctor.
+    /// </summary>
     public class Get
     {
         public record Query(string? PatientId) : IRequest<IList<AppointmentDto>>;

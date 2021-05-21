@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors
 {
+    /// <summary>
+    /// Gets an approved doctor by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(string DoctorId) : IRequest<DoctorDto?>;
@@ -40,7 +43,8 @@ namespace IbdTracker.Features.Doctors
                     {
                         DoctorId = d.DoctorId,
                         Name = d.Name,
-                        Location = d.Location
+                        Location = d.Location,
+                        IsApproved = d.IsApproved
                     })
                     .FirstOrDefaultAsync(cancellationToken);
         }

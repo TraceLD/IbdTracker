@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.FoodItems
 {
+    /// <summary>
+    /// PUTs (edits) a food item.
+    /// </summary>
     public class Put
     {
         public record Command(Guid FoodItemId, string Name, string? PictureUrl) : IRequest<ActionResult>;

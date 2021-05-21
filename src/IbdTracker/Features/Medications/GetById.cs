@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Medications
 {
+    /// <summary>
+    /// Gets a medication by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid MedicationId) : IRequest<MedicationDto?>;

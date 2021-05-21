@@ -140,6 +140,34 @@ namespace IbdTracker.Tests
             
             return response;
         }
+        
+        /// <summary>
+        /// Sends (executes) a MediatR (<see cref="IMediator"/>) query/command in a new IoC scope
+        /// on behalf of the test doctor user.
+        /// 
+        /// This closely mimics our controllers where we a new scope is created for each request that
+        /// comes in and then the work is passed off to MediatR.
+        /// </summary>
+        /// 
+        /// <param name="request">The command/query.</param>
+        /// <param name="includeEmailInUserClaims">Whether an email claim should be included in the user's claims.</param>
+        /// <typeparam name="TResponse">The response type.</typeparam>
+        /// <returns>The result of the command/query.</returns>
+        protected async Task<TResponse?> SendMediatorRequestInScopeOnBehalfOfTheTestDoctor<TResponse>(
+            IRequest<TResponse?> request, bool includeEmailInUserClaims = false)
+        {
+            var response = default(TResponse);
+            
+            await ExecuteInScope(async sp =>
+            {
+                SetCurrentUserToDoctorTestUser(includeEmailInUserClaims);
+                
+                var mediator = sp.GetRequiredService<IMediator>();
+                response = await mediator.Send(request);
+            });
+            
+            return response;
+        }
 
         /// <summary>
         /// Gets a service from the IoC container, i.e. the service provider (<see cref="IServiceProvider"/>). 

@@ -10,6 +10,9 @@ using MediatR;
 
 namespace IbdTracker.Features.Patients.MealEvents
 {
+    /// <summary>
+    /// Reports a new meal event for the currently logged-in patient.
+    /// </summary>
     public class Post
     {
         public record Command(Guid MealId, DateTime? DateTime) : IRequest<MealEventDto>;

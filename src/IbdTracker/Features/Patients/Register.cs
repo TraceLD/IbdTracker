@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IbdTracker.Features.Patients
 {
+    /// <summary>
+    /// Registers a new patient.
+    /// </summary>
     public class Register
     {
         public record Command(

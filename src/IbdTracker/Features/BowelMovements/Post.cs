@@ -9,6 +9,9 @@ using MediatR;
 
 namespace IbdTracker.Features.BowelMovements
 {
+    /// <summary>
+    /// POSTs (creates) a new BM.
+    /// </summary>
     public class Post
     {
         public record Command(

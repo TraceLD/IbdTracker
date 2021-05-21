@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.InformationRequests
 {
+    /// <summary>
+    /// Get active information requests belonging to the currently logged-in patient.
+    /// </summary>
     public class GetActive
     {
         public record Query : IRequest<IList<InformationRequestDto>>;

@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Prescriptions
 {
+    /// <summary>
+    /// Gets active prescriptions belonging to the currently logged-in patient.
+    /// </summary>
     public class GetActive
     {
         public record Query : IRequest<IList<PrescriptionDto>>;

@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.GlobalNotifications
 {
+    /// <summary>
+    /// PUTs (edits) a global notification.
+    /// </summary>
     public class Put
     {
         public record Command(

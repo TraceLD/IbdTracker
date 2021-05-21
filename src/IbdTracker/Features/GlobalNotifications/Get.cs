@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.GlobalNotifications
 {
+    /// <summary>
+    /// Gets all the active global notifications.
+    /// </summary>
     public class Get
     {
         public record Query : IRequest<IList<GlobalNotificationDto>>;

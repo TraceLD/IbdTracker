@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Meals
 {
+    /// <summary>
+    /// Gets a meal belonging to the currently logged-in patient by ID.
+    /// </summary>
     public class GetById
     {
         public record Query(Guid MealId) : IRequest<MealDto?>;

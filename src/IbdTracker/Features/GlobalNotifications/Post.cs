@@ -8,6 +8,9 @@ using MediatR;
 
 namespace IbdTracker.Features.GlobalNotifications
 {
+    /// <summary>
+    /// POSTs (creates) a new notification.
+    /// </summary>
     public class Post
     {
         public record Command(

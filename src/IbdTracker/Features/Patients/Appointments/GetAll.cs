@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Appointments
 {
+    /// <summary>
+    /// Gets all appointments belonging to the currently logged-in patient.
+    /// </summary>
     public class GetAll
     {
         public record Query : IRequest<IList<AppointmentDto>>;

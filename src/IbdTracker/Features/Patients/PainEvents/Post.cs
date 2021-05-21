@@ -10,6 +10,9 @@ using MediatR;
 
 namespace IbdTracker.Features.Patients.PainEvents
 {
+    /// <summary>
+    /// Reports a new pain event for the currently logged-in patient.
+    /// </summary>
     public class Post
     {
         public record Command(DateTime? DateTime, int MinutesDuration, int PainScore) : IRequest<PainEventDto>;

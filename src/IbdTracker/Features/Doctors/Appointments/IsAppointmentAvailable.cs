@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors.Appointments
 {
+    /// <summary>
+    /// Checks if an appointment is available with a given doctor.
+    /// </summary>
     public class IsAppointmentAvailable
     {
         // do not have to validate for null as it comes from ASP.NET Core query and route args which are validated;

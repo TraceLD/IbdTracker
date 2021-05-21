@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.Appointments
 {
+    /// <summary>
+    /// Edits an appointment belonging to the currently logged-in patient.
+    /// </summary>
     public class Put
     {
         public record Command(

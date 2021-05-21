@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.PainEvents
 {
+    /// <summary>
+    /// Gets recent average duration, intensity and count of pain events.
+    /// </summary>
     public class GetRecentAvgs
     {
         public record Query(DateTime? StartDate, DateTime? EndDate) : IRequest<IList<Result>>;
@@ -20,6 +23,8 @@ namespace IbdTracker.Features.Patients.PainEvents
         {
             private readonly IbdSymptomTrackerContext _context;
             private readonly IUserService _userService;
+            
+            private const int DefinitionOfRecentInDays = 62;
 
             public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
@@ -30,7 +35,7 @@ namespace IbdTracker.Features.Patients.PainEvents
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-62);
+                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-DefinitionOfRecentInDays);
                 var endDate = request.EndDate ?? DateTime.UtcNow;
                 var res = await _context.PainEvents
                     .AsNoTracking()

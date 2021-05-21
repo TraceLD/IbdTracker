@@ -9,6 +9,9 @@ using MediatR;
 
 namespace IbdTracker.Features.Appointments
 {
+    /// <summary>
+    /// POSTs (creates) a new appointment).
+    /// </summary>
     public class Post
     {
         public record Command(

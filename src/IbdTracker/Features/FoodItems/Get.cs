@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.FoodItems
 {
+    /// <summary>
+    /// Gets all the available food items.
+    /// </summary>
     public class Get
     {
         public class Query : IRequest<IList<FoodItemDto>>

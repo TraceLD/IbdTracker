@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Doctors
 {
+    /// <summary>
+    /// Gets the details of the currently logged-in doctor.
+    /// </summary>
     public class GetCurrent
     {
         public record Query : IRequest<DoctorDto?>;
@@ -33,7 +36,8 @@ namespace IbdTracker.Features.Doctors
                     {
                         DoctorId = d.DoctorId,
                         Name = d.Name,
-                        Location = d.Location
+                        Location = d.Location,
+                        IsApproved = d.IsApproved
                     })
                     .FirstOrDefaultAsync(cancellationToken);
         }

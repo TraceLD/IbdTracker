@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.PainEvents
 {
+    /// <summary>
+    /// Gets all the pain events belonging to the currently logged-in patient.
+    /// </summary>
     public class Get
     {
         public record Query : IRequest<IList<PainEventDto>>;

@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IbdTracker.Features.Doctors
 {
+    /// <summary>
+    /// Registers a new doctor. Registers as unverified and awaits verification from an administrator.
+    /// </summary>
     public class Register
     {
         public record Command(

@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.GlobalNotifications
 {
+    /// <summary>
+    /// Deletes a global notification.
+    /// </summary>
     public class Delete
     {
         public record Command(Guid Id) : IRequest<ActionResult>;
