@@ -42,8 +42,8 @@
     {#if foodItem.recommendationValue}
         <p
             class:text-red-500={foodItem.recommendationValue <= 19}
-            class:text-yellow-500={foodItem.recommendationValue < 50 && foodItem.recommendationValue > 19}
-            class:text-green-300={foodItem.recommendationValue >= 50 && foodItem.recommendationValue < 70}
+            class:text-yellow-500={foodItem.recommendationValue <= 49 && foodItem.recommendationValue > 19}
+            class:text-green-300={foodItem.recommendationValue > 49 && foodItem.recommendationValue < 70}
             class:text-green-500={foodItem.recommendationValue >= 70}
             class="ml-auto"
         >
