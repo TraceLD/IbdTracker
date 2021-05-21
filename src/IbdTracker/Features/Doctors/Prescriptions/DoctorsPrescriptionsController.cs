@@ -26,7 +26,7 @@ namespace IbdTracker.Features.Doctors.Prescriptions
         public async Task<ActionResult> Prescribe([FromBody] Prescribe.Command command) =>
             await _mediator.Send(command);
 
-        [Authorize("view:prescriptions")]
+        [Authorize("read:prescriptions")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PrescriptionDto>>> GetPrescriptions([FromQuery] Get.Query query)
         {
@@ -34,7 +34,7 @@ namespace IbdTracker.Features.Doctors.Prescriptions
             return Ok(res);
         }
 
-        [Authorize("view:prescriptions")]
+        [Authorize("read:prescriptions")]
         [HttpGet("{prescriptionId}")]
         public async Task<ActionResult<PrescriptionDto>> GetPrescriptionById(
             [FromRoute] GetById.Query query)
