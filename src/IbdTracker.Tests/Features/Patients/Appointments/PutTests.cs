@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Xunit;
 using IbdTracker.Features.Patients.Appointments;
 using Microsoft.AspNetCore.Mvc;
+using Xunit;
 
-namespace IbdTracker.Tests.Features.Patients.AppointmentsController
+namespace IbdTracker.Tests.Features.Patients.Appointments
 {
     public class PutTests : TestBase
     {

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace IbdTracker.Infrastructure.Authorization
 {
+    /// <summary>
+    /// Permission requirement model class.
+    /// </summary>
     public class HasPermissionRequirement : IAuthorizationRequirement
     {
         public string Issuer { get; }

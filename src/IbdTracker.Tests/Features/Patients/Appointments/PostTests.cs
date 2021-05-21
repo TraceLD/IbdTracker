@@ -6,7 +6,7 @@ using IbdTracker.Features.Appointments;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace IbdTracker.Tests.Features.Patients.AppointmentsController
+namespace IbdTracker.Tests.Features.Patients.Appointments
 {
     public class PostTests : TestBase
     {

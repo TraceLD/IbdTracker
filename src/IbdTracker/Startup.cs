@@ -4,7 +4,6 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using IbdTracker.Core;
-using IbdTracker.Core.CommonDtos;
 using IbdTracker.Core.Config;
 using IbdTracker.Infrastructure.Authorization;
 using IbdTracker.Infrastructure.Services;
@@ -109,9 +108,7 @@ namespace IbdTracker
                     configuration.RegisterValidatorsFromAssemblyContaining<Startup>();
                     configuration.ImplicitlyValidateChildProperties = true;
                 });
-
-            // configure swagger/openapi;
-            // TODO: add swagger/openapi decorators to controllers;
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "IbdTracker", Version = "v1"});

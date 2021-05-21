@@ -5,8 +5,17 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace IbdTracker.Infrastructure.Authorization
 {
+    /// <summary>
+    /// Checks whether the user has a given permission.
+    /// </summary>
     public class HasPermissionHandler : AuthorizationHandler<HasPermissionRequirement>
     {
+        /// <summary>
+        /// Checks whether the user has a given required permission.
+        /// </summary>
+        /// <param name="context">HTTP context of the request.</param>
+        /// <param name="requirement">Requirement.</param>
+        /// <returns>Succeeds if the user has a permission, otherwise fails.</returns>
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasPermissionRequirement requirement)
         {
             // If user does not have the permission claim, get out of here

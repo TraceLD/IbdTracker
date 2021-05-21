@@ -5,7 +5,7 @@ using IbdTracker.Core.CommonDtos;
 using IbdTracker.Features.Patients.Appointments;
 using Xunit;
 
-namespace IbdTracker.Tests.Features.Patients.AppointmentsController
+namespace IbdTracker.Tests.Features.Patients.Appointments
 {
     public class GetOneTests : TestBase
     {
@@ -26,6 +26,7 @@ namespace IbdTracker.Tests.Features.Patients.AppointmentsController
                 DoctorId = "auth0|6076cf2ec42780006af85a96",
                 StartDateTime = new DateTime(2021, 7, 1, 10, 0, 0),
                 PatientNotes = null,
+                PatientName = "Integration and Unit Tests",
                 DurationMinutes = 60,
                 DoctorNotes = null,
                 DoctorName = "Dr Demo Person",

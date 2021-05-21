@@ -2,8 +2,14 @@
 
 namespace IbdTracker.Infrastructure.Authorization
 {
+    /// <summary>
+    /// Static class containing all the API permissions available.
+    /// </summary>
     public static class ApiPermissions
     {
+        /// <summary>
+        /// List of all the permissions available.
+        /// </summary>
         public static IEnumerable<string> PermissionsList => new List<string>
         {
             "write:patient",
@@ -24,6 +30,7 @@ namespace IbdTracker.Infrastructure.Authorization
             "read:recommendations",
             "read:doctor",
             "write:doctor",
+            "write:alldoctors",
             "write:informationrequests"
         };
     }
