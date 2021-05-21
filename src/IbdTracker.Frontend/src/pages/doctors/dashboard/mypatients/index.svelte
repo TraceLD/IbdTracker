@@ -18,7 +18,7 @@
         <h2>My patients</h2>
         {#if patients.length !== 0}
             {#each patients as patient}
-                <div class="mb-6">
+                <div class="mb-16">
                     <PatientCard {patient} />
                 </div>
             {/each}
