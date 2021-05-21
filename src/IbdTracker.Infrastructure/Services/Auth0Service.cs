@@ -29,6 +29,13 @@ namespace IbdTracker.Infrastructure.Services
         /// <param name="auth0UserId">User's Auth0 ID.</param>
         /// <returns><see cref="Task"/> representing the asynchronous operation.</returns>
         Task MarkDoctorAsVerified(string auth0UserId);
+
+        /// <summary>
+        /// Gets a user's email from Auth0.
+        /// </summary>
+        /// <param name="auth0UserId">User's Auth0 ID.</param>
+        /// <returns>User's email from Auth0.</returns>
+        Task<string> GetEmailForUser(string auth0UserId);
     }
     
     /// <inheritdoc />
@@ -66,6 +73,13 @@ namespace IbdTracker.Infrastructure.Services
                 new AssignRolesRequest {Roles = new[] {UnverifiedDoctorRoleId}});
             await _managementApiClient.Users.AssignRolesAsync(auth0UserId,
                 new AssignRolesRequest {Roles = new[] {DoctorRoleId}});
+        }
+
+        /// <inheritdoc />
+        public async Task<string> GetEmailForUser(string auth0UserId)
+        {
+            var user = await _managementApiClient.Users.GetAsync(auth0UserId);
+            return user.Email;
         }
     }
 }

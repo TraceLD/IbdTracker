@@ -39,23 +39,24 @@ namespace IbdTracker.Features.Patients.InformationResponses
             private readonly IEmailService _emailService;
             private readonly IbdSymptomTrackerContext _context;
             private readonly IUserService _userService;
+            private readonly IAuth0Service _authService;
 
-            public Handler(IEmailService emailService, IbdSymptomTrackerContext context, IUserService userService)
+            public Handler(IEmailService emailService, IbdSymptomTrackerContext context, IUserService userService, IAuth0Service authService)
             {
                 _emailService = emailService;
                 _context = context;
                 _userService = userService;
+                _authService = authService;
             }
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var patientName = await _context.Patients
+                var patient = await _context.Patients
                     .Where(p => p.PatientId.Equals(patientId))
-                    .Select(p => p.Name)
                     .FirstOrDefaultAsync(cancellationToken);
 
-                if (patientName is null)
+                if (patient is null)
                 {
                     return new NotFoundResult();
                 }
@@ -63,7 +64,7 @@ namespace IbdTracker.Features.Patients.InformationResponses
                 var html = new StringBuilder($@"
 <h1>IBDtracker - IBD Symptom Tracker</h1>
 
-<h2>Patient {patientName} has shared data.</h2>
+<h2>Patient {patient.Name} has shared data.</h2>
 <br>
 <h3>Active prescriptions.</h3>");
 
@@ -82,7 +83,28 @@ namespace IbdTracker.Features.Patients.InformationResponses
 
                 html.AppendLine("<br>");
 
-                // TODO: add pain events;
+                if (request.SendPain)
+                {
+                    var painEvents = await _context.PainEvents
+                        .Where(pe => pe.PatientId.Equals(patientId)
+                                     && pe.DateTime >= request.DateFrom
+                                     && pe.DateTime <= request.DateTo)
+                        .ToListAsync(cancellationToken);
+                    
+                    html.AppendLine("<h3>Pain events.</h3>");
+                    
+                    foreach (var pe in painEvents)
+                    {
+                        var peLb = new StringBuilder($"{pe.DateTime.Date.ToShortDateString()}");
+                        
+                        peLb.Append($" | Duration: {pe.MinutesDuration} | Intensity {pe.PainScore}");
+                        html.AppendLine(peLb.ToString());
+                        html.AppendLine("<br>");
+                    }
+
+                    html.AppendLine("<br>");
+                }
+                
                 if (request.SendBms)
                 {
                     var bms = await _context.BowelMovementEvents
@@ -114,9 +136,9 @@ namespace IbdTracker.Features.Patients.InformationResponses
                     html.AppendLine("<br>");
                 }
 
-                await _emailService.SendMessage("ibdtrackerdoctor@gmail.com",
-                    $"Patient {patientName} has shared data.", html.ToString());
-
+                var email = await _authService.GetEmailForUser(patient.DoctorId!);
+                await _emailService.SendMessage(email,
+                    $"Patient {patient} has shared data.", html.ToString());
                 return new NoContentResult();
             }
         }
