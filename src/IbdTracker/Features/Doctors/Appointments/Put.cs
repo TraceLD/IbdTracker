@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Patients.Appointments
+namespace IbdTracker.Features.Doctors.Appointments
 {
     public class Put
     {
@@ -44,12 +44,12 @@ namespace IbdTracker.Features.Patients.Appointments
             }
         }
         
-        public class Handler : IRequestHandler<Command, ActionResult>
+        public class Hanlder : IRequestHandler<Command, ActionResult>
         {
             private readonly IbdSymptomTrackerContext _context;
             private readonly IUserService _userService;
 
-            public Handler(IbdSymptomTrackerContext context, IUserService userService)
+            public Hanlder(IbdSymptomTrackerContext context, IUserService userService)
             {
                 _context = context;
                 _userService = userService;
@@ -57,29 +57,29 @@ namespace IbdTracker.Features.Patients.Appointments
 
             public async Task<ActionResult> Handle(Command request, CancellationToken cancellationToken)
             {
-                var patientId = _userService.GetUserAuthId();
+                var doctorId = _userService.GetUserAuthId();
                 var appointment =
                     await _context.Appointments.FirstOrDefaultAsync(
-                        a => a.AppointmentId == request.AppointmentId && a.PatientId.Equals(patientId),
+                        a => a.AppointmentId == request.AppointmentId && a.DoctorId.Equals(doctorId),
                         cancellationToken);
-
+                
                 if (appointment is null)
                 {
                     return new NotFoundResult();
                 }
-
-                // the patient should not be able to modify anything but the patient notes;
+                
+                // the doctor should not be able to modify anything but the doctor notes;
                 if (!request.DoctorId.Equals(appointment.DoctorId)
                     || request.StartDateTime != appointment.StartDateTime
                     || request.DurationMinutes != appointment.DurationMinutes)
                 {
                     return new UnauthorizedResult();
                 }
-                
-                appointment.PatientNotes = request.PatientNotes;
+
+                appointment.DoctorNotes = request.DoctorNotes;
 
                 await _context.SaveChangesAsync(cancellationToken);
-
+                
                 return new NoContentResult();
             }
         }

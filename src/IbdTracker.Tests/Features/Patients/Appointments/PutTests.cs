@@ -25,9 +25,9 @@ namespace IbdTracker.Tests.Features.Patients.Appointments
                 "auth0|6076cf2ec42780006af85a96",
                 new(2021, 7, 1, 10, 0, 0),
                 60,
-                "ADDED_NOTES", // the only actual modification, but PUT requires entire object;
-                null);
-            var expectedDoctorNotes = "ADDED_NOTES";
+                null,
+                "ADDED_NOTES"); // the only actual modification, but PUT requires entire object;);
+            const string expectedPatientNotes = "ADDED_NOTES";
             
             // act;
             var res = await SendMediatorRequestInScopeOnBehalfOfTheTestPatient(command);
@@ -37,14 +37,14 @@ namespace IbdTracker.Tests.Features.Patients.Appointments
             // assert;
             res.Should().BeOfType<NoContentResult>(); // successful PUT should return NO CONTENT per HTTP conventions;
             resObject?
-                .DoctorNotes
+                .PatientNotes
                 .Should()
                 .NotBeNull()
-                .And.BeEquivalentTo(expectedDoctorNotes);
+                .And.BeEquivalentTo(expectedPatientNotes);
             
             // clean up the DB, i.e. revert it to the original state;
             var appointmentToCleanUp = Context.Appointments.FirstOrDefault(a => a.AppointmentId == appointmentId);
-            appointmentToCleanUp!.DoctorNotes = null;
+            appointmentToCleanUp!.PatientNotes = null;
             await Context.SaveChangesAsync();
         }
         
