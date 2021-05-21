@@ -21,7 +21,7 @@
     <Loading />
 {:then res}
     <div class="fixed bottom-0 right-0 p-4">
-        <QrCode on:click={$goto("/dashboard/food/add/qr")} />
+        <QrCode on:click={$goto("/dashboard/food/add/addviaqr")} />
     </div>
 
     <h2>My meals</h2>

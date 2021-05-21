@@ -6,8 +6,6 @@
     import { post } from "../services/requests";
     import { goto } from "@roxi/routify";
 
-    import type { Meal } from "../models/models";
-
     export let postDestination: string;
     export let gotoDestination: string;
 
@@ -29,7 +27,7 @@
                 // if QR code successfully scanned stop further scanning;
                 qrScanner.stop();
                 // parse QR code's text into JSON;
-                let qrCodeJson: Meal = JSON.parse(result);
+                let qrCodeJson = JSON.parse(result);
                 // POST the JSON to the API;
                 let res: Response = await post(postDestination, qrCodeJson);
 

@@ -6,4 +6,4 @@
 </script>
 
 <SubpageHeader buttonHref={gotoDestination} text="Scan a QR code" />
-<QrReader {gotoDestination} postDestination={"patients/@me/meals"} />
+<QrReader {gotoDestination} postDestination={"api/patients/@me/meals/events"} />

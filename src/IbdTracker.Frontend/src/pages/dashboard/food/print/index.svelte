@@ -12,7 +12,7 @@
     }
 </script>
 
-<div class="p-4">
+<div class="p-4 max-w-lg">
     {#await loadMeals()}
         <Loading />
     {:then res}       
@@ -41,12 +41,14 @@
             Print
         </button>
 
-        <div class="container flex">
+        <div class="grid grid-cols-3">
             {#each res as meal}
-                <div class="flex gap-">
-                    <div>
+                <div>
+                    <div class="h-16">
                         <h2 class="text-black">{meal.name}</h2>
-                        <QrCode value={JSON.stringify(meal)} />
+                    </div>
+                    <div>                        
+                        <QrCode value={JSON.stringify({mealId: meal.mealId})} />
                     </div>
                 </div>
             {/each}
