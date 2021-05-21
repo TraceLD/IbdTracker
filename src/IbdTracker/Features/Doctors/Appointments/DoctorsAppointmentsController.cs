@@ -50,5 +50,25 @@ namespace IbdTracker.Features.Doctors.Appointments
         [HttpDelete("@me/appointments/{appointmentId}")]
         public async Task<ActionResult> CancelAppointmentForMe([FromRoute] Cancel.Command command) =>
             await _mediator.Send(command);
+
+        [Authorize("write:appointments")]
+        [HttpPut("{appointmentId}")]
+        public async Task<ActionResult> PutForMe([FromRoute] Guid appointmentId, [FromBody] Put.Command command)
+        {
+            if (appointmentId != command.AppointmentId)
+            {
+                return BadRequest();
+            }
+
+            return await _mediator.Send(command);
+        }
+        
+        [Authorize("read:appointments")]
+        [HttpGet("@me/appointments/{appointmentId}")]
+        public async Task<ActionResult<AppointmentDto>> GetOneForMeById([FromRoute] GetOne.Query query)
+        {
+            var res = await _mediator.Send(query);
+            return res is null ? NotFound() : Ok(res);
+        }
     }
 }

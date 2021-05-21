@@ -7,10 +7,10 @@ using IbdTracker.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IbdTracker.Features.Patients.Appointments
+namespace IbdTracker.Features.Doctors.Appointments
 {
     /// <summary>
-    /// Gets one appointment belonging to the currently logged-in patient by ID.
+    /// Gets one appointment belonging to the currently logged-in doctor by ID.
     /// </summary>
     public class GetOne
     {
@@ -34,7 +34,7 @@ namespace IbdTracker.Features.Patients.Appointments
                     .Include(a => a.Patient)
                     .FirstOrDefaultAsync(
                         a => a.AppointmentId == request.AppointmentId &&
-                             a.PatientId.Equals(_userService.GetUserAuthId()),
+                             a.DoctorId.Equals(_userService.GetUserAuthId()),
                         cancellationToken))?.ToDto();
         }
     }
