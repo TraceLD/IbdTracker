@@ -10,6 +10,9 @@ using MediatR;
 
 namespace IbdTracker.Features.Patients.BowelMovements
 {
+    /// <summary>
+    /// POSTs (registers) a BM for the currently logged in patient;
+    /// </summary>
     public class Post
     {
         public record Command(

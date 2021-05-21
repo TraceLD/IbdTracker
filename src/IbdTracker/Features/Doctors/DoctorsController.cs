@@ -64,5 +64,10 @@ namespace IbdTracker.Features.Doctors
         [HttpPost("@me/register")]
         public async Task<ActionResult> Register(Register.Command command) =>
             await _mediator.Send(command);
+
+        [Authorize("write:alldoctors")]
+        [HttpPut("{doctorId}")]
+        public async Task<ActionResult> VerifyADoctor([FromRoute] Verify.Command command) =>
+            await _mediator.Send(command);
     }
 }

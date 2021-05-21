@@ -61,7 +61,7 @@ namespace IbdTracker.Tests.Features.Patients.Appointments
                 startDate, duration, null, null);
             
             // act;
-            Func<Task<AppointmentDto>> act = async () =>
+            Func<Task<AppointmentDto?>> act = async () =>
                 await SendMediatorRequestInScopeOnBehalfOfTheTestPatient(command);
 
             // arrange;

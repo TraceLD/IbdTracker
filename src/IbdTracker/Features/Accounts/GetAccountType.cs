@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Accounts
 {
+    /// <summary>
+    /// Checks the account type for a given ID.
+    /// </summary>
     public class GetAccountType
     {
         public record Query(string? AuthId) : IRequest<AccountType>;

@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.BowelMovements
 {
+    /// <summary>
+    /// Gets one BM belonging to the currently logged-in patient by ID.
+    /// </summary>
     public class GetOne
     {
         public record Query(Guid BowelMovementEventId) : IRequest<BowelMovementEventDto?>;

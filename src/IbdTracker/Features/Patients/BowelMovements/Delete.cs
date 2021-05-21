@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.BowelMovements
 {
+    /// <summary>
+    /// Deletes a BM belonging to the currently logged-in patient.
+    /// </summary>
     public class Delete
     {
         public record Command(Guid BowelMovementEventId) : IRequest<ActionResult>;

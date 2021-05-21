@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.BowelMovements
 {
+    /// <summary>
+    /// Gets recent BMs belonging to the logged-in patient grouped by day.
+    /// </summary>
     public class GetRecentGrouped
     {
         public record Query(DateTime? StartDate, DateTime? EndDate) : IRequest<IList<Result>>;
@@ -21,6 +24,8 @@ namespace IbdTracker.Features.Patients.BowelMovements
         {
             private readonly IbdSymptomTrackerContext _context;
             private readonly IUserService _userService;
+            
+            private const int DefinitionOfRecentTimePeriodInDays = 62;
 
             public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
@@ -31,7 +36,7 @@ namespace IbdTracker.Features.Patients.BowelMovements
             public async Task<IList<Result>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-62);
+                var startDate = request.StartDate ?? DateTime.UtcNow.AddDays(-DefinitionOfRecentTimePeriodInDays);
                 var endDate = request.EndDate ?? DateTime.UtcNow;
                 var res = await _context.BowelMovementEvents
                     .AsNoTracking()

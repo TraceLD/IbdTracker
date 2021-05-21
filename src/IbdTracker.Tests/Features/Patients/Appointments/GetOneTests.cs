@@ -44,7 +44,7 @@ namespace IbdTracker.Tests.Features.Patients.Appointments
         public async Task ShouldReturnNullIfNotFound()
         {
             // arrange;
-            // test data set contains this Appointment;
+            // test data set does not contain this Appointment;
             // empty Guid, no appointment will have that, which is what we want, since we are testing
             // what happens if appointment isn't found;
             var appointmentId = new Guid();

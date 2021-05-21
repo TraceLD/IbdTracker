@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.BowelMovements
 {
+    /// <summary>
+    /// Gets recent BMs for the currently logged-in patient..
+    /// </summary>
     public class GetRecent
     {
         public record Query : IRequest<IList<BowelMovementEventDto>>;
@@ -19,6 +22,8 @@ namespace IbdTracker.Features.Patients.BowelMovements
         {
             private readonly IbdSymptomTrackerContext _context;
             private readonly IUserService _userService;
+
+            private const int DefinitionOfRecentTimePeriodInDays = 62;
 
             public Handler(IbdSymptomTrackerContext context, IUserService userService)
             {
@@ -29,7 +34,7 @@ namespace IbdTracker.Features.Patients.BowelMovements
             public async Task<IList<BowelMovementEventDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var patientId = _userService.GetUserAuthId();
-                var sevenDaysAgo = DateTime.UtcNow.AddDays(-7);
+                var sevenDaysAgo = DateTime.UtcNow.AddDays(-DefinitionOfRecentTimePeriodInDays);
 
                 return await _context.BowelMovementEvents
                     .AsNoTracking()
