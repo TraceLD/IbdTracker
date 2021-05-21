@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IbdTracker.Features.Patients.InformationResponses
 {
+    /// <summary>
+    /// POSTs a response to the information request.
+    /// </summary>
     public class Post
     {
         public record Command(DateTime DateFrom, DateTime DateTo, bool SendPain, bool SendBms) : IRequest<ActionResult>;
